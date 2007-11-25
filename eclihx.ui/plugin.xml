@@ -9,9 +9,22 @@
             extensions="hx"
             icon="icons/sample.gif"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            class="eclihx.ui.internal.ui.editors.HXEditor"
+            class="eclihx.ui.internal.ui.editors.hx.HXEditor"
             id="eclihx.ui.internal.ui.editors.HXEditor">
       </editor>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="eclihx.ui.internal.ui.preferences.EclihxMainPreferencePage"
+            id="org.eclipse.jdt.ui.preferences.EclihXMainPreferencePage"
+            name="%eclihxMainPrefName"/>
+      <page
+            category="org.eclipse.jdt.ui.preferences.EclihXMainPreferencePage"
+            class="eclihx.ui.internal.ui.preferences.HaxeEditorPreferencePage"
+            id="org.eclipse.jdt.ui.preferences.HaxeBasePreferencePage"
+            name="%hxEditorPrefName"/>
+   </extension>
+   
 
 </plugin>
