@@ -15,5 +15,6 @@ public class EclihxMainPreferencePage extends FieldEditorPreferencePage implemen
 
 	public void init(IWorkbench workbench) {
 	}
+	
 
 }
