@@ -1,1 +1,7 @@
 See todo.txt files in corresponding folders for each plugin
+
+Common tasks:
+
+1. - Create build scripts
+2. - Specification (Try javadoc)
+3. - Internalization
