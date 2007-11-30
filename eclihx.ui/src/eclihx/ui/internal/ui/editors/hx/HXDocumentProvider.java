@@ -15,8 +15,10 @@ public class HXDocumentProvider extends FileDocumentProvider {
 				new FastPartitioner(
 					new HXPartitionScanner(),
 					new String[] {
-						HXPartitionScanner.HX_COMMENT,
-						HXPartitionScanner.HX_MULITILINE_COMMENT});
+						IHXPartitions.HX_SINGLE_LINE_COMMENT,
+						IHXPartitions.HX_MULTI_LINE_COMMENT,
+						IHXPartitions.HX_STRING,
+						IHXPartitions.HX_PREPROCESSOR });
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
 		}

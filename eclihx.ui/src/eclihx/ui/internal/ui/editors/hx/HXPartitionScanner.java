@@ -1,22 +1,29 @@
 package eclihx.ui.internal.ui.editors.hx;
 
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.rules.*;
 
 public class HXPartitionScanner extends RuleBasedPartitionScanner {
-	public final static String HX_MULITILINE_COMMENT = "__hx_multiline_comment";
-	public final static String HX_COMMENT = "__hx_comment";
 
 	public HXPartitionScanner() {
+		IToken hxMultilineComment = new Token(IHXPartitions.HX_MULTI_LINE_COMMENT);
+		IToken hxComment = new Token(IHXPartitions.HX_SINGLE_LINE_COMMENT);
+		IToken hxPreprocessor = new Token(IHXPartitions.HX_PREPROCESSOR);
+		IToken hxDoc = new Token(IHXPartitions.HX_DOC);
+		IToken hxString = new Token(IHXPartitions.HX_STRING);
 
-		IToken hxMultilineComment = new Token(HX_MULITILINE_COMMENT);
-		IToken hxComment = new Token(HX_COMMENT);
+		ArrayList<IRule> rules = new ArrayList<IRule>(2);
 
-		IPredicateRule[] rules = new IPredicateRule[2];
+		rules.add(new MultiLineRule("/*", "*/", hxMultilineComment));
+		rules.add(new EndOfLineRule("//", hxComment));
+		rules.add(new EndOfLineRule("#", hxPreprocessor));
+		rules.add(new MultiLineRule("/**", "**/", hxDoc));
+		rules.add(new SingleLineRule("\"", "\"", hxString));
 
-		rules[0] = new MultiLineRule("/*", "*/", hxMultilineComment);
-		rules[1] = new SingleLineRule("//", "", hxComment);
-
-		setPredicateRules(rules);
+		IPredicateRule[] result= new IPredicateRule[rules.size()];
+		rules.toArray(result);
+		setPredicateRules(result);
 	}
 }

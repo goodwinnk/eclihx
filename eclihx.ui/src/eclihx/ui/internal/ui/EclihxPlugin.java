@@ -1,8 +1,11 @@
 package eclihx.ui.internal.ui;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import eclihx.ui.PreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -59,4 +62,11 @@ public class EclihxPlugin extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 	
+	/**
+	 * Initialize plugin default settings
+	 */
+	@Override
+	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		PreferenceConstants.initializeDefaultValues(store);
+	}
 }
