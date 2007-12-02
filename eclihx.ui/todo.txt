@@ -2,13 +2,13 @@ Colorizing:
 	Partitions(Entity responsible for dividing the document into non-overlapping regions)
 		+ Multiline Comment
 		+ Single Line Comment
-		+ Haxe preprocessor
-		+- Haxe code(see haxe code rules)
-		- Haxe doc
-		+ Haxe String
+		+ haXe preprocessor
+		+- haXe code(see haxe code rules)
+		- haXe doc
+		+ haXe String
 		
 	Rules (Rule define parts and how they should be colorized)
-		Haxe code:
+		haXe code:
 			+- Number Constants (numbers in 0xFF00 and 13e50 format left)
 			+ Chars constants 
 			+ Default Types constants (like null, true, false)
@@ -29,4 +29,22 @@ Program Preference
 	Think of new system of preferences
 		- compilation time check of uniqueness
 		- easy using of color and style options
+		
+Preferences
+	- colorizing page
+		
+Perspectives
+	haXe Perspective
+		- Default views in open views
+		
+Wizards
+	New haXe Project
+		- Default structure
+	New haXe File
+		
+		
+Required Icons:
+	- file
+	- project
+	- haXe perspective
 		
