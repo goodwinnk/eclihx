@@ -26,5 +26,40 @@
             name="%hxEditorPrefName"/>
    </extension>
    
+	<extension point="org.eclipse.ui.newWizards">
+		<category 
+			id="eclihx.ui.haxe"
+			name="%newWizardCategoryName"/>
+		<wizard
+            category="eclihx.ui.haxe"
+            class="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
+            icon="icons/sample.gif"
+            id="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
+            name="%newHaxeProject.name"
+            project="true">
+            <description>
+            	%newHaxeProject.description
+            </description>
+		</wizard>
+		<wizard
+        	category="eclihx.ui.haxe"
+        	class="eclihx.ui.internal.ui.wizards.HaxeFileWizard"
+        	icon="icons/sample.gif"
+        	id="eclihx.ui.internal.ui.wizards.HaxeFileWizard"
+        	name="%newHaxeFile.name"
+        	project="false">
+        	<description>
+            	%newHaxeFile.description
+            </description>
+		</wizard>
+	</extension>
+ <extension
+       point="org.eclipse.ui.perspectives">
+    <perspective
+          class="eclihx.ui.internal.ui.HaxePerspectiveFactory"
+          icon="icons/sample.gif"
+          id="eclihx.ui.internal.ui.HaxePerspectiveFactory"
+          name="%haxeEclihxPerspective.name"/>
+ </extension>
 
 </plugin>
