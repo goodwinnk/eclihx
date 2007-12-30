@@ -27,7 +27,7 @@ Colorizing:
 			
 Program Preference
 	Think of new system of preferences
-		- compilation time check of uniqueness
+		- compilation time check for uniqueness
 		- easy using of color and style options
 		
 Preferences
@@ -36,12 +36,34 @@ Preferences
 Perspectives
 	haXe Perspective
 		- Default views in open views
+		- Update new menu
 		
 Wizards
 	New haXe Project
-		- Default structure
+	    + Empty Project creation
+		- Default structure (Now the best haxe file structure? Options?)
 	New haXe File
-		
+	    + Empty file add
+	    - Hx file (options)
+	    - hxml file (options)
+    New haXe class
+        - what to do?
+    New Package
+        - ! What should be done?
+        
+    
+Configuration:    
+russian:
+1. несколько таргетов с генерацией hxml-файла для каждого из них
+2. можно просто сделать текстовое поле для ввода параметров для каждого, а можно и умнее:
+ - выбор платформы (flash6, flash7, flash8, flash9, js, neko, as3) и имени выходного файла
+ - указать главный класс
+ - вызывать ли main()
+ - debug mode
+ - список подключаемых библиотек
+ 
+todo: translate :)
+    	    
 		
 Required Icons:
 	- file
