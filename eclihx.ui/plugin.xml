@@ -52,6 +52,17 @@
             	%newHaxeFile.description
             </description>
 		</wizard>
+		<wizard
+			category="eclihx.ui.haxe"
+			class="eclihx.ui.internal.ui.wizards.HaxeTargetWizard"
+			icon="icons/sample.gif"
+			id="eclihx.ui.internal.ui.wizards.HaxeTargetWizard"
+			name="%newHaxeTarget.name"
+			project="false">
+			<description>
+				%newHaxeTarget.description
+			</description>
+		</wizard>
 	</extension>
  <extension
        point="org.eclipse.ui.perspectives">

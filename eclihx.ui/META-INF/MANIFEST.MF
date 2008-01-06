@@ -11,7 +11,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.editors,
  org.eclipse.ui.workbench.texteditor,
- eclihx.core
+ eclihx.core,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
 Eclipse-LazyStart: true
 Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
