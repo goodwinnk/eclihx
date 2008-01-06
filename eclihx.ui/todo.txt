@@ -32,6 +32,7 @@ Program Preference
 		
 Preferences
 	- colorizing page
+	- haxe compiler path
 		
 Perspectives
 	haXe Perspective
@@ -40,33 +41,38 @@ Perspectives
 		
 Wizards
 	New haXe Project
-	    + Empty Project creation
-		- Default structure (Now the best haxe file structure? Options?)
+	    -+ Create SRC folder (Not stable)
+	    -+ Create BIN folder (Not stable)
+	    -+ Create project hxml file (Not stable)
 	New haXe File
-	    + Empty file add
-	    - Hx file (options)
-	    - hxml file (options)
+	    - Default hx resoulution.
+	New haXe Target
+		- select destination platform
+			- flash6
+			- flash7
+			- flash8
+			- flash9
+			- js
+			- neko
+			- as3
+		- output file
+		- select class
+		- start main
+		- debug mode
+		- libraries list
+		- default target option
+		- hxml file generation
     New haXe class
         - what to do?
     New Package
-        - ! What should be done?
+        - What should be done?
         
-    
-Configuration:    
-russian:
-1. несколько таргетов с генерацией hxml-файла для каждого из них
-2. можно просто сделать текстовое поле для ввода параметров для каждого, а можно и умнее:
- - выбор платформы (flash6, flash7, flash8, flash9, js, neko, as3) и имени выходного файла
- - указать главный класс
- - вызывать ли main()
- - debug mode
- - список подключаемых библиотек
- 
-todo: translate :)
-    	    
 		
 Required Icons:
 	- file
-	- project
+	- project (small icon)
+	- project (big icon - for project wizard)
 	- haXe perspective
+	- haXe target
+	
 		

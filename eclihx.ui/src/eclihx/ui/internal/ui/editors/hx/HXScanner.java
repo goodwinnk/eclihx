@@ -18,7 +18,7 @@ import eclihx.ui.internal.ui.editors.BracketRule;
 
 public class HXScanner extends AbstractScanner {
 	
-	String[] fDeclareKeyWords = {"var", "function", "new", "delete", "class"};
+	String[] fDeclareKeyWords = {"var", "function", "new", "delete", "class", "package"};
 	
 	String[] fKeyWords = {"import", "extends", "implements", "extern", "private",
 			              "public", "static", "try", "catch", "throw", "cast", "return", "break", "continue",
