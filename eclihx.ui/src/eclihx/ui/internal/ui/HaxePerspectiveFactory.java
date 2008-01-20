@@ -10,7 +10,6 @@ import org.eclipse.ui.IFolderLayout;
 public class HaxePerspectiveFactory implements IPerspectiveFactory {
 
 	public void createInitialLayout(IPageLayout layout) {
-		// Editors are placed for free.
 		String editorArea = layout.getEditorArea();
 
 		// Top left
