@@ -24,6 +24,11 @@
             class="eclihx.ui.internal.ui.preferences.HaxeEditorPreferencePage"
             id="org.eclipse.jdt.ui.preferences.HaxeBasePreferencePage"
             name="%hxEditorPrefName"/>
+      <page
+            category="org.eclipse.jdt.ui.preferences.EclihXMainPreferencePage"
+            class="eclihx.ui.internal.ui.preferences.HaxeCompilerPreferencePage"
+            id="eclihx.ui.internal.ui.preferences.HaxeCompilerPreferencePage"
+            name="%hxCompilerPrefName"/>
    </extension>
    
 	<extension point="org.eclipse.ui.newWizards">
@@ -71,6 +76,29 @@
           icon="icons/sample.gif"
           id="eclihx.ui.internal.ui.HaxePerspectiveFactory"
           name="%haxeEclihxPerspective.name"/>
+ </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          adaptable="false"
+          class="eclihx.ui.internal.ui.properties.BuildPathPropertyPage"
+          id="eclihx.ui.page1"
+          name="%projectBuildPathPage.name"
+          objectClass="org.eclipse.core.resources.IProject"/>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+          configTypeID="eclihx.launching.HaxeLaunchDelegate"
+          icon="icons/sample.gif"
+          id="eclihx.ui.launchConfigurationImage"/>
+ </extension>
+ <extension
+       point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+          class="eclihx.ui.launch.HaxetLaunchConfigurationTabGroup"
+          id="eclihx.ui.launch.HaxetLaunchConfigurationTabGroup"
+          type="eclihx.launching.HaxeLaunchDelegate"/>
  </extension>
 
 </plugin>

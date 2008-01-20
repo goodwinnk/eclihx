@@ -8,13 +8,14 @@ public class EclihxMainPreferencePage extends FieldEditorPreferencePage implemen
 
 	public EclihxMainPreferencePage() {
 		super(GRID);
+		
+		setDescription("Eclihx About Page");
 	}
 
 	protected void createFieldEditors() {
 	}
 
 	public void init(IWorkbench workbench) {
+		
 	}
-	
-
 }

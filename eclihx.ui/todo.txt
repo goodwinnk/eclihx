@@ -31,8 +31,13 @@ Program Preference
 		- easy using of color and style options
 		
 Preferences
-	- colorizing page
-	- haxe compiler path
+	Main Page
+		- info about plugin
+	Editor Page
+		- coloring settings
+	Compiler Page
+		+ haxe compiler path
+		- validation of the compiler 
 		
 Perspectives
 	haXe Perspective
@@ -64,8 +69,10 @@ Wizards
 		- hxml file generation
     New haXe class
         - what to do?
-    New Package
-        - What should be done?
+
+Launcher
+	- haxe launcher
+	- html generator for flash and js
         
 		
 Required Icons:
@@ -74,5 +81,6 @@ Required Icons:
 	- project (big icon - for project wizard)
 	- haXe perspective
 	- haXe target
+	- haXe launcher (16x16, <= 256 colors)
 	
 		

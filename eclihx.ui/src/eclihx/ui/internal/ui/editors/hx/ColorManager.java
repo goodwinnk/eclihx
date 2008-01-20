@@ -46,6 +46,15 @@ public class ColorManager implements ISharedTextColors {
 	public ColorManager() {
 		this(true);
 	}
+	
+	/**
+	 * For testing purposes only.
+	 * @return the table viewer in the Favorites view
+	 */
+	public ColorManager getFavoritesViewer() {
+		return new ColorManager();
+	}
+
 
 	/**
 	 * Creates a new color manager.
