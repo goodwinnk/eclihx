@@ -5,6 +5,8 @@ import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
+import eclihx.ui.launch.tabs.HaxeMainTab;
+
 public class HaxetLaunchConfigurationTabGroup extends
 		AbstractLaunchConfigurationTabGroup {
 
@@ -14,6 +16,7 @@ public class HaxetLaunchConfigurationTabGroup extends
      */
     public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
         ILaunchConfigurationTab[] tabs = {
+        		new HaxeMainTab(),
                 new CommonTab()
             };
         

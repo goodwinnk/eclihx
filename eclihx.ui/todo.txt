@@ -71,7 +71,7 @@ Wizards
         - what to do?
 
 Launcher
-	- haxe launcher
+	+- simple launcher (still not stable)
 	- html generator for flash and js
         
 		
@@ -82,5 +82,6 @@ Required Icons:
 	- haXe perspective
 	- haXe target
 	- haXe launcher (16x16, <= 256 colors)
+	- launcher main tab icon
 	
 		
