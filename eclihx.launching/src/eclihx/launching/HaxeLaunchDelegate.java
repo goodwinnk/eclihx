@@ -48,10 +48,8 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
             
             Process systemProcess = Runtime.getRuntime().exec(commandLine, null, directory);
             
-            
-            
             DebugPlugin.newProcess(launch, systemProcess, null);
-
+            
         } catch (CoreException e) {
             EclihxLogger.logError(e);
         } catch (IOException e) {

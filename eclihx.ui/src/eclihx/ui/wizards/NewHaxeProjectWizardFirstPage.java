@@ -15,15 +15,23 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 
+import eclihx.core.util.OSUtil;
+import eclihx.core.haxe.internal.HaxePreferencesManager;
+import eclihx.core.haxe.internal.EHaxePreferencesIds;
+
 
 public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage {
-
-	private static String buildExtenstionSuffix = ".hxml"; 
+	// TODO: move string constants to separate file
+	
+	private static String buildExtenstionSuffix = OSUtil.getFullFileExtension(HaxePreferencesManager.getString(EHaxePreferencesIds.BUILD_FILE_EXTENSION)); 
 	
 	private Text buildFileField;
 	private Text srcFolderField;
 	private Text binFolderField;
 	
+	/*
+	 * Validation on modifying attributes
+	 */
     private Listener propertiesModifyListener = new Listener() {
         public void handleEvent(Event e) {
             setPageComplete(validatePage());
@@ -33,8 +41,8 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
 	
 	public NewHaxeProjectWizardFirstPage() {
 		super("New haXe project");
-		setTitle("Create a haXe project"); //$NON-NLS-1$
-		setDescription("Create a haXe project in the workspace or in an external location."); //$NON-NLS-1$
+		setTitle("Create a haXe project");
+		setDescription("Create a haXe project in the workspace or in an external location.");
 	}
 	
     /**
@@ -67,7 +75,7 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
     }
     
     /**
-     * Returns source folder
+     * Returns source folder with leading and trailing spaces removed.
      * 
      * @return source folder name
      */
@@ -80,7 +88,7 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
     }
     
     /**
-     * Returns binary folder
+     * Returns binary folder with leading and trailing spaces removed.
      * 
      * @return binary folder name
      */
@@ -93,23 +101,22 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
     }
     
 
-
+    @Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 	
 		Group group = new Group((Composite)getControl(),SWT.NONE);
-		group.setText("Project settings"); //$NON-NLS-1$
+		group.setText("Project settings");
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		
+		// common data grid
 		GridData dataFillHorizontal = new GridData(GridData.FILL_HORIZONTAL);
-		//GridData dataRight = new GridData(SWT.END, SWT.CENTER, true, false);
-		
+				
 		// build file label
         Label buildFileLabel = new Label(group, SWT.NONE);
         buildFileLabel.setText("Build File (hxml):");
         buildFileLabel.setFont(parent.getFont());
-        //buildFileLabel.setLayoutData(dataRight);
  
         // build file entry field
         buildFileField = new Text(group, SWT.BORDER);
@@ -122,7 +129,6 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
         Label srcFolderLabel = new Label(group, SWT.NONE);
         srcFolderLabel.setText("Source Folder:");
         srcFolderLabel.setFont(parent.getFont());
-        //srcFolderLabel.setLayoutData(dataRight);
 
         // source folder entry field
         srcFolderField = new Text(group, SWT.BORDER);
@@ -135,7 +141,6 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
         Label binFolderLabel = new Label(group, SWT.NONE);
         binFolderLabel.setText("Binary Folder:");
         binFolderLabel.setFont(parent.getFont());
-        //binFolderLabel.setLayoutData(dataRight);
         
         // binary folder entry field
         binFolderField = new Text(group, SWT.BORDER);
@@ -145,24 +150,26 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
         binFolderField.addListener(SWT.Modify, propertiesModifyListener);
 	}
 	
+    @Override
 	protected boolean validatePage() {
 		if (!super.validatePage()) return false;
 		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
+		// Check project name is empty or not
         String projectBuildFileFieldContents = getProjectBuildFileFieldValue();
-        if (projectBuildFileFieldContents.equals("")) { //$NON-NLS-1$
+        if (projectBuildFileFieldContents.equals("")) { 
             setErrorMessage(null);
             setMessage("Project build file name can't be empty");
             return false;
         }
 
-        IStatus nameStatus = workspace.validateName(getProjectBuildFileName(), IResource.FILE);
+        // Validate project name
+        IStatus nameStatus = workspace.validateName(getProjectBuildFileName(), IResource.PROJECT);
         if (!nameStatus.isOK()) {
             setErrorMessage(nameStatus.getMessage());
             return false;
         }
-        
         
         // Check source folder
         if (!getSourceFolder().equals("")) { // Source folder can be empty

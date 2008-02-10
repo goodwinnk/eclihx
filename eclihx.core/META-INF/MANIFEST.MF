@@ -5,6 +5,11 @@ Bundle-SymbolicName: eclihx.core;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.core.EclihxCore
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources
 Eclipse-LazyStart: true
-Export-Package: eclihx.core;x-friends:="eclihx.ui,eclihx.launching"
+Export-Package: eclihx.core,
+ eclihx.core.haxe.internal,
+ eclihx.core.haxe.model,
+ eclihx.core.haxe.model.core,
+ eclihx.core.util

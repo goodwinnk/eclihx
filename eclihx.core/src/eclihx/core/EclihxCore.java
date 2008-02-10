@@ -10,7 +10,7 @@ public class EclihxCore extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "eclihx.core";
-
+	
 	// The shared instance
 	private static EclihxCore plugin;
 	

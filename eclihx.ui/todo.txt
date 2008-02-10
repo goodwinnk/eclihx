@@ -49,6 +49,11 @@ Wizards
 	    -+ Create SRC folder (Not stable)
 	    -+ Create BIN folder (Not stable)
 	    -+ Create project hxml file (Not stable)
+	    + haxe project nature
+	    - Icon from the haxe perspective
+	    - Open haxe perspective after creation
+	    - hxml files manager
+	    
 	New haXe File
 	    - Default hx resoulution.
 	New haXe Target
@@ -67,13 +72,14 @@ Wizards
 		- libraries list
 		- default target option
 		- hxml file generation
-    New haXe class
-        - what to do?
 
 Launcher
 	+- simple launcher (still not stable)
+	+ select haxe project for launcher
 	- html generator for flash and js
-        
+    
+features
+	- after deleting project - sugest to remove concerned run configuration
 		
 Required Icons:
 	- file
@@ -83,5 +89,10 @@ Required Icons:
 	- haXe target
 	- haXe launcher (16x16, <= 256 colors)
 	- launcher main tab icon
+	
+
+================================	
+Current Task:
+	Select project in 
 	
 		

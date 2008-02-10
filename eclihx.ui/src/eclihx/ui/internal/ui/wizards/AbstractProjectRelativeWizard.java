@@ -18,13 +18,13 @@ import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 public abstract class AbstractProjectRelativeWizard extends Wizard {
 
 	protected IProject project = null;
-
 	protected IResource resource = null;
 
 	public AbstractProjectRelativeWizard() {
 		setNeedsProgressMonitor(true);
 	}
 
+	//TODO
 	public IProject getProject() {
 		return project;
 	}
@@ -45,11 +45,6 @@ public abstract class AbstractProjectRelativeWizard extends Wizard {
 				}
 			}
 		}
-	}
-
-	public void addPages() {
-		// Add AS icon to shell
-		// getShell().setImage(ASPluginImages.get(IASCoreUIConstants.AS_NATURE_ICON));
 	}
 
 	public boolean performCancel() {
@@ -146,7 +141,5 @@ public abstract class AbstractProjectRelativeWizard extends Wizard {
 			}
 
 		});
-
 	}
-
 }
