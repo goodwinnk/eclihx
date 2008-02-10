@@ -3,21 +3,36 @@ package eclihx.ui.launch.tabs;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
+import org.eclipse.jface.viewers.ILabelDecorator;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
+import eclihx.core.EclihxCore;
 import eclihx.core.EclihxLogger;
+import eclihx.core.haxe.model.HaxeWorkplace;
 
 public class HaxeMainTab extends AbstractLaunchConfigurationTab {
+	
+	// TODO: move strings constants to configure file
 
 	private Text projectNameText;
 	private Text buildFileNameText;
@@ -27,9 +42,66 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	private ModifyListener fModifyListener = 
 		new ModifyListener() { public void modifyText(ModifyEvent me) { updateLaunchConfigurationDialog(); } };
 	
+	/* Base selection listener. It reacts to events ignoring them */	
+	class SelectionListenerClass implements SelectionListener { 
+		public void widgetDefaultSelected(SelectionEvent e) {/*do nothing*/}
+		public void widgetSelected(SelectionEvent e) { /*do nothing*/ }
+	}
+		
+	
+	
+	/**
+	 * Choose a haXe project dialog
+	 * @return
+	 */
+	private String chooseHaxeProject() {
+		// TODO: make icons for project selection
+		
+		ILabelProvider labelProvider = new LabelProvider();
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);
+		
+		dialog.setTitle("Select Haxe Project");
+		dialog.setMessage("Enter a string to search for a project:");
+		try {
+			dialog.setElements(new HaxeWorkplace(getWorkspaceRoot()).getHaxeProjectsNames());
+		} catch (Exception e) {
+			EclihxLogger.logError(e);
+		}
+		
+		String haxeProjectName = projectNameText.getText();
+		if (haxeProjectName != null) {
+			dialog.setInitialSelections(new Object[] { haxeProjectName });
+		}
+	
+		if (dialog.open() == Window.OK) {
+			return (String) dialog.getFirstResult();
+		}
+		return null;
+	}	
+		
+	/**
+	 * Get current workspace
+	 * @return
+	 */
+	private IWorkspaceRoot getWorkspaceRoot() {
+		// TODO Auto-generated method stub
+		return ResourcesPlugin.getWorkspace().getRoot();
+	}
+
+	protected void onProjectButtonSelected(SelectionEvent e) {
+		// TODO Auto-generated method stub
+		String project = chooseHaxeProject();
+		
+		if (project != null) {
+			projectNameText.setText(project);
+		}
+		
+		
+	}
+
 	@Override
 	public Image getImage() {
-		// TODO Auto-generated method stub
+		// TODO Add image for the main page of the launcher configuration
 		return super.getImage();
 	}
 	
@@ -45,13 +117,21 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		// Add project group
 		Group projectGroup = new Group(top, SWT.NONE);
 		projectGroup.setText("Project");
-		projectGroup.setLayout(layout);
-		projectGroup.setLayoutData(horizontantalGrid);
+		projectGroup.setLayout(new GridLayout(2, false));
+		projectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		projectNameText = new Text(projectGroup,  SWT.BORDER);
-		projectNameText.setLayoutData(horizontantalGrid);
+		projectNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		projectNameText.setText("");
 		projectNameText.addModifyListener(fModifyListener);
+		
+		Button projectButton = createPushButton(projectGroup, "Select Project...", null);
+		projectButton.addSelectionListener(
+			new SelectionListenerClass () {
+				public void widgetSelected(SelectionEvent e) {
+					onProjectButtonSelected(e);
+				}
+			});
 		
 		// Add build file group
 		Group buildFileGroup = new Group(top, SWT.NONE);
@@ -102,12 +182,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		// TODO Auto-generated method stub
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.PROJECT_NAME, projectNameText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, workingDirectoryText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, outputDirectoryText.getText());
-		
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {

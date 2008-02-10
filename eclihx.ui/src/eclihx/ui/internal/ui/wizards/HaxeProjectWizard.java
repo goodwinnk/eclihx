@@ -21,24 +21,23 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+
+import eclihx.core.haxe.model.HaxeProject;
 import eclihx.ui.wizards.NewHaxeProjectWizardFirstPage;
 
 
 public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements INewWizard, IExecutableExtension{
-
+	// TODO: move string to constants 
+	
 	@Override
 	protected void doCancel(IProgressMonitor monitor) {
-
-		
+		// TODO: Test with unreadable folders 
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		fConfigElement = config;
 	}
-
-	private IWorkbench fWorkbench;
-	private IStructuredSelection fSelection;
-	private IProject newProject;
 	
 	private IConfigurationElement fConfigElement;
 	
@@ -47,6 +46,7 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 	@Override
 	public void addPages() {
 		firstPage = new NewHaxeProjectWizardFirstPage();
+		
 		super.addPage(firstPage);
 	}
 	
@@ -84,10 +84,16 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 			if (!project.exists()) {
 				project.create(description, new SubProgressMonitor(monitor, 1));
 			}
+			
 			// Open the project
 			if (!project.isOpen()) {
 				project.open(new SubProgressMonitor(monitor, 1));
+				
+				// TODO: not clear enough
+				new HaxeProject(project); // convert ordinal project to haXe project;
 			}
+			
+			
 			
 			// Build file
 			IFile file = project.getFile("/" + firstPage.getProjectBuildFileName());
@@ -101,23 +107,21 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 			// Bin folder
 			IFolder binFolder = project.getFolder(firstPage.getBinaryFolder());
 			binFolder.create(false, true, monitor);
+			
 		} catch (CoreException e) {
-		} finally {
-			monitor.done();
-		}
+		} 
 	}
 
 	public HaxeProjectWizard() {
 		setWindowTitle("New haXe project");
-		setNeedsProgressMonitor(true);
 	}
 	
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		fWorkbench = workbench;
-		fSelection = selection;
+		//fWorkbench = workbench;
+		//fSelection = selection;
+		
 		//setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWJPRJ);
 		//setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
 		//setWindowTitle("Create haXe project");
 	}
 }
-
