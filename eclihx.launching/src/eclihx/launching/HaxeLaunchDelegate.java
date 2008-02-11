@@ -1,8 +1,11 @@
 package eclihx.launching;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -12,16 +15,29 @@ import org.eclipse.core.runtime.Path;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.ProgressMonitor;
+
 import eclihx.core.EclihxLogger;
 
 public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		try {
-            // TODO: set up execution
-            String executablePath = "C:\\Program Files\\Motion-Twin\\haxe\\haxe.exe";
+            String executablePath = configuration.getAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
             
-            // TODO: get attributes
+            if (executablePath == null || executablePath.isEmpty()) {
+            	// If we have no special executable path - use default one
+            	executablePath = EclihxLauncher.getDefault().getPluginPreferences().getString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH);
+            }
+            
+            if (executablePath == null || executablePath.isEmpty()) {
+            	// TODO 4 Move this message to configuration page
+            	EclihxLogger.logInfo("You should choose haXe launcher first.");
+            }
+            
+            
+            
+            // TODO 8 get attributes
             String arguments = "";
                 
             // output directory
@@ -31,7 +47,7 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
             // source directory
             String sourceDirectory = configuration.getAttribute(IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, (String) null);
             
-            // TODO: dirty hack
+            // TODO 5 dirty hack
             if (sourceDirectory.endsWith("\\")) {
             	sourceDirectory = sourceDirectory.substring(0, sourceDirectory.length() - 1);
             }
@@ -50,12 +66,20 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
             
             DebugPlugin.newProcess(launch, systemProcess, null);
             
+            // TODO 8 update bin folder
+            // IFolder executeFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(executableLocation);
+            // executeFolder.refreshLocal(2, new NullProgressMonitor());
+            
+            
+            
         } catch (CoreException e) {
             EclihxLogger.logError(e);
         } catch (IOException e) {
             // stop all
             monitor.done();
         }
+        
+        
 		
 	}
 	

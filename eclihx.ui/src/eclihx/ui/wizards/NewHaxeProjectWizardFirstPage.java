@@ -21,7 +21,7 @@ import eclihx.core.haxe.internal.EHaxePreferencesIds;
 
 
 public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage {
-	// TODO: move string constants to separate file
+	// TODO 3 move string constants to separate file
 	
 	private static String buildExtenstionSuffix = OSUtil.getFullFileExtension(HaxePreferencesManager.getString(EHaxePreferencesIds.BUILD_FILE_EXTENSION)); 
 	

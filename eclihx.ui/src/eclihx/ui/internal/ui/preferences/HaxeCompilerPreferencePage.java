@@ -18,12 +18,13 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import eclihx.launching.EclihxLauncher;
+import eclihx.launching.LauncherPreferenceInitializer;
 import eclihx.ui.internal.ui.EclihxPlugin;
 
 public class HaxeCompilerPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 
-	// TODO: validation for the compiler path
+	// TODO 6 validation for the compiler path
 	
 	private FileFieldEditor compilerPathField;
 	
@@ -44,9 +45,11 @@ public class HaxeCompilerPreferencePage extends PreferencePage implements
 		// children to populate.
 		top.setLayout(new GridLayout());
 				
-		compilerPathField = new FileFieldEditor("eclihx_launcher_compiler", "haXe compiler:", true, top);
-		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getString("eclihx_launcher_compiler"));
+		compilerPathField = new FileFieldEditor(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH, "haXe compiler:", true, top);
+		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH));
 		compilerPathField.setEmptyStringAllowed(true);
+		
+		// TODO 7 Support of different OSes
 		compilerPathField.setFileExtensions(new String[]{"*.exe"});
 		compilerPathField.load();
 				
@@ -55,13 +58,13 @@ public class HaxeCompilerPreferencePage extends PreferencePage implements
 
 	@Override
 	protected void performDefaults() {
-		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getDefaultString("eclihx_launcher_compiler"));
+		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getDefaultString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH));
 		super.performDefaults();
 	}
 
 	@Override
 	public boolean performOk() {
-		EclihxLauncher.getDefault().getPluginPreferences().setValue("eclihx_launcher_compiler", compilerPathField.getStringValue());
+		EclihxLauncher.getDefault().getPluginPreferences().setValue(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH, compilerPathField.getStringValue());
 		return super.performOk();
 	}
 }

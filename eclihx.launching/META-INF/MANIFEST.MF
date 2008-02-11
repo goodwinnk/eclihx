@@ -7,6 +7,7 @@ Bundle-Activator: eclihx.launching.EclihxLauncher
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
- eclihx.core
+ eclihx.core,
+ org.eclipse.core.resources
 Eclipse-LazyStart: true
 Export-Package: eclihx.launching

@@ -6,9 +6,13 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import eclihx.launching.EclihxLauncher;
 
+
 public class LauncherPreferenceInitializer extends
 		AbstractPreferenceInitializer {
-
+	
+	// TODO 2 Maybe move ids declaration to somewhere else 
+	public static final String ECLIHAXE_HAXE_COMPILER_PATH = "eclihx.launching.haxe_compiler_path";
+	
 	public LauncherPreferenceInitializer() {
 		super();
 	}
@@ -16,6 +20,6 @@ public class LauncherPreferenceInitializer extends
 	@Override
 	public void initializeDefaultPreferences() {
 		Preferences store = EclihxLauncher.getDefault().getPluginPreferences();
-		store.setDefault("eclihx_launcher_compiler", "");
+		store.setDefault(ECLIHAXE_HAXE_COMPILER_PATH, "");
 	}
 }
