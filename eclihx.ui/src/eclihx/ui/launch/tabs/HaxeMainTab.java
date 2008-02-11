@@ -25,15 +25,19 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
+import eclihx.launching.EclihxLauncher;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
+import eclihx.launching.LauncherPreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.EclihxLogger;
 import eclihx.core.haxe.model.HaxeWorkplace;
 
 public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	
-	// TODO: move strings constants to configure file
+	// TODO 3 move strings constants to configure file
 
+	
+	/* Controls */
 	private Text projectNameText;
 	private Text buildFileNameText;
 	private Text workingDirectoryText;
@@ -55,7 +59,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 * @return
 	 */
 	private String chooseHaxeProject() {
-		// TODO: make icons for project selection
+		// TODO 4 make icons for project selection
 		
 		ILabelProvider labelProvider = new LabelProvider();
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);
@@ -101,10 +105,11 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public Image getImage() {
-		// TODO Add image for the main page of the launcher configuration
+		// TODO 2 Add image for the main page of the launcher configuration
 		return super.getImage();
 	}
 	
+	@Override
 	public void createControl(Composite parent) {
 		Composite top = new Composite(parent, SWT.LEFT);
 
@@ -170,7 +175,6 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public String getName() {
-		// TODO: move to constants
 		return "Main";
 	}
 
@@ -186,6 +190,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, workingDirectoryText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, outputDirectoryText.getText());
+		
+		// TODO 1 Make separate place for overriding initializator 
+		configuration.setAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
+		
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
@@ -193,6 +201,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, "");
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, "");
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, "");
+		configuration.setAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
 	}
 	
 	/**

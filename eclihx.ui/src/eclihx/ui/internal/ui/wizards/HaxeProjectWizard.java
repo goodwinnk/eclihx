@@ -27,11 +27,11 @@ import eclihx.ui.wizards.NewHaxeProjectWizardFirstPage;
 
 
 public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements INewWizard, IExecutableExtension{
-	// TODO: move string to constants 
+	// TODO 3 move string to constants 
 	
 	@Override
 	protected void doCancel(IProgressMonitor monitor) {
-		// TODO: Test with unreadable folders 
+		// TODO 6 Test with unreadable folders 
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 			if (!project.isOpen()) {
 				project.open(new SubProgressMonitor(monitor, 1));
 				
-				// TODO: not clear enough
+				// TODO 4 not clear enough
 				new HaxeProject(project); // convert ordinal project to haXe project;
 			}
 			

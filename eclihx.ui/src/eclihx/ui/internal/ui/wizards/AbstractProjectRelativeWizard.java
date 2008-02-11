@@ -24,7 +24,6 @@ public abstract class AbstractProjectRelativeWizard extends Wizard {
 		setNeedsProgressMonitor(true);
 	}
 
-	//TODO
 	public IProject getProject() {
 		return project;
 	}
