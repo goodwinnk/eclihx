@@ -3,7 +3,6 @@ package eclihx.ui.launch.tabs;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -20,17 +19,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-import eclihx.launching.EclihxLauncher;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
-import eclihx.launching.LauncherPreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.EclihxLogger;
-import eclihx.core.haxe.model.HaxeWorkplace;
+import eclihx.core.haxe.internal.IProjectPathManager;
+import eclihx.core.haxe.model.HaxeWorkspace;
+import eclihx.core.haxe.model.core.IHaxeProject;
 
 public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	
@@ -40,7 +38,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	/* Controls */
 	private Text projectNameText;
 	private Text buildFileNameText;
-	private Text workingDirectoryText;
+	private Text sourceDirectoryText;
 	private Text outputDirectoryText;
 	
 	private ModifyListener fModifyListener = 
@@ -67,7 +65,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		dialog.setTitle("Select Haxe Project");
 		dialog.setMessage("Enter a string to search for a project:");
 		try {
-			dialog.setElements(new HaxeWorkplace(getWorkspaceRoot()).getHaxeProjectsNames());
+			dialog.setElements(new HaxeWorkspace(getWorkspaceRoot()).getHaxeProjectsNames());
 		} catch (Exception e) {
 			EclihxLogger.logError(e);
 		}
@@ -94,10 +92,25 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 	protected void onProjectButtonSelected(SelectionEvent e) {
 		// TODO Auto-generated method stub
-		String project = chooseHaxeProject();
+		String projectName = chooseHaxeProject();
+		IHaxeProject haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
 		
-		if (project != null) {
-			projectNameText.setText(project);
+		if (haxeProject != null) {
+			projectNameText.setText(projectName);
+			
+			IProjectPathManager pathManager = haxeProject.getPathManager();
+			
+			// Sets build file as a first one in the projects paths
+			buildFileNameText.setText(pathManager.getBuildFiles().get(0).getProjectRelativePath().toString());
+			
+			// Output folder
+			outputDirectoryText.setText(pathManager.getOutputFolder().getProjectRelativePath().toString());
+			
+			// Source folder
+			sourceDirectoryText.setText(pathManager.getSourceFolders().get(0).getProjectRelativePath().toString());
+			
+		} else {
+			EclihxLogger.logInfo("The selected project wasn't found.");
 		}
 		
 		
@@ -127,6 +140,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		
 		projectNameText = new Text(projectGroup,  SWT.BORDER);
 		projectNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		projectNameText.setEditable(false); // Do not allow modification.
 		projectNameText.setText("");
 		projectNameText.addModifyListener(fModifyListener);
 		
@@ -146,6 +160,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		
 		buildFileNameText = new Text(buildFileGroup,  SWT.BORDER);
 		buildFileNameText.setLayoutData(horizontantalGrid);
+		buildFileNameText.setEditable(false);
 		buildFileNameText.setText("");
 		buildFileNameText.addModifyListener(fModifyListener);
 		
@@ -155,19 +170,21 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		workingDirectoryGroup.setLayout(layout);
 		workingDirectoryGroup.setLayoutData(horizontantalGrid);
 		
-		workingDirectoryText = new Text(workingDirectoryGroup,  SWT.BORDER);
-		workingDirectoryText.setLayoutData(horizontantalGrid);
-		workingDirectoryText.setText("");
-		workingDirectoryText.addModifyListener(fModifyListener);
+		sourceDirectoryText = new Text(workingDirectoryGroup,  SWT.BORDER);
+		sourceDirectoryText.setLayoutData(horizontantalGrid);
+		sourceDirectoryText.setEditable(false);
+		sourceDirectoryText.setText("");
+		sourceDirectoryText.addModifyListener(fModifyListener);
 		
 		// Output working directory group
 		Group outputDirectoryGroup = new Group(top, SWT.NONE);
-		outputDirectoryGroup.setText("Working Directory");
+		outputDirectoryGroup.setText("Output Directory");
 		outputDirectoryGroup.setLayout(layout);
 		outputDirectoryGroup.setLayoutData(horizontantalGrid);
 		
 		outputDirectoryText = new Text(outputDirectoryGroup,  SWT.BORDER);
 		outputDirectoryText.setLayoutData(horizontantalGrid);
+		outputDirectoryText.setEditable(false);
 		outputDirectoryText.setText("");
 		outputDirectoryText.addModifyListener(fModifyListener);
 		
@@ -188,10 +205,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.PROJECT_NAME, projectNameText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText.getText());
-		configuration.setAttribute(IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, workingDirectoryText.getText());
+		configuration.setAttribute(IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, sourceDirectoryText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, outputDirectoryText.getText());
 		
-		// TODO 1 Make separate place for overriding initializator 
+		// TODO 1 Make separate place for overriding initializer
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
 		
 	}
@@ -227,7 +244,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		} catch (CoreException e) {
 			EclihxLogger.logError(e);
 		}
-		workingDirectoryText.setText(workingDirectoryString);		
+		sourceDirectoryText.setText(workingDirectoryString);		
 	}
 	
 	/**

@@ -6,7 +6,6 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -85,12 +84,14 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 				project.create(description, new SubProgressMonitor(monitor, 1));
 			}
 			
+			HaxeProject haxeProject = null;
+			
 			// Open the project
 			if (!project.isOpen()) {
 				project.open(new SubProgressMonitor(monitor, 1));
 				
 				// TODO 4 not clear enough
-				new HaxeProject(project); // convert ordinal project to haXe project;
+				haxeProject = new HaxeProject(project); // convert ordinal project to haXe project;
 			}
 			
 			
@@ -100,13 +101,22 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 			InputStream stream = new ByteArrayInputStream(("# " + project.getName() + " build file").getBytes());
 			file.create(stream, true, monitor);
 			
-			// Src folder
+			haxeProject.getPathManager().addBuildFile(file);
+			
+			// Source folder
 			IFolder srcFolder = project.getFolder(firstPage.getSourceFolder());
 			srcFolder.create(false, true, monitor);
+			
+			haxeProject.getPathManager().addSourceFolder(srcFolder);
 			
 			// Bin folder
 			IFolder binFolder = project.getFolder(firstPage.getBinaryFolder());
 			binFolder.create(false, true, monitor);
+			
+			haxeProject.getPathManager().setOutputFolder(binFolder);
+			
+			// TODO 7 Make advanced storage
+			haxeProject.store();
 			
 		} catch (CoreException e) {
 		} 
