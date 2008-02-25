@@ -1,4 +1,4 @@
-/* Seems should be delated */
+/* Seems should be deleted */
 
 package eclihx.ui.internal.ui.editors.hx;
 

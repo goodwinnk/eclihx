@@ -79,7 +79,7 @@ public class HXScanner extends AbstractScanner {
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new HXWhitespaceDetector()));
 		
-		// Add rule for haxe keywords
+		// Add rule for haXe keywords
 		IToken wordToken = getToken(PreferenceConstants.HX_EDITOR_DEFAULT_COLOR); 
 		WordRule wr = new WordRule(new WordDetector(), wordToken);
 		

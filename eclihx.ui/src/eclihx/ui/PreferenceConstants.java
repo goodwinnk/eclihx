@@ -7,11 +7,11 @@ import org.eclipse.swt.graphics.RGB;
 import eclihx.ui.internal.ui.EclihxPlugin;
 
 /**
- * Preference IDs and defualt values for EclihX-UI plugin
+ * Preference IDs and default values for EclihX-UI plug-in
  */
 public final class PreferenceConstants {
 	
-//========= Haxe Editor Style Settings =========//
+//========= haXe Editor Style Settings =========//
 	public final static String HX_EDITOR_COMMENT_COLOR = "hx_editor_comment_color";
 	public final static String HX_EDITOR_COMMENT_BOLD = "hx_editor_comment_bold";
 	public final static String HX_EDITOR_COMMENT_ITALIC = "hx_editor_comment_italic";

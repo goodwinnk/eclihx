@@ -32,6 +32,9 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		//TODO 10 remove it from here
+		initializeDefaultPluginPreferences();
 	}
 
 	/*
@@ -66,7 +69,7 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Initialize plugin default settings
+	 * Initialize plug-in default settings
 	 */
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {

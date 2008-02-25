@@ -1,14 +1,7 @@
 package eclihx.ui.internal.ui.preferences;
 
-import java.beans.PropertyChangeListener;
-
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,7 +12,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.LauncherPreferenceInitializer;
-import eclihx.ui.internal.ui.EclihxPlugin;
 
 public class HaxeCompilerPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
