@@ -5,21 +5,32 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
 import eclihx.core.EclihxLogger;
-import eclihx.core.haxe.internal.IClasspathManager;
+import eclihx.core.haxe.internal.IProjectPathManager;
 import eclihx.core.haxe.model.core.IHaxeProject;
 
 /**
- * Extend project with haxe functionality Use agregation as subclassing isn't
+ * Extend project with haXe functionality Use agregation as sub classing isn't
  * available in this case
- * 
  */
 public class HaxeProject implements IHaxeProject {
 
 	IProject fProject;
+	IProjectPathManager fPathManager;
 
 	public HaxeProject(IProject project) {
 		fProject = project;
 		AddHaxeNature(HAXE_PROJECT_NATURE_ID);
+		fPathManager = ProjectPathManager.create(project);
+	}
+	
+	/**
+	 * Stores project
+	 */
+	public void store() {
+		// TODO 7 Make properties change listener
+		if (fPathManager != null) {
+			fPathManager.store();
+		}
 	}
 
 	public void AddHaxeNature(String natureID) {
@@ -48,19 +59,22 @@ public class HaxeProject implements IHaxeProject {
 		try {
 			return project.hasNature(HAXE_PROJECT_NATURE_ID);
 		} catch (CoreException e) {
-			// if
-			// (ExternalJavaProject.EXTERNAL_PROJECT_NAME.equals(project.getName()))
 			return false;
-			// project does not exist or is not open
 		}
 	}
 
-	public IClasspathManager getClassPathManager() {
-		// TODO Auto-generated method stub
-		return null;
+	public IProjectPathManager getPathManager() {
+		if (fPathManager == null) {
+			fPathManager = ProjectPathManager.create(fProject);
+			return fPathManager;
+		}
+		
+		return fPathManager;
 	}
 
 	public IProject getProjectBase() {
 		return fProject;
 	}
+	
+
 }

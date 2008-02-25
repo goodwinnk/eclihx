@@ -10,7 +10,7 @@ package eclihx.core.util;
 public final class OSUtil {
 	
 	/**
-	 * Add extension separator to the parameter if there is no any.
+	 * Add extension separator to the parameter if there are no any.
 	 * 
 	 * @param original extension
 	 * @return extension with separator
