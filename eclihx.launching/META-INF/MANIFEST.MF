@@ -4,7 +4,6 @@ Bundle-Name: EclihaX Launching Plug-in
 Bundle-SymbolicName: eclihx.launching;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.launching.EclihxLauncher
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  eclihx.core,
