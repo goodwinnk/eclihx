@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * Eclihx Logger Class
+ * EclihX Logger Class
  */
 
 public class EclihxLogger {

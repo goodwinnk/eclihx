@@ -1,5 +1,8 @@
 package eclihx.core;
 
+import eclihx.core.haxe.model.HaxeWorkspace;
+
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -8,12 +11,17 @@ import org.osgi.framework.BundleContext;
  */
 public class EclihxCore extends Plugin {
 
+	/*
+	 * (non-javadoc)
+	 */
+	private HaxeWorkspace haxeWorkspace;
+
 	// The plug-in ID
 	public static final String PLUGIN_ID = "eclihx.core";
-	
+
 	// The shared instance
 	private static EclihxCore plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -23,28 +31,45 @@ public class EclihxCore extends Plugin {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		haxeWorkspace = new HaxeWorkspace(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		
+		haxeWorkspace.close();
+		
 		plugin = null;
-		super.stop(context);
+		super.stop(context);		
 	}
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static EclihxCore getDefault() {
 		return plugin;
+	}
+	
+	/**
+	 * Getter of the property <tt>haxeWorkspace</tt>
+	 * 
+	 * @return Returns the haxeWorkspace.
+	 * 
+	 */
+	public HaxeWorkspace getHaxeWorkspace() {
+		return haxeWorkspace;
 	}
 
 }
