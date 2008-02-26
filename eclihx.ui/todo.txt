@@ -21,7 +21,7 @@ Colorizing:
 			- TemplateBrackets
 			
 	Scanners 
-		- Group partitions defenition in one place
+		- Group partitions definition in one place
 		- Tokens absence custom exception
 		
 			
@@ -55,7 +55,7 @@ Wizards
 	    - hxml files manager
 	    
 	New haXe File
-	    - Default hx resoulution.
+	    - Default hx resolution.
 	New haXe Target
 		- select destination platform
 			- flash6
@@ -84,6 +84,11 @@ Launcher UI:
 		+ auto find output folder
 		- select hxml file (Simple implementation is ready) 
 		- configure source folders (Only one is allowed for now)
+	
+	- Launch shortcut (Run as...)
+	- Update bin folder after run
+		
+
 		
 
 haXe core
@@ -104,4 +109,7 @@ Required Icons:
 	- launcher main tab icon
 	
 
-================================	
+==== Current Task ============================
+Launch shortcut (Run as...)
+Update bin folder after run
+	
