@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -99,15 +100,15 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			projectNameText.setText(projectName);
 			
 			IProjectPathManager pathManager = haxeProject.getPathManager();
-			
+		
 			// Sets build file as a first one in the projects paths
-			buildFileNameText.setText(pathManager.getBuildFiles().get(0).getProjectRelativePath().toString());
+			buildFileNameText.setText(pathManager.getBuildFiles().get(0).getLocation().toString());
 			
 			// Output folder
-			outputDirectoryText.setText(pathManager.getOutputFolder().getProjectRelativePath().toString());
+			outputDirectoryText.setText(pathManager.getOutputFolder().getLocation().toString());
 			
 			// Source folder
-			sourceDirectoryText.setText(pathManager.getSourceFolders().get(0).getProjectRelativePath().toString());
+			sourceDirectoryText.setText(pathManager.getSourceFolders().get(0).getLocation().toString());
 			
 		} else {
 			EclihxLogger.logInfo("The selected project wasn't found.");
