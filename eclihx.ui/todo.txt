@@ -23,6 +23,10 @@ Colorizing:
 	Scanners 
 		- Group partitions definition in one place
 		- Tokens absence custom exception
+
+Editor:
+	- auto formating
+		
 		
 			
 Program Preference
@@ -110,6 +114,5 @@ Required Icons:
 	
 
 ==== Current Task ============================
-Launch shortcut (Run as...)
-Update bin folder after run
+
 	

@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.ui,
  eclihx.launching,
  eclihx.core,
  org.eclipse.debug.ui,
- org.eclipse.debug.core
+ org.eclipse.debug.core,
+ org.eclipse.ui.navigator
 Eclipse-LazyStart: true
 Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource

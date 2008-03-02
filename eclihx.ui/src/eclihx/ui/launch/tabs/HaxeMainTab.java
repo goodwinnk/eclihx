@@ -19,12 +19,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
+import eclihx.launching.EclihxLauncher;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
+import eclihx.launching.LauncherPreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.EclihxLogger;
 import eclihx.core.haxe.internal.IProjectPathManager;
@@ -210,7 +211,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, outputDirectoryText.getText());
 		
 		// TODO 1 Make separate place for overriding initializer
-		configuration.setAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
+		configuration.setAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, EclihxLauncher.getDefault().getPluginPreferences().getString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH));
 		
 	}
 
@@ -272,5 +273,24 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			EclihxLogger.logError(e);
 		}
 		buildFileNameText.setText(buildFileString);		
+	}
+
+	@Override
+	public boolean isValid(ILaunchConfiguration launchConfig) {
+		if (!super.isValid(launchConfig)) return false;
+		
+		String executablePath;
+		try {
+			executablePath = launchConfig.getAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
+			if (executablePath.isEmpty()) {
+				setErrorMessage("Please, define haXe compiler first (Preferences->EclihX->Compiler).");
+	            setMessage(null);
+			}
+		} catch (CoreException e) {
+			// Do nothing
+		}
+		
+		// Everything is ok
+		return true;
 	}
 }

@@ -9,12 +9,12 @@ public class BuildPathPropertyPage extends PropertyPage implements
 		IWorkbenchPropertyPage {
 
 	public BuildPathPropertyPage() {
-		// TODO Auto-generated constructor stub
+		// TODO 4 Implement
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
-		// TODO Auto-generated method stub
+		// TODO 4 Implement
 		return null;
 	}
 
