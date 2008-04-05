@@ -1,5 +1,8 @@
 package eclihx.ui.launch.tabs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -18,7 +21,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -36,12 +41,17 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	
 	// TODO 3 move strings constants to configure file
 
+	/**
+	 *  If this variable is <code>null</code> it's mean that we hadn't found the project.
+	 */
+	IHaxeProject haxeProject;
 	
 	/* Controls */
 	private Text projectNameText;
 	private Text buildFileNameText;
 	private Text sourceDirectoryText;
 	private Text outputDirectoryText;
+	private Button projectBuildButton;
 	
 	private ModifyListener fModifyListener = 
 		new ModifyListener() { public void modifyText(ModifyEvent me) { updateLaunchConfigurationDialog(); } };
@@ -50,15 +60,13 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	class SelectionListenerClass implements SelectionListener { 
 		public void widgetDefaultSelected(SelectionEvent e) {/*do nothing*/}
 		public void widgetSelected(SelectionEvent e) { /*do nothing*/ }
-	}
-		
-	
+	}	
 	
 	/**
-	 * Choose a haXe project dialog
+	 * Get a project selector dialog
 	 * @return
 	 */
-	private String chooseHaxeProject() {
+	private AbstractElementListSelectionDialog getHaxeProjectsDialog() {
 		// TODO 4 make icons for project selection
 		
 		ILabelProvider labelProvider = new LabelProvider();
@@ -66,23 +74,52 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		
 		dialog.setTitle("Select Haxe Project");
 		dialog.setMessage("Enter a string to search for a project:");
+		
 		try {
 			dialog.setElements(new HaxeWorkspace(getWorkspaceRoot()).getHaxeProjectsNames());
+			
+			String haxeProjectName = projectNameText.getText();
+			if (haxeProjectName != null) {
+				dialog.setInitialSelections(new Object[] { haxeProjectName });
+			}
+			
 		} catch (Exception e) {
-			EclihxLogger.logError(e);
+			EclihxLogger.logError(e); 
+			// This is not critical - we will return an empty dialog
 		}
 		
-		String haxeProjectName = projectNameText.getText();
-		if (haxeProjectName != null) {
-			dialog.setInitialSelections(new Object[] { haxeProjectName });
-		}
-	
-		if (dialog.open() == Window.OK) {
-			return (String) dialog.getFirstResult();
-		}
-		return null;
+		return dialog;
 	}	
+	
+	/**
+	 * Choose a haXe build file dialog
+	 * @return
+	 */
+	private AbstractElementListSelectionDialog getBuildFilesDialog() {
+		// TODO 4 make icons for project selection
 		
+		assert(haxeProject != null); // Select build file should be disabled in this case
+		
+		ILabelProvider labelProvider = new LabelProvider();
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);
+		
+		dialog.setTitle("Select Haxe Build File");
+		dialog.setMessage("Enter a string to search for a file:");
+		
+		try	{
+			
+			IProjectPathManager pathManager = haxeProject.getPathManager();
+			dialog.setElements(getAbsolutePaths(pathManager.getBuildFiles()).toArray());
+			
+			//TODO 2 understand what we should do with default selection 
+		} catch (Exception e) {
+			EclihxLogger.logError(e); 
+			// This is not critical - we will return an empty dialog
+		}
+		
+		return dialog;
+	}		
+	
 	/**
 	 * Get current workspace
 	 * @return
@@ -91,31 +128,57 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		// TODO Auto-generated method stub
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
+	
+	/**
+	 * Converts IFile to absolute paths strings
+	 */
+	private List<String> getAbsolutePaths(List<IFile> files) {
+		List<String> paths = new ArrayList<String>(files.size());
+		for (IFile file : files) {
+			paths.add(file.getLocation().toString());			
+		}
+		return paths;		
+	}
+	
 
-	protected void onProjectButtonSelected(SelectionEvent e) {
-		// TODO Auto-generated method stub
-		String projectName = chooseHaxeProject();
-		IHaxeProject haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
-		
-		if (haxeProject != null) {
-			projectNameText.setText(projectName);
+	/**
+	 * Handler for the button of project selection
+	 * 
+	 * @param event
+	 */
+	protected void onProjectButtonSelected(SelectionEvent event) {
+		AbstractElementListSelectionDialog dialog = getHaxeProjectsDialog();
+		if (dialog.open() == Window.OK) {
+			String projectNewName = dialog.getFirstResult().toString();
 			
+			projectNameText.setText(projectNewName);
+
 			IProjectPathManager pathManager = haxeProject.getPathManager();
-		
 			// Sets build file as a first one in the projects paths
 			buildFileNameText.setText(pathManager.getBuildFiles().get(0).getLocation().toString());
-			
 			// Output folder
 			outputDirectoryText.setText(pathManager.getOutputFolder().getLocation().toString());
-			
 			// Source folder
 			sourceDirectoryText.setText(pathManager.getSourceFolders().get(0).getLocation().toString());
-			
-		} else {
-			EclihxLogger.logInfo("The selected project wasn't found.");
 		}
+	}
+	
+	/**
+	 * Handler for the button of project target file selector
+	 * @param event
+	 */
+	protected void onBuildFileSelected(SelectionEvent event) {
+		AbstractElementListSelectionDialog dialog = getBuildFilesDialog();
 		
-		
+		if (dialog.open() == Window.OK) {
+			String buildFileName = dialog.getFirstResult().toString();
+			
+			if (buildFileName != null) {
+				buildFileNameText.setText(buildFileName);
+			} else {
+				EclihxLogger.logInfo("The selected file wasn't found.");
+			}
+		}
 	}
 
 	@Override
@@ -145,10 +208,18 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		projectNameText.setEditable(false); // Do not allow modification.
 		projectNameText.setText("");
 		projectNameText.addModifyListener(fModifyListener);
+		projectNameText.addModifyListener(
+			new ModifyListener () {
+				public void modifyText(ModifyEvent me) {
+					checkProjectName();
+				}
+			} 
+		);
 		
 		Button projectButton = createPushButton(projectGroup, "Select Project...", null);
 		projectButton.addSelectionListener(
 			new SelectionListenerClass () {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					onProjectButtonSelected(e);
 				}
@@ -157,14 +228,23 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		// Add build file group
 		Group buildFileGroup = new Group(top, SWT.NONE);
 		buildFileGroup.setText("Build file");
-		buildFileGroup.setLayout(layout);
-		buildFileGroup.setLayoutData(horizontantalGrid);
+		buildFileGroup.setLayout(new GridLayout(2, false));
+		buildFileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		buildFileNameText = new Text(buildFileGroup,  SWT.BORDER);
-		buildFileNameText.setLayoutData(horizontantalGrid);
+		buildFileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buildFileNameText.setEditable(false);
 		buildFileNameText.setText("");
 		buildFileNameText.addModifyListener(fModifyListener);
+		
+		projectBuildButton = createPushButton(buildFileGroup, "Build file...", null);
+		projectBuildButton.addSelectionListener(
+			new SelectionListenerClass () {
+				@Override
+				public void widgetSelected(SelectionEvent event) {
+					onBuildFileSelected(event);
+				}
+			});		
 		
 		// Add working directory group
 		Group workingDirectoryGroup = new Group(top, SWT.NONE);
@@ -233,6 +313,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		} catch (CoreException e) {
 			EclihxLogger.logError(e);
 		}
+		
 		projectNameText.setText(projectNameString);
 	}
 	
@@ -277,20 +358,55 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
+
 		if (!super.isValid(launchConfig)) return false;
 		
-		String executablePath;
 		try {
-			executablePath = launchConfig.getAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
+			
+			// compiler check
+			String executablePath = launchConfig.getAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
 			if (executablePath.isEmpty()) {
 				setErrorMessage("Please, define haXe compiler first (Preferences->EclihX->Compiler).");
-	            setMessage(null);
+	            return false;
 			}
-		} catch (CoreException e) {
+			
+			if (!checkProjectName()) return false; 
+			
+		} catch (Exception e) {
 			// Do nothing
+			return false;
+		}
+			
+		
+		
+		// Everything is OK
+		return true;
+	}
+	
+	/**
+	 * Method checks if we entered valid project name
+	 * @return <code>true</code> if valid
+	 */
+	private boolean checkProjectName() {
+		String projectName = projectNameText.getText();
+		
+		if (projectName == null || projectName.isEmpty()) {
+			setMessage("Choose the haXe project");
+			setErrorMessage(null);
+			return false;
 		}
 		
-		// Everything is ok
+		haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
+		
+		if (haxeProject == null) {
+			setMessage(null);
+			setErrorMessage("Can't find the haXe project.");
+			projectBuildButton.setEnabled(false);
+			return false;
+		}
+		
+		setMessage(null);
+		setErrorMessage(null);		
 		return true;
 	}
 }

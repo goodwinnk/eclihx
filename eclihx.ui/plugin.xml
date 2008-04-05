@@ -59,13 +59,13 @@
 		</wizard>
 		<wizard
 			category="eclihx.ui.haxe"
-			class="eclihx.ui.internal.ui.wizards.HaxeTargetWizard"
+			class="eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard"
 			icon="icons/sample.gif"
-			id="eclihx.ui.internal.ui.wizards.HaxeTargetWizard"
-			name="%newHaxeTarget.name"
+			id="eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard"
+			name="%newHaxeBuildFile.name"
 			project="false">
 			<description>
-				%newHaxeTarget.description
+				%newHaxeBuildFile.description
 			</description>
 		</wizard>
 	</extension>

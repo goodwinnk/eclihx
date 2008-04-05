@@ -11,6 +11,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.IStatusHandler;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
+import org.eclipse.debug.core.ILaunchManager;
 
 import java.io.File;
 
@@ -25,6 +26,11 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		try {
+			
+			if (ILaunchManager.DEBUG_MODE.equals(mode)) {
+				//TODO 10 implement debugger!
+			}
+			
             String executablePath = configuration.getAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
             
             if (executablePath == null || executablePath.isEmpty()) {
@@ -54,6 +60,8 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
             Process systemProcess = DebugPlugin.exec(DebugPlugin.parseArguments(commandLine), directory);
             
             DebugPlugin.newProcess(launch, systemProcess, null);
+            
+            
             
             IStatus status = new Status(IStatus.ERROR, EclihxLauncher.PLUGIN_ID, 112, "", null); //$NON-NLS-1$
             IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
