@@ -22,8 +22,8 @@ public class HaxePerspectiveFactory implements IPerspectiveFactory {
 		topLeft.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
 		// Bottom left
-		IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.50, editorArea);
-		bottomLeft.addView(IPageLayout.ID_OUTLINE);
+		//IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.50, editorArea);
+		//bottomLeft.addView(IPageLayout.ID_OUTLINE);
 
 		// Bottom right
 		IFolderLayout bottomRight = layout.createFolder("bottomRight", IPageLayout.BOTTOM, (float) 0.65, editorArea);

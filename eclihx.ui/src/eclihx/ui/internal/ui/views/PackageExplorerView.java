@@ -1,10 +1,5 @@
 package eclihx.ui.internal.ui.views;
 
-import java.awt.Composite;
-
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.ui.views.navigator.ResourceComparator;
-import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.INavigatorContentService;
 

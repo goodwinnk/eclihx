@@ -373,11 +373,9 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			if (!checkProjectName()) return false; 
 			
 		} catch (Exception e) {
-			// Do nothing
-			return false;
-		}
-			
-		
+			//setErrorMessage("hmmm... something is wrong");
+			//return false;
+		}	
 		
 		// Everything is OK
 		return true;

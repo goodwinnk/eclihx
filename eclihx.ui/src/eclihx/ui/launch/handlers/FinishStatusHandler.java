@@ -22,5 +22,4 @@ public class FinishStatusHandler implements IStatusHandler {
 		
 		return null;
 	}
-
 }
