@@ -1,7 +1,10 @@
-/** From Eclihaxe project
- *  06.01.2008 */
+/* 
+ * From Eclihaxe project
+ *  06.01.2008 
+ */
 
 package eclihx.ui.internal.ui.wizards;
+
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -15,6 +18,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
+//TODO 7 rewrite it 
 public abstract class AbstractProjectRelativeWizard extends Wizard {
 
 	protected IProject project = null;
@@ -128,7 +132,7 @@ public abstract class AbstractProjectRelativeWizard extends Wizard {
 	}
 
 	/**
-	 * Show async error messge
+	 * Show async error message
 	 * 
 	 * @param message
 	 */
