@@ -36,8 +36,9 @@ public class EclihxCore extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		haxeWorkspace = new HaxeWorkspace(ResourcesPlugin.getWorkspace().getRoot());
+
+		haxeWorkspace = new HaxeWorkspace(ResourcesPlugin.getWorkspace()
+				.getRoot());
 	}
 
 	/*
@@ -46,11 +47,11 @@ public class EclihxCore extends Plugin {
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		
+
 		haxeWorkspace.close();
-		
+
 		plugin = null;
-		super.stop(context);		
+		super.stop(context);
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class EclihxCore extends Plugin {
 	public static EclihxCore getDefault() {
 		return plugin;
 	}
-	
+
 	/**
 	 * Getter of the property <tt>haxeWorkspace</tt>
 	 * 
