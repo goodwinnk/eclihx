@@ -33,7 +33,7 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
-		//TODO 10 remove it from here
+		//FIXME 9 remove it from here
 		initializeDefaultPluginPreferences();
 	}
 

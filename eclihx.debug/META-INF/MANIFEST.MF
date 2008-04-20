@@ -1,8 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %pluginName
+Bundle-Name: Debug Plug-in
 Bundle-SymbolicName: eclihx.debug
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.debug.Activator
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.debug.core
 Eclipse-LazyStart: true
+Export-Package: eclihx.debug.flash
+Bundle-ClassPath: .,
+ lib/adobe/swfkit.jar,
+ lib/adobe/fdb.jar
