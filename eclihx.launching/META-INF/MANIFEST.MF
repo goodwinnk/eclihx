@@ -4,9 +4,15 @@ Bundle-Name: EclihaX Launching Plug-in
 Bundle-SymbolicName: eclihx.launching;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.launching.EclihxLauncher
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: eclihx.debug,
+ org.eclipse.core.runtime,
  org.eclipse.debug.core,
  eclihx.core,
  org.eclipse.core.resources
 Eclipse-LazyStart: true
-Export-Package: eclihx.launching
+Export-Package: eclihx.launching;
+  uses:="org.eclipse.debug.core,
+   org.eclipse.core.runtime,
+   org.osgi.framework,
+   org.eclipse.core.runtime.preferences,
+   org.eclipse.debug.core.model"

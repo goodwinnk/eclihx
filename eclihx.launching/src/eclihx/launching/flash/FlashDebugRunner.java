@@ -1,6 +1,4 @@
-package eclihx.launching.haxe;
-
-import java.io.File;
+package eclihx.launching.flash;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -10,13 +8,25 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.IStatusHandler;
 
+import eclihx.debug.flash.Runner;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.HaxeRunnerConfiguration;
 import eclihx.launching.IHaxeRunner;
 
-public class HaxeRunner implements IHaxeRunner {
-	
+/*import flash.tools.debugger.Bootstrap;
+//import flash.tools.debugger.Session;
+import flash.tools.debugger.SessionManager;
+import flash.tools.debugger.VersionException;*/
 
+/**
+ * Should connect to flash and allow to debug...
+ * This class won't be very beautiful for some time - I'm not sure how it should be written
+ */
+public class FlashDebugRunner implements IHaxeRunner {
+
+	// TODO 5 refactor this class!!!
+
+	// FIXME 3 Copied from HaxeRunner
 	private void throwState(int severity, int code, String message) throws CoreException {
 		IStatus status = new Status(severity, EclihxLauncher.PLUGIN_ID, code, message, null); //$NON-NLS-1$
 		IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
@@ -36,17 +46,6 @@ public class HaxeRunner implements IHaxeRunner {
 		}				
 	}
 	
-	/**
-	 * Checks if string isn't quoted yet and adds quotation marks to the both ends of the string.
-	 * @param str
-	 * @return Quoted string
-	 */
-	private String quoteString(String str) {
-		if ( !(str.startsWith("\"") || (str.endsWith("\""))) ) {
-			return "\"" + str + "\"";
-		}
-		return str;				
-	}
 	
 	/**
 	 * Check if we have valid configuration for launching
@@ -55,6 +54,7 @@ public class HaxeRunner implements IHaxeRunner {
 	 * @return
 	 * @throws CoreException
 	 */
+	// FIXME 3 Copied from HaxeRunner
 	private void validateConfiguration(HaxeRunnerConfiguration config) throws CoreException {
 		if (config.getCompilerPath() == null || config.getCompilerPath().isEmpty()) {
 			throwState(IStatus.ERROR, IStatus.OK, "haXe compiler wasn't defined properly.");
@@ -73,24 +73,44 @@ public class HaxeRunner implements IHaxeRunner {
 			throwState(IStatus.ERROR, IStatus.OK, "Source directory isn't defined.");
 		}		
 	}
-
+	
 	@Override
-	public void run(HaxeRunnerConfiguration configuration, 
-					ILaunch launch, 
-					IProgressMonitor monitor) throws CoreException {
-		
-		validateConfiguration(configuration);		
-		
-        // output directory
-        File outputDirectory = new File(configuration.getOutputDirectory());
-        
-        String commandLine = configuration.getCompilerPath() + 
-                             " -cp " + quoteString(configuration.getSourceDirectory()) +  
-                             ' ' + configuration.getBuildFile();
-        Process systemProcess = DebugPlugin.exec(DebugPlugin.parseArguments(commandLine), outputDirectory);
-        
-        DebugPlugin.newProcess(launch, systemProcess, null);
+	public void run(HaxeRunnerConfiguration configuration, ILaunch launch,
+			IProgressMonitor monitor) throws CoreException {
 
+		validateConfiguration(configuration);
+		
+		// My attempt
+		(new Runner()).run(launch);
+
+		/*
+		int requestPort = -1;
+		int eventPort = -1;
+		
+		requestPort = 3001; //findFreePort();
+		eventPort = 3002;   //findFreePort();
+		if (requestPort == -1 || eventPort == -1) {
+			return; //abort("Unable to find free port", null);
+		}*/
+		
+		// special debug parameters
+		//commandList.add("-debug");
+		//commandList.add("" + requestPort);
+		//commandList.add("" + eventPort);
+					
+		//String[] commandLine = (String[]) commandList.toArray(new String[commandList.size()]);
+		
+		//String[] commandLine = new String[]{""};
+		
+		
+		
+		//Process process = DebugPlugin.exec(commandLine, null);
+		//IProcess p = DebugPlugin.newProcess(launch, process, "label" /*path*/);
+		
+		
+		//IDebugTarget target = new FlashDebugTarget(/*launch, p, requestPort, eventPort*/);
+		//launch.addDebugTarget(target);			
+
+		// TODO Auto-generated method stub
 	}
-
 }

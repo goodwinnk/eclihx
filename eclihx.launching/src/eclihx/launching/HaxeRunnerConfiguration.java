@@ -1,10 +1,6 @@
 package eclihx.launching;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
 /**
