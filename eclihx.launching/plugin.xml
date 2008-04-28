@@ -9,6 +9,23 @@
             delegate="eclihx.launching.HaxeLaunchDelegate"
             id="eclihx.launching.HaxeLaunchDelegate"
             modes="run, debug"
-            name="haXe application"/>
+            name="haXe application"
+            sourceLocatorId="eclihx.launching.HaxeSourceLocator"
+            sourcePathComputerId="eclihx.launching.HaxeSourcePathComputerDelegate"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            class="eclihx.launching.HaxeSourceLocator"
+            id="eclihx.launching.HaxeSourceLocator"
+            name="Haxe Source Locator">
+      </sourceLocator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="eclihx.launching.HaxeSourcePathComputerDelegate"
+            id="eclihx.launching.HaxeSourcePathComputerDelegate">
+      </sourcePathComputer>
    </extension>
 </plugin>

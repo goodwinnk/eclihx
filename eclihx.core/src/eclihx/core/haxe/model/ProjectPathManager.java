@@ -121,7 +121,13 @@ public class ProjectPathManager implements IProjectPathManager {
 		    marshaller.marshal(createSerializer(), os);
 		    
 		    InputStream stream = new ByteArrayInputStream(os.toByteArray());
-			file.create(stream, true, null);
+		    
+		    if (file.exists()) {
+		    	file.setContents(stream, IFile.FORCE, null);
+		    } else {
+		    	file.create(stream, true, null);
+		    }
+			
 		
 		} catch (JAXBException e) {
 			EclihxLogger.logError(e);

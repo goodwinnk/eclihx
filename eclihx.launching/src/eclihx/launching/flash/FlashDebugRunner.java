@@ -8,7 +8,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.IStatusHandler;
 
-import eclihx.debug.flash.Runner;
+import eclihx.debug.flash.FlashRunner;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.HaxeRunnerConfiguration;
 import eclihx.launching.IHaxeRunner;
@@ -81,7 +81,7 @@ public class FlashDebugRunner implements IHaxeRunner {
 		validateConfiguration(configuration);
 		
 		// My attempt
-		(new Runner()).run(launch);
+		(new FlashRunner()).run(launch);
 
 		/*
 		int requestPort = -1;

@@ -17,42 +17,40 @@ import flash.tools.debugger.SessionManager;
 import flash.tools.debugger.VersionException;
 
 
-public class Runner {
+public class FlashRunner {
 	
 	private CoreException generateError(String message, Throwable exception) {
 		return new CoreException(new Status(IStatus.OK, "debug", message, exception));
 	}
 	
-	public Runner() {
+	public FlashRunner() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public void run(ILaunch launch) throws CoreException {
 		try {
-			String uriPath = "f:/Programs/Haxe/HaxeAttempts/TestDebugfdb.swf";
+			// FIXME 9
+			String uriPath = "f:/Programs/runtime-EclipseApplication/Test1/bin/test.swf";
 
 			SessionManager flashManager = Bootstrap.sessionManager();
 
 			if (flashManager.supportsLaunch()) {
-				flashManager.startListening();
 
-				Session debugSession = flashManager.launch(uriPath, null, true,
-						null);
+				flashManager.startListening();
+				Session debugSession = flashManager.launch(uriPath, null, true, null);
+				//flashManager.accept(null);
 				
 				IProcess debugProcess = DebugPlugin.newProcess(launch,
 						debugSession.getLaunchProcess(),
 						"Haxe-Flash debug process");
 
-				if (debugProcess != null) {
+				if (debugSession != null) {
 					IDebugTarget target = new FlashDebugTarget(uriPath, launch,
 							debugSession, debugProcess);
 					launch.addDebugTarget(target);
-				} else {
-					// TODO 8 this means that launch() method for SessionManager wasn't used
+				} else {					
 				}
-
-				Bootstrap.sessionManager().accept(null);
-
+				
 			} else {
 				// TODO 8 the debugger will have to tell the user to manually launch the Flash player 
 			}
