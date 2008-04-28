@@ -7,39 +7,68 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 
-public class FlashThread implements IThread {
+public class FlashThread extends FlashDebugElement implements IThread {
 
+	/**
+	 * Breakpoints this thread is suspended at or <code>null</code>
+	 * if none.
+	 */
+	private IBreakpoint[] fBreakpoints;
+	
+	/**
+	 * Whether this thread is stepping
+	 */
+	private boolean fStepping = false;
+	
 	public FlashThread(FlashDebugTarget target) {
-		// TODO Auto-generated constructor stub
+		super(target);
 	}
 	
 	@Override
 	public IBreakpoint[] getBreakpoints() {
-		// TODO Auto-generated method stub
-		return null;
+		if (fBreakpoints == null) {
+			return new IBreakpoint[0];
+		}
+		return fBreakpoints;
+	}
+	
+	/**
+	 * Sets the breakpoints this thread is suspended at, or <code>null</code>
+	 * if none.
+	 * 
+	 * @param breakpoints the breakpoints this thread is suspended at, or <code>null</code>
+	 * if none
+	 */
+	protected void setBreakpoints(IBreakpoint[] breakpoints) {
+		fBreakpoints = breakpoints;
 	}
 
 	@Override
 	public String getName() throws DebugException {
-		// TODO Auto-generated method stub
-		return null;
+		return "Thread[1]";
 	}
 
 	@Override
 	public int getPriority() throws DebugException {
-		// TODO Auto-generated method stub
+		// TODO 3 Understand what value would be best here
 		return 0;
 	}
 
 	@Override
 	public IStackFrame[] getStackFrames() throws DebugException {
-		// TODO Auto-generated method stub
-		return null;
+		if (isSuspended()) {
+			return ((FlashDebugTarget)getDebugTarget()).getStackFrames();
+		} else {
+			return new IStackFrame[0];
+		}
 	}
 
 	@Override
 	public IStackFrame getTopStackFrame() throws DebugException {
-		// TODO Auto-generated method stub
+		IStackFrame[] frames = getStackFrames();
+		if (frames.length > 0) {
+			return frames[0];
+		}
 		return null;
 	}
 
@@ -50,117 +79,75 @@ public class FlashThread implements IThread {
 	}
 
 	@Override
-	public IDebugTarget getDebugTarget() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ILaunch getLaunch() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getModelIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object getAdapter(Class adapter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean canResume() {
-		// TODO Auto-generated method stub
-		return false;
+		return getDebugTarget().canResume();
 	}
 
 	@Override
 	public boolean canSuspend() {
-		// TODO Auto-generated method stub
-		return false;
+		return getDebugTarget().canSuspend();
 	}
 
 	@Override
 	public boolean isSuspended() {
-		// TODO Auto-generated method stub
-		return false;
+		return getDebugTarget().isSuspended();
 	}
 
 	@Override
 	public void resume() throws DebugException {
-		// TODO Auto-generated method stub
-
+		getDebugTarget().resume();
 	}
 
 	@Override
 	public void suspend() throws DebugException {
-		// TODO Auto-generated method stub
-
+		getDebugTarget().suspend();
 	}
 
 	@Override
 	public boolean canStepInto() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean canStepOver() {
-		// TODO Auto-generated method stub
-		return false;
+		return isSuspended();
 	}
 
 	@Override
 	public boolean canStepReturn() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isStepping() {
-		// TODO Auto-generated method stub
-		return false;
+		return fStepping;
 	}
 
 	@Override
 	public void stepInto() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void stepOver() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void stepReturn() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean canTerminate() {
-		// TODO Auto-generated method stub
-		return false;
+		return getDebugTarget().canTerminate();
 	}
 
 	@Override
 	public boolean isTerminated() {
-		// TODO Auto-generated method stub
-		return false;
+		return getDebugTarget().isTerminated();
 	}
 
 	@Override
 	public void terminate() throws DebugException {
-		// TODO Auto-generated method stub
-
+		getDebugTarget().terminate();
 	}
 
 }
