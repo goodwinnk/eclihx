@@ -61,7 +61,7 @@ public interface IProjectPathManager {
 	void addLibFolder(IFolder folder);
 	
 	/**
-	 * Get builds file
+	 * Get build files
 	 * @return
 	 */
 	List<IFile> getBuildFiles();

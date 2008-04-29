@@ -4,8 +4,9 @@ Bundle-Name: Debug Plug-in
 Bundle-SymbolicName: eclihx.debug;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.debug.Activator
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.debug.core
+Require-Bundle: org.eclipse.debug.core,
+ org.eclipse.core.runtime,
+ eclihx.core
 Eclipse-LazyStart: true
 Export-Package: eclihx.debug.flash
 Bundle-ClassPath: .,

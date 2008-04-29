@@ -9,8 +9,7 @@ import eclihx.core.haxe.internal.IProjectPathManager;
 import eclihx.core.haxe.model.core.IHaxeProject;
 
 /**
- * Extend project with haXe functionality Use agregation as sub classing isn't
- * available in this case
+ * Extend project with haXe functionality.
  */
 public class HaxeProject implements IHaxeProject {
 

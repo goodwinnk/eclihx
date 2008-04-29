@@ -1,6 +1,7 @@
 package eclihx.debug.flash;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -16,6 +17,10 @@ import flash.tools.debugger.Session;
 import flash.tools.debugger.SessionManager;
 import flash.tools.debugger.VersionException;
 
+import eclihx.core.haxe.internal.hxml.ParamsContainer;
+import eclihx.core.haxe.internal.hxml.IBuildParamsContainer;
+import eclihx.core.haxe.internal.hxml.BuildParamParser;
+
 
 public class FlashRunner {
 	
@@ -27,10 +32,13 @@ public class FlashRunner {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void run(ILaunch launch) throws CoreException {
+	public void run(ILaunch launch, String fileName, String outputFolder) throws CoreException {
 		try {
-			// FIXME 9
-			String uriPath = "f:/Programs/runtime-EclipseApplication/Test1/bin/test.swf";
+			
+			LinkedList<IBuildParamsContainer> paramContainersList = BuildParamParser.parseFile(fileName);
+			if (paramContainersList.isEmpty()) return;
+			
+			String uriPath = outputFolder + "/" + paramContainersList.getFirst().getOutputFileName();
 
 			SessionManager flashManager = Bootstrap.sessionManager();
 
