@@ -81,7 +81,7 @@ public class FlashDebugRunner implements IHaxeRunner {
 		validateConfiguration(configuration);
 		
 		// My attempt
-		(new FlashRunner()).run(launch);
+		(new FlashRunner()).run(launch, configuration.getBuildFile(), configuration.getOutputDirectory());
 
 		/*
 		int requestPort = -1;

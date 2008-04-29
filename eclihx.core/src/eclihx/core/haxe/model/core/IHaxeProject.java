@@ -10,5 +10,7 @@ public interface IHaxeProject {
 	
 	IProject getProjectBase();
 	
-	IProjectPathManager getPathManager();	
+	IProjectPathManager getPathManager();
+	
+	
 }
