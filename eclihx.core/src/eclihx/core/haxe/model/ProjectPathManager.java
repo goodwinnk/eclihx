@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import eclihx.core.EclihxLogger;
-import eclihx.core.haxe.internal.IProjectPathManager;
+import eclihx.core.haxe.model.core.IProjectPathManager;
 
 /**
  * Class for storing paths of the project

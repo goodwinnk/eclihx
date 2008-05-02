@@ -1,4 +1,4 @@
-package eclihx.core.haxe.internal.hxml;
+package eclihx.core.haxe.internal;
 
 public class ParamsContainer implements IBuildParamsContainer {
 

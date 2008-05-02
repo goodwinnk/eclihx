@@ -33,9 +33,9 @@ import eclihx.launching.IHaxeLaunchConfigurationConstants;
 import eclihx.launching.LauncherPreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.EclihxLogger;
-import eclihx.core.haxe.internal.IProjectPathManager;
 import eclihx.core.haxe.model.HaxeWorkspace;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IProjectPathManager;
 
 public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	

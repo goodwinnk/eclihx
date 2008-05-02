@@ -17,9 +17,9 @@ import flash.tools.debugger.Session;
 import flash.tools.debugger.SessionManager;
 import flash.tools.debugger.VersionException;
 
-import eclihx.core.haxe.internal.hxml.ParamsContainer;
-import eclihx.core.haxe.internal.hxml.IBuildParamsContainer;
-import eclihx.core.haxe.internal.hxml.BuildParamParser;
+import eclihx.core.haxe.internal.BuildParamParser;
+import eclihx.core.haxe.internal.IBuildParamsContainer;
+import eclihx.core.haxe.internal.ParamsContainer;
 
 
 public class FlashRunner {

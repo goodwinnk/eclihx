@@ -1,6 +1,7 @@
 package eclihx.core;
 
 import eclihx.core.haxe.model.HaxeWorkspace;
+import eclihx.core.haxe.model.core.IHaxeWorkspace;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
@@ -14,7 +15,7 @@ public class EclihxCore extends Plugin {
 	/*
 	 * (non-javadoc)
 	 */
-	private HaxeWorkspace haxeWorkspace;
+	private IHaxeWorkspace haxeWorkspace;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "eclihx.core";
@@ -69,7 +70,7 @@ public class EclihxCore extends Plugin {
 	 * @return Returns the haxeWorkspace.
 	 * 
 	 */
-	public HaxeWorkspace getHaxeWorkspace() {
+	public IHaxeWorkspace getHaxeWorkspace() {
 		return haxeWorkspace;
 	}
 
