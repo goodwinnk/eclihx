@@ -1,4 +1,4 @@
-package eclihx.core.haxe.internal;
+package eclihx.core.haxe.model.core;
 
 import java.util.List;
 
