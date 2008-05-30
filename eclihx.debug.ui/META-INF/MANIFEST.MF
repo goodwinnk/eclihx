@@ -8,9 +8,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.debug.ui,
- eclihx.debug,
- eclihx.launching,
  eclihx.ui,
+ eclihx.debug,
  org.eclipse.ui.editors,
  org.eclipse.jface.text
 Eclipse-LazyStart: true
