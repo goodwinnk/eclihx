@@ -59,8 +59,6 @@ public class HaxeProject implements IHaxeProject {
 			// was added to prevent appearing exception in the method signature.
 			return false;
 		}
-		
-		
 	}
 	
 	/* (non-Javadoc)
@@ -116,7 +114,7 @@ public class HaxeProject implements IHaxeProject {
 	 */
 	protected void addNature(String natureID) throws CoreException  {
 		
-		// assert(fProject.isOpen()); // The project should be opened
+		assert(fProject.isOpen()); // The project should be opened
 		IProjectDescription description = fProject.getDescription();
 
 		if (!description.hasNature(natureID)) {
