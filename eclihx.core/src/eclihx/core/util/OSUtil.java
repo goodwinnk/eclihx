@@ -1,6 +1,5 @@
 package eclihx.core.util;
 
-
 /**
  * Not sure yet will this class be usefull
  * 
