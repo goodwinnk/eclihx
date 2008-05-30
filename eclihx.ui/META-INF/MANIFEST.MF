@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-LazyStart: true
 Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
-Export-Package: eclihx.ui;x-internal:=true
+Export-Package: eclihx.ui,
+ eclihx.ui.launch

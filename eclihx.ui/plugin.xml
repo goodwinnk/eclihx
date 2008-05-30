@@ -78,6 +78,15 @@
           name="%haxeEclihxPerspective.name"/>
  </extension>
  <extension
+       point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+          targetID="eclihx.ui.internal.ui.HaxePerspectiveFactory">
+       <newWizardShortcut
+             id="eclihx.ui.haxe">
+       </newWizardShortcut>
+    </perspectiveExtension>
+ </extension>
+ <extension
        point="org.eclipse.ui.propertyPages">
     <page
           adaptable="false"
@@ -92,13 +101,6 @@
           configTypeID="eclihx.launching.HaxeLaunchDelegate"
           icon="icons/sample.gif"
           id="eclihx.ui.launchConfigurationImage"/>
- </extension>
- <extension
-       point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-    <launchConfigurationTabGroup
-          class="eclihx.ui.launch.HaxetLaunchConfigurationTabGroup"
-          id="eclihx.ui.launch.HaxetLaunchConfigurationTabGroup"
-          type="eclihx.launching.HaxeLaunchDelegate"/>
  </extension>
  <extension
        point="org.eclipse.debug.ui.launchShortcuts">
