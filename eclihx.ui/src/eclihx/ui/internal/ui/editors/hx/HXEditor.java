@@ -2,6 +2,8 @@ package eclihx.ui.internal.ui.editors.hx;
 
 import org.eclipse.ui.editors.text.TextEditor;
 
+import eclihx.core.EclihxCore;
+import eclihx.core.EclihxLogger;
 import eclihx.ui.internal.ui.EclihxPlugin;
 
 public class HXEditor extends TextEditor {
