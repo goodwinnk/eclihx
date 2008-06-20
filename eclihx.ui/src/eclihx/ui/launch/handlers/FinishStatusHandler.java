@@ -12,7 +12,6 @@ import eclihx.core.haxe.model.core.IHaxeProject;
 
 public class FinishStatusHandler implements IStatusHandler {
 
-	@Override
 	public Object handleStatus(IStatus status, Object source) throws CoreException {
 		String projectName = (String)source;
 		

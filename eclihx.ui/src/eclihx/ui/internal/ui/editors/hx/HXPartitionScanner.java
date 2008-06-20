@@ -20,7 +20,7 @@ public class HXPartitionScanner extends RuleBasedPartitionScanner {
 		rules.add(new EndOfLineRule("//", hxComment));
 		rules.add(new EndOfLineRule("#", hxPreprocessor));
 		rules.add(new MultiLineRule("/**", "**/", hxDoc));
-		rules.add(new SingleLineRule("\"", "\"", hxString));
+		rules.add(new SingleLineRule("\"", "\"", hxString, '\\'));
 
 		IPredicateRule[] result= new IPredicateRule[rules.size()];
 		rules.toArray(result);

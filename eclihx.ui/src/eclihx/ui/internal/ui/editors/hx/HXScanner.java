@@ -5,6 +5,7 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.NumberRule;
+import org.eclipse.jface.text.rules.PatternRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
@@ -72,6 +73,8 @@ public class HXScanner extends AbstractScanner {
 		// Add number rule
 		rules.add(new NumberRule(getToken(PreferenceConstants.HX_EDITOR_NUMBER_COLOR)));
 		
+		
+				
 		// Add rule for character constants
 		IToken charToken = getToken(PreferenceConstants.HX_EDITOR_STRING_COLOR);
 		rules.add(new SingleLineRule("'", "'", charToken, '\\'));
@@ -96,8 +99,9 @@ public class HXScanner extends AbstractScanner {
 			wr.addWord(fTypeConstants[i], typeConstatToken);
 		
 		IToken typeWordToken = getToken(PreferenceConstants.HX_EDITOR_TYPE_COLOR);
-		for (int i = 0; i < fTypeWords.length; i++)
+		for (int i = 0; i < fTypeWords.length; i++) {
 			wr.addWord(fTypeWords[i], typeWordToken);
+		}
 
 		rules.add(wr);
 		

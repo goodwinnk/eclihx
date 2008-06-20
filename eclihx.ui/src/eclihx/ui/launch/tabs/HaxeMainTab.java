@@ -186,8 +186,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		// TODO 2 Add image for the main page of the launcher configuration
 		return super.getImage();
 	}
-	
-	@Override
+
 	public void createControl(Composite parent) {
 		Composite top = new Composite(parent, SWT.LEFT);
 

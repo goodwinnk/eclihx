@@ -28,12 +28,10 @@ import eclihx.ui.wizards.NewHaxeProjectWizardFirstPage;
 public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements INewWizard, IExecutableExtension{
 	// TODO 3 move string to constants 
 	
-	@Override
 	protected void doCancel(IProgressMonitor monitor) {
 		// TODO 6 Test with unreadable folders 
 	}
 
-	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		fConfigElement = config;
 	}
