@@ -14,6 +14,7 @@ public class HXEditor extends TextEditor {
 
 	public HXEditor() {
 		super();
+		
 		// Set preference store to the store of the ui plugin
 		setPreferenceStore(EclihxPlugin.getDefault().getPreferenceStore());
 		setDocumentProvider(new HXDocumentProvider());
