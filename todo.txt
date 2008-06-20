@@ -1,7 +1,9 @@
-See todo.txt files in corresponding folders for each plugin
+First release:
+Time: ???
 
-Common tasks:
-
-1. - Create build scripts
-2. - Specification (Try javadoc)
-3. - Internalization
+- Colorazing of the haxe code(Should be finished)
+- formatting???
+- Preferences of the code
+- hxml visual editor
+- Import project feature
+- CVS/SVN support.
