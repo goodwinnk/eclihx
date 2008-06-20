@@ -24,7 +24,7 @@ public class FlashThread extends FlashDebugElement implements IThread {
 		super(target);
 	}
 	
-	@Override
+	
 	public IBreakpoint[] getBreakpoints() {
 		if (fBreakpoints == null) {
 			return new IBreakpoint[0];
@@ -43,18 +43,18 @@ public class FlashThread extends FlashDebugElement implements IThread {
 		fBreakpoints = breakpoints;
 	}
 
-	@Override
+	
 	public String getName() throws DebugException {
 		return "Thread[1]";
 	}
 
-	@Override
+	
 	public int getPriority() throws DebugException {
 		// TODO 3 Understand what value would be best here
 		return 0;
 	}
 
-	@Override
+	
 	public IStackFrame[] getStackFrames() throws DebugException {
 		if (isSuspended()) {
 			return ((FlashDebugTarget)getDebugTarget()).getStackFrames();
@@ -63,7 +63,7 @@ public class FlashThread extends FlashDebugElement implements IThread {
 		}
 	}
 
-	@Override
+	
 	public IStackFrame getTopStackFrame() throws DebugException {
 		IStackFrame[] frames = getStackFrames();
 		if (frames.length > 0) {
@@ -72,80 +72,80 @@ public class FlashThread extends FlashDebugElement implements IThread {
 		return null;
 	}
 
-	@Override
+	
 	public boolean hasStackFrames() throws DebugException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public boolean canResume() {
 		return getDebugTarget().canResume();
 	}
 
-	@Override
+	
 	public boolean canSuspend() {
 		return getDebugTarget().canSuspend();
 	}
 
-	@Override
+	
 	public boolean isSuspended() {
 		return getDebugTarget().isSuspended();
 	}
 
-	@Override
+	
 	public void resume() throws DebugException {
 		getDebugTarget().resume();
 	}
 
-	@Override
+	
 	public void suspend() throws DebugException {
 		getDebugTarget().suspend();
 	}
 
-	@Override
+	
 	public boolean canStepInto() {
 		return false;
 	}
 
-	@Override
+	
 	public boolean canStepOver() {
 		return isSuspended();
 	}
 
-	@Override
+	
 	public boolean canStepReturn() {
 		return false;
 	}
 
-	@Override
+	
 	public boolean isStepping() {
 		return fStepping;
 	}
 
-	@Override
+	
 	public void stepInto() throws DebugException {
 	}
 
-	@Override
+	
 	public void stepOver() throws DebugException {
 	}
 
-	@Override
+	
 	public void stepReturn() throws DebugException {
 	}
 
-	@Override
+	
 	public boolean canTerminate() {
 		return getDebugTarget().canTerminate();
 	}
 
-	@Override
+	
 	public boolean isTerminated() {
 		return getDebugTarget().isTerminated();
 	}
 
-	@Override
+	
 	public void terminate() throws DebugException {
 		getDebugTarget().terminate();
 	}

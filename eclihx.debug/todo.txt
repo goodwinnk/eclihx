@@ -1,0 +1,7 @@
+Session syncronized!
+Support breakpoints
+Support stack management
+Support variables management
+
+
+

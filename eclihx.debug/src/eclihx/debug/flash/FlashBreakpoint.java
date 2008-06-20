@@ -17,7 +17,6 @@ public class FlashBreakpoint extends LineBreakpoint {
 		ensureMarker().setAttribute(IBreakpoint.ID, getModelIdentifier());
 	}
 	
-	@Override
 	public String getModelIdentifier() {
 		return FlashConstants.ID_FLASH_DEBUG_MODEL;
 	}
