@@ -7,7 +7,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class FlashBreakpointAdapterFactory implements IAdapterFactory {
 
-	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof ITextEditor) {
 			ITextEditor editorPart = (ITextEditor) adaptableObject;
@@ -24,7 +23,7 @@ public class FlashBreakpointAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
-	@Override
+	
 	public Class[] getAdapterList() {
 		return new Class[]{IToggleBreakpointsTarget.class};
 	}

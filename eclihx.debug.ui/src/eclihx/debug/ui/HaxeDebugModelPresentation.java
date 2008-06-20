@@ -18,7 +18,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse.debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
-	@Override
+	
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		// TODO Auto-generated method stub
 		
@@ -27,7 +27,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#getImage(java.lang.Object)
 	 */
-	@Override
+	
 	public Image getImage(Object element) {
 		// TODO Auto-generated method stub
 		return null;
@@ -36,7 +36,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#getText(java.lang.Object)
 	 */
-	@Override
+	
 	public String getText(Object element) {
 		// TODO Auto-generated method stub
 		return null;
@@ -45,7 +45,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String, java.lang.Object)
 	 */
-	@Override
+	
 	public void setAttribute(String attribute, Object value) {
 		// TODO Auto-generated method stub
 		
@@ -54,7 +54,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
-	@Override
+	
 	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 		
@@ -63,7 +63,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
-	@Override
+	
 	public void dispose() {
 		// TODO Auto-generated method stub
 		
@@ -72,7 +72,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
 	 */
-	@Override
+	
 	public boolean isLabelProperty(Object element, String property) {
 		// TODO Auto-generated method stub
 		return false;
@@ -81,13 +81,13 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
 	 */
-	@Override
+	
 	public void removeListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public IEditorInput getEditorInput(Object element) {
 		if (element instanceof IFile)
 			return new FileEditorInput((IFile) element);
@@ -101,7 +101,7 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.IEditorInput,
 	 *      java.lang.Object)
 	 */
-	@Override
+	
 	public String getEditorId(IEditorInput input, Object element) {
 		if (element instanceof IFile) {
 			IFile file = (IFile) element;

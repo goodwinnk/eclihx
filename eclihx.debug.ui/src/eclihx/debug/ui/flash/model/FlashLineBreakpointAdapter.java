@@ -16,7 +16,6 @@ import eclihx.debug.flash.FlashConstants;
 
 public class FlashLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
-	@Override
 	public boolean canToggleLineBreakpoints(IWorkbenchPart part,
 			ISelection selection) {
 		
@@ -24,19 +23,19 @@ public class FlashLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		
 	}
 
-	@Override
+	
 	public boolean canToggleMethodBreakpoints(IWorkbenchPart part,
 			ISelection selection) {
 		return false;
 	}
 
-	@Override
+	
 	public boolean canToggleWatchpoints(IWorkbenchPart part,
 			ISelection selection) {
 		return false;
 	}
 
-	@Override
+	
 	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection)
 			throws CoreException {
 		
@@ -62,12 +61,12 @@ public class FlashLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		}
 	}
 
-	@Override
+	
 	public void toggleMethodBreakpoints(IWorkbenchPart part,
 			ISelection selection) throws CoreException {
 	}
 
-	@Override
+	
 	public void toggleWatchpoints(IWorkbenchPart part, ISelection selection)
 			throws CoreException {
 	}
