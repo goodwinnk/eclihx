@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests Plug-in
+Bundle-SymbolicName: eclihx.tests
+Bundle-Version: 1.0.0
+Bundle-Activator: eclihx.tests.Activator
+Require-Bundle: eclihx.core
+Eclipse-LazyStart: true
+Bundle-ClassPath: lib/junit-4.4.jar,
+ .
