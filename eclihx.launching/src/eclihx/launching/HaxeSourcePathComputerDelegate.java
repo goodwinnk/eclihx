@@ -16,7 +16,6 @@ import org.eclipse.debug.core.sourcelookup.containers.WorkspaceSourceContainer;
 
 public class HaxeSourcePathComputerDelegate implements  ISourcePathComputerDelegate {
 	
-	@Override
 	public ISourceContainer[] computeSourceContainers(
 			ILaunchConfiguration configuration, IProgressMonitor monitor)
 			throws CoreException {

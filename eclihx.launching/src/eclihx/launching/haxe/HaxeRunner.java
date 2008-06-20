@@ -74,7 +74,6 @@ public class HaxeRunner implements IHaxeRunner {
 		}		
 	}
 
-	@Override
 	public void run(HaxeRunnerConfiguration configuration, 
 					ILaunch launch, 
 					IProgressMonitor monitor) throws CoreException {
