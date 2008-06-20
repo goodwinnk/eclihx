@@ -17,9 +17,14 @@ import flash.tools.debugger.Session;
 import flash.tools.debugger.SessionManager;
 import flash.tools.debugger.VersionException;
 
-import eclihx.core.haxe.internal.BuildParamParser;
 import eclihx.core.haxe.internal.IBuildParamsContainer;
 import eclihx.core.haxe.internal.ParamsContainer;
+import eclihx.core.haxe.internal.configuration.FlashConfiguration;
+import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
+import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
+import eclihx.core.haxe.internal.configuration.InvalidConfiguration;
+import eclihx.core.haxe.internal.parser.BuildParamParser;
+import eclihx.core.util.console.parser.core.ParseError;
 
 
 public class FlashRunner {
@@ -35,10 +40,25 @@ public class FlashRunner {
 	public void run(ILaunch launch, String fileName, String outputFolder) throws CoreException {
 		try {
 			
-			LinkedList<IBuildParamsContainer> paramContainersList = BuildParamParser.parseFile(fileName);
-			if (paramContainersList.isEmpty()) return;
+			BuildParamParser parser = new BuildParamParser();
 			
-			String uriPath = outputFolder + "/" + paramContainersList.getFirst().getOutputFileName();
+			
+			HaxeConfiguration config;
+			try {
+				config = parser.parseFile(fileName).getMainConfiguration();
+			} catch (InvalidConfiguration e) {
+				// TODO 6 Bad thing. We can fall here 
+				return;
+			} catch (ParseError e) {
+				// TODO 7 We shouldn't fall. There should some user friendly message exist
+				return;
+			}
+			FlashConfiguration flashConfig = config.getFlashConfig();
+			
+			
+			if (!(flashConfig != null && config.isDebug() && config.hasCompilationFlags("fdb"))) return;
+			
+			String uriPath = outputFolder + "/" + flashConfig.getOutFile();
 
 			SessionManager flashManager = Bootstrap.sessionManager();
 

@@ -22,7 +22,6 @@ public class FlashDebugElement extends PlatformObject implements IDebugElement {
 		fTarget = target;
 	}
 	
-	@Override
 	public IDebugTarget getDebugTarget() {
 		return fTarget;
 	}
@@ -31,12 +30,10 @@ public class FlashDebugElement extends PlatformObject implements IDebugElement {
 		return fTarget;
 	}
 
-	@Override
 	public ILaunch getLaunch() {
 		return fTarget.getLaunch();
 	}
 
-	@Override
 	public String getModelIdentifier() {
 		return FlashConstants.ID_FLASH_DEBUG_MODEL;
 	}

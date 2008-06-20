@@ -226,70 +226,70 @@ public class FlashDebugTarget extends FlashDebugElement implements IDebugTarget 
 		}
 	}
 	
-	@Override
 	public String getName() throws DebugException {
-		return "Haxe debug: " + fUrl; // TODO 5 make it beautiful
+		// TODO 5 make it beautiful
+		return ("Haxe debug: " + fUrl);
 	}
 
-	@Override
+	
 	public IProcess getProcess() {
 		return fProcess;
 	}
 
-	@Override
+	
 	public IThread[] getThreads() throws DebugException {
 		return fThreads;
 	}
 
-	@Override
+	
 	public boolean hasThreads() throws DebugException {
 		return (!isTerminated());
 	}
 
-	@Override
+	
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		return (breakpoint instanceof FlashBreakpoint);
 	}
 
-	@Override
+	
 	public IDebugTarget getDebugTarget() {
 		return this;
 	}
 
-	@Override
+	
 	public ILaunch getLaunch() {
 		return fLaunch;
 	}
 
-	@Override
+	
 	public boolean canTerminate() {
 		return true;
 	}
 
-	@Override
+	
 	public synchronized boolean isTerminated() {
 		return (!fSession.isConnected());
 	}
 
-	@Override
+	
 	public void terminate() throws DebugException {
 		fSession.terminate();
 		
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(this);
 	}
 
-	@Override
+	
 	public boolean canResume() {
 		return (!isTerminated() && isSuspended());
 	}
 
-	@Override
+	
 	public boolean canSuspend() {
 		// If session is started and isn't suspended yet
 		return (!(isTerminated() || isSuspended()));
 	}
 
-	@Override
+	
 	public boolean isSuspended() {
 		try {
 			return fSession.isSuspended();
@@ -299,7 +299,7 @@ public class FlashDebugTarget extends FlashDebugElement implements IDebugTarget 
 		}
 	}
 
-	@Override
+	
 	public void resume() throws DebugException {
 		try {
 			fSession.stepContinue();
@@ -317,7 +317,7 @@ public class FlashDebugTarget extends FlashDebugElement implements IDebugTarget 
 		
 	}
 
-	@Override
+	
 	public void suspend() throws DebugException {
 		try {
 			fSession.isSuspended();
@@ -327,7 +327,7 @@ public class FlashDebugTarget extends FlashDebugElement implements IDebugTarget 
 		}
 	}
 
-	@Override
+	
 	public void breakpointAdded(IBreakpoint breakpoint) {
 		if (supportsBreakpoint(breakpoint)) {
 			try {
@@ -355,40 +355,40 @@ public class FlashDebugTarget extends FlashDebugElement implements IDebugTarget 
 		}
 	}
 
-	@Override
+	
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		// TODO 6 implement this
 		
 	}
 
-	@Override
+	
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		// TODO 8 implement this		
 	}
 
-	@Override
+	
 	public boolean canDisconnect() {
 		return false; // TODO 5 enable disconnecting
 		//return (!isDisconnected());
 	}
 
-	@Override
+	
 	public void disconnect() throws DebugException {
 		fSession.unbind();
 	}
 
-	@Override
+	
 	public synchronized boolean isDisconnected() {
 		return (!fSession.isConnected());
 	}
 
-	@Override
+	
 	public IMemoryBlock getMemoryBlock(long startAddress, long length)
 			throws DebugException {
 		return null;
 	}
 
-	@Override
+	
 	public boolean supportsStorageRetrieval() {
 		
 		return true;
