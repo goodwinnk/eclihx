@@ -14,6 +14,15 @@ public interface IBuildParamsContainer {
 	TargetPlatform getTargetPlatform();
 	void setTargetPlatform(TargetPlatform platform);
 	
+	int getTargetPlatformVersion();
+	void setTargetPlatformVersion(int version);
+	
+	boolean isDebugEnabled();
+	void setDebugEnabled(boolean debugEnabled);
+	
+	boolean isDebugInstructionsEnabled();
+	void setDebugInstructionsEnabled(boolean debugInstrucitonsEnabled);
+	
 	void merge(IBuildParamsContainer container);
 	
 }
