@@ -18,18 +18,27 @@ import eclihx.ui.internal.ui.editors.SingleTokenScanner;
 
 public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	private HXDoubleClickStrategy doubleClickStrategy;
-	private ColorManager colorManager;
+	//private ColorManager colorManager;
 	
-	private HXScanner hxCodeScanner;
-	private AbstractScanner singleLineCommentScanner;
-	private AbstractScanner multiLineCommentScanner;
-	private AbstractScanner stringScanner;
-	private AbstractScanner hxDocScanner;
-	private AbstractScanner hxConditionCompilationScanner;
+	private final HXScanner hxCodeScanner;
+	private final AbstractScanner singleLineCommentScanner;
+	private final AbstractScanner multiLineCommentScanner;
+	private final AbstractScanner stringScanner;
+	private final AbstractScanner regexprScanner;
+	//private final AbstractScanner hxDocScanner;
+	private final AbstractScanner hxConditionCompilationScanner;
 
 	public HXSourceViewerConfiguration(ColorManager colorManager) {
-		this.colorManager = colorManager;
-		initializeScanners();
+		//this.colorManager = colorManager;
+		
+		IPreferenceStore store = EclihxPlugin.getDefault().getPreferenceStore();
+		hxCodeScanner = new HXScanner(colorManager, store);
+		singleLineCommentScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_COMMENT_COLOR, PreferenceConstants.HX_EDITOR_COMMENT_BOLD, PreferenceConstants.HX_EDITOR_COMMENT_ITALIC);
+		multiLineCommentScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_COLOR, PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_BOLD, PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_ITALIC);
+		stringScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_STRING_COLOR, PreferenceConstants.HX_EDITOR_STRING_BOLD, PreferenceConstants.HX_EDITOR_STRING_ITALIC);
+		regexprScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_REGEXPR_COLOR, PreferenceConstants.HX_EDITOR_REGEXPR_BOLD, PreferenceConstants.HX_EDITOR_REGEXPR_ITALIC);
+		hxConditionCompilationScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_COLOR, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_BOLD, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_ITALIC);
+		
 	}
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] {
@@ -37,6 +46,7 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 			IHXPartitions.HX_SINGLE_LINE_COMMENT,
 			IHXPartitions.HX_MULTI_LINE_COMMENT,
 			IHXPartitions.HX_STRING,
+			IHXPartitions.HX_REGEXPR,
 			IHXPartitions.HX_PREPROCESSOR
 		};
 	}
@@ -64,9 +74,13 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 		return stringScanner;
 	}
 	
-	protected AbstractScanner getHXDocScanner() {
-		return hxDocScanner;
+	protected AbstractScanner getRegexprScanner() {
+		return regexprScanner;
 	}
+	
+	/*protected AbstractScanner getHXDocScanner() {
+		return hxDocScanner;
+	}*/
 	
 	protected AbstractScanner getHXConditionCompilationScanner() {
 		return hxConditionCompilationScanner;
@@ -92,22 +106,14 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 		reconciler.setDamager(dr, IHXPartitions.HX_STRING);
 		reconciler.setRepairer(dr, IHXPartitions.HX_STRING);
 		
+		dr = new DefaultDamagerRepairer(getRegexprScanner());
+		reconciler.setDamager(dr, IHXPartitions.HX_REGEXPR);
+		reconciler.setRepairer(dr, IHXPartitions.HX_REGEXPR);
+		
 		dr = new DefaultDamagerRepairer(getHXConditionCompilationScanner());
 		reconciler.setDamager(dr, IHXPartitions.HX_PREPROCESSOR);
 		reconciler.setRepairer(dr, IHXPartitions.HX_PREPROCESSOR);
 		
 		return reconciler;
-	}
-	
-	/**
-	 * Initialize scanners
-	 */
-	private void initializeScanners() {
-		IPreferenceStore store = EclihxPlugin.getDefault().getPreferenceStore();
-		hxCodeScanner = new HXScanner(colorManager, store);
-		singleLineCommentScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_COMMENT_COLOR, PreferenceConstants.HX_EDITOR_COMMENT_BOLD, PreferenceConstants.HX_EDITOR_COMMENT_ITALIC);
-		multiLineCommentScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_COLOR, PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_BOLD, PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_ITALIC);
-		stringScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_STRING_COLOR, PreferenceConstants.HX_EDITOR_STRING_BOLD, PreferenceConstants.HX_EDITOR_STRING_ITALIC);
-		hxConditionCompilationScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_COLOR, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_BOLD, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_ITALIC);
 	}
 }

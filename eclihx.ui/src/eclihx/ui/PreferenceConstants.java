@@ -24,6 +24,10 @@ public final class PreferenceConstants {
 	public final static String HX_EDITOR_STRING_BOLD = "hx_editor_string_bold";
 	public final static String HX_EDITOR_STRING_ITALIC = "hx_editor_string_italic";
 	
+	public final static String HX_EDITOR_REGEXPR_COLOR = "hx_editor_regexpr_color";
+	public final static String HX_EDITOR_REGEXPR_BOLD = "hx_editor_regexpr_bold";
+	public final static String HX_EDITOR_REGEXPR_ITALIC = "hx_editor_regexpr_italic";
+	
 	public final static String HX_EDITOR_BRACKET_COLOR = "hx_editor_bracket_color";
 	public final static String HX_EDITOR_BRACKET_BOLD = "hx_editor_bracket_bold";
 	public final static String HX_EDITOR_BRACKET_ITALIC = "hx_editor_bracket_italic";
@@ -90,6 +94,10 @@ public final class PreferenceConstants {
 		PreferenceConverter.setDefault(store, HX_EDITOR_NUMBER_COLOR, new RGB(204, 102, 204));
 		store.setDefault(HX_EDITOR_NUMBER_BOLD, false);
 		store.setDefault(HX_EDITOR_NUMBER_ITALIC, false);
+		
+		PreferenceConverter.setDefault(store, HX_EDITOR_REGEXPR_COLOR, new RGB(0, 128, 0));
+		store.setDefault(HX_EDITOR_REGEXPR_BOLD, false);
+		store.setDefault(HX_EDITOR_REGEXPR_ITALIC, false);
 		
 		PreferenceConverter.setDefault(store, HX_EDITOR_DECLARE_KEYWORDS_COLOR, new RGB(0, 0, 0));
 		store.setDefault(HX_EDITOR_DECLARE_KEYWORDS_BOLD, true);
