@@ -10,18 +10,18 @@ import eclihx.ui.internal.ui.editors.hx.ColorManager;
 
 public class SingleTokenScanner extends AbstractScanner {
 
-	private TextAttributesKeys[] fAttributesKeys;
+	private TextAttributesKey[] fAttributesKeys;
 
 	public SingleTokenScanner(ColorManager manager, IPreferenceStore store, 
 			                  String colorPropertyKey, String boldPropertyKey, String italicPropertyKey) {
 		super(manager, store);
-		TextAttributesKeys keys = new TextAttributesKeys(
+		TextAttributesKey keys = new TextAttributesKey(
 										colorPropertyKey, 
 										boldPropertyKey, 
 										italicPropertyKey, 
 										null, 
 										null);
-		fAttributesKeys= new TextAttributesKeys[] { keys };
+		fAttributesKeys= new TextAttributesKey[] { keys };
 		initialize();
 	}
 
@@ -32,7 +32,7 @@ public class SingleTokenScanner extends AbstractScanner {
 	}
 
 	@Override
-	protected TextAttributesKeys[] getAttributesKeys() {
+	protected TextAttributesKey[] getAttributesKeys() {
 		return fAttributesKeys;
 	}
 }

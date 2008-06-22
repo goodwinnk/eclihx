@@ -22,4 +22,5 @@ Eclipse-LazyStart: true
 Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
 Export-Package: eclihx.ui,
+ eclihx.ui.internal.ui.editors,
  eclihx.ui.launch

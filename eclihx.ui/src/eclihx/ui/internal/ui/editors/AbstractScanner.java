@@ -64,9 +64,9 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	/**
 	 * Class for storing keys for text attribute 
 	 */
-	public static class TextAttributesKeys {
+	public static class TextAttributesKey {
 		
-		public TextAttributesKeys(String colorKey, 
+		public TextAttributesKey(String colorKey, 
 				           String boldKey, 
 				           String italicKey, 
 				           String strikethroughKey,
@@ -92,19 +92,19 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 		
 		/**
 		 * Preference keys for boolean preferences which are <code>true</code>,
-		 * iff the corresponding token should be rendered italic.
+		 * if the corresponding token should be rendered italic.
 		 */
 		public String propertyNameItalic;
 		
 		/**
 		 * Preference keys for boolean preferences which are <code>true</code>,
-		 * iff the corresponding token should be rendered strikethrough.
+		 * if the corresponding token should be rendered strikethrough.
 		 */
 		public String propertyNameStrikethrough;
 		
 		/**
 		 * Preference keys for boolean preferences which are <code>true</code>,
-		 * iff the corresponding token should be rendered underline.
+		 * if the corresponding token should be rendered underline.
 		 */
 		public String propertyNameUnderline;
 	}
@@ -114,7 +114,7 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 
 	private HashMap<String, Token> fTokenMap= new HashMap<String, Token>();
 	
-	private TextAttributesKeys[] fAttributesKeys;
+	private TextAttributesKey[] fAttributesKeys;
 	
 	private boolean fNeedsLazyColorLoading;
 
@@ -122,7 +122,7 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	 * Returns an array of preference keys which define the TextAttributes
 	 * used in the rules of this scanner.
 	 */
-	abstract protected TextAttributesKeys[] getAttributesKeys();
+	abstract protected TextAttributesKey[] getAttributesKeys();
 
 	/**
 	 * Creates the list of rules controlling this scanner.
@@ -147,11 +147,11 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 		fAttributesKeys = getAttributesKeys();
 		fNeedsLazyColorLoading = (Display.getCurrent() == null);
 		
-		for (TextAttributesKeys keys: fAttributesKeys) {
+		for (TextAttributesKey key: fAttributesKeys) {
 			if (fNeedsLazyColorLoading)
-				addTokenWithProxyAttribute(keys);
+				addTokenWithProxyAttribute(key);
 			else
-				addToken(keys);
+				addToken(key);
 		}
 
 		initializeRules();
@@ -165,15 +165,15 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 
 	private void resolveProxyAttributes() {
 		if (fNeedsLazyColorLoading && Display.getCurrent() != null) {
-			for (TextAttributesKeys keys: fAttributesKeys) {
+			for (TextAttributesKey keys: fAttributesKeys) {
 				addToken(keys);
 			}
 			fNeedsLazyColorLoading= false;
 		}
 	}
 
-	private void addTokenWithProxyAttribute(TextAttributesKeys keys) {
-		TextAttributesKeys nullColorAttributes = new TextAttributesKeys(null, 
+	private void addTokenWithProxyAttribute(TextAttributesKey keys) {
+		TextAttributesKey nullColorAttributes = new TextAttributesKey(null, 
 				                                                        keys.propertyNameBold, 
 				                                                        keys.propertyNameItalic,
 				                                                        keys.propertyNameStrikethrough,
@@ -181,20 +181,20 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 		fTokenMap.put(keys.propertyNameColor, new Token(createTextAttribute(nullColorAttributes)));
 	}
 
-	private void addToken(TextAttributesKeys keys) {
-		if (fColorManager != null && keys.propertyNameColor != null && fColorManager.getColor(keys.propertyNameColor) == null) {
-			RGB rgb= PreferenceConverter.getColor(fPreferenceStore, keys.propertyNameColor);
-			fColorManager.getColor(keys.propertyNameColor);
-			fColorManager.unbindColor(keys.propertyNameColor);
-			fColorManager.bindColor(keys.propertyNameColor, rgb);
+	private void addToken(TextAttributesKey key) {
+		if (fColorManager != null && key.propertyNameColor != null && fColorManager.getColor(key.propertyNameColor) == null) {
+			RGB rgb= PreferenceConverter.getColor(fPreferenceStore, key.propertyNameColor);
+			fColorManager.getColor(key.propertyNameColor);
+			fColorManager.unbindColor(key.propertyNameColor);
+			fColorManager.bindColor(key.propertyNameColor, rgb);
 		}
 
 		if (!fNeedsLazyColorLoading)
-			fTokenMap.put(keys.propertyNameColor, new Token(createTextAttribute(keys)));
+			fTokenMap.put(key.propertyNameColor, new Token(createTextAttribute(key)));
 		else {
-			Token token= fTokenMap.get(keys.propertyNameColor);
+			Token token= fTokenMap.get(key.propertyNameColor);
 			if (token != null)
-				token.setData(createTextAttribute(keys));
+				token.setData(createTextAttribute(key));
 		}
 	}
 
@@ -208,7 +208,7 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	 * @param underlineKey the italic preference key
 	 * @return the created text attribute
 	 */
-	private TextAttribute createTextAttribute(TextAttributesKeys keys) {
+	private TextAttribute createTextAttribute(TextAttributesKey keys) {
 		Color color = null;
 		if (keys.propertyNameColor != null)
 			color = fColorManager.getColor(keys.propertyNameColor);

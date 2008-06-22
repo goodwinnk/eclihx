@@ -12,14 +12,18 @@ public class HXPartitionScanner extends RuleBasedPartitionScanner {
 		IToken hxComment = new Token(IHXPartitions.HX_SINGLE_LINE_COMMENT);
 		IToken hxPreprocessor = new Token(IHXPartitions.HX_PREPROCESSOR);
 		IToken hxDoc = new Token(IHXPartitions.HX_DOC);
+		IToken hxRegexpr = new Token(IHXPartitions.HX_REGEXPR);
 		IToken hxString = new Token(IHXPartitions.HX_STRING);
+		
+		
 
-		ArrayList<IRule> rules = new ArrayList<IRule>(2);
+		ArrayList<IRule> rules = new ArrayList<IRule>(5);
 
 		rules.add(new MultiLineRule("/*", "*/", hxMultilineComment));
 		rules.add(new EndOfLineRule("//", hxComment));
 		rules.add(new EndOfLineRule("#", hxPreprocessor));
 		rules.add(new MultiLineRule("/**", "**/", hxDoc));
+		rules.add(new MultiLineRule("~/", "/", hxRegexpr));
 		rules.add(new SingleLineRule("\"", "\"", hxString, '\\'));
 
 		IPredicateRule[] result= new IPredicateRule[rules.size()];

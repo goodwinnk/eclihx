@@ -9,7 +9,7 @@ Colorizing:
 		
 	Rules (Rule define parts and how they should be colored)
 		haXe code:
-			+- Number Constants (numbers in 0xFF00 and 13e50 format left)
+			+ Number Constants (numbers in 0xFF00 and 13e50 format left)
 			+ Chars constants 
 			+ Default Types constants (like null, true, false)
 			
@@ -19,6 +19,8 @@ Colorizing:
 			+ Braces
 			+ Brackets () []
 			- TemplateBrackets
+			
+			+ variables like "status1"
 			
 	Scanners 
 		- Group partitions definition in one place
