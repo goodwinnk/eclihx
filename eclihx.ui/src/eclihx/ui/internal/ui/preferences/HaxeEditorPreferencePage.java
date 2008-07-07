@@ -1,18 +1,554 @@
 package eclihx.ui.internal.ui.preferences;
 
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+
+import org.eclipse.jface.preference.ColorSelector;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class HaxeEditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+import eclihx.ui.PreferenceConstants;
+import eclihx.ui.internal.ui.EclihxPlugin;
 
-	public HaxeEditorPreferencePage() {
-		super(GRID);
+
+public class HaxeEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	/**
+	 * Class for storing controls for managing syntax setting and
+	 * providing restricted API for their manipulation
+	 */
+	private final class SyntaxEditorsGroup {
+		
+		private final ColorSelector colorSelector;
+		private final Button boldCheck;
+		private final Button italicCheck;
+		
+		/**
+		 * Current setting group
+		 */
+		private SyntaxPreferencesGroup preferencesGroup;
+		
+		/**
+		 * Creates all editors on the Composite and calls <code>load(null)</code>
+		 * at the end
+		 * @param parent Composite where controls are to be placed
+		 */
+		public SyntaxEditorsGroup(Composite parent) {
+
+			GridLayout preferencesLayout = new GridLayout(2, false);
+			parent.setLayout(preferencesLayout);
+			
+			Label labelColor = new Label(parent, SWT.NONE);
+			labelColor.setText("Color");
+			
+			colorSelector = new ColorSelector(parent);
+			colorSelector.addListener(
+				new IPropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent event) {
+						if (!event.getNewValue().equals(event.getOldValue())) {
+							preferencesGroup.changeColorValue((RGB)event.getNewValue());
+						}
+					}
+				}
+			);	
+			
+			GridData checksData = new GridData();
+			checksData.horizontalSpan = 2;
+			
+			boldCheck = new Button(parent, SWT.CHECK);
+			boldCheck.setText("Bold");
+			boldCheck.setLayoutData(checksData);
+			boldCheck.addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						preferencesGroup.changeBoldValue(boldCheck.getSelection());
+					}
+				}
+			);
+			
+			italicCheck = new Button(parent, SWT.CHECK);
+			italicCheck.setText("Italic");
+			italicCheck.setLayoutData(checksData);
+			italicCheck.addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						preferencesGroup.changeItalicValue(italicCheck.getSelection());
+					}
+				}
+			);
+			
+			load(null);
+		}
+		
+		/**
+		 * Disable or enable all controls at once
+		 * @param state true if controls should be enabled
+		 */
+		private void setEnabled(boolean state) {
+			colorSelector.setEnabled(state);
+			boldCheck.setEnabled(state);
+			italicCheck.setEnabled(state);
+		}
+		
+		/**
+		 * Loads preference group. If group is null this method
+		 * makes all controls disabled
+		 * @param group Group of syntax preferences
+		 * @see SyntaxPreferencesGroup
+		 */
+		public void load(SyntaxPreferencesGroup group) {
+			preferencesGroup = group;
+			setEnabled(preferencesGroup != null);
+			refresh();
+		}
+		
+		/**
+		 * Asks loaded group for current values 
+		 */
+		public void refresh() {
+			if (preferencesGroup != null) {
+				colorSelector.setColorValue(preferencesGroup.getColorValue());
+				boldCheck.setSelection(preferencesGroup.isBold());
+				italicCheck.setSelection(preferencesGroup.isItalic());
+			}
+		}		
 	}
-
-	protected void createFieldEditors() {
+	
+	/**
+	 * Class for storing values keys from the storing group. This class
+	 * implements Lazy Loading pattern and won't ask preference store
+	 * for values until user will ask for it.
+	 */
+	private final class SyntaxPreferencesGroup {
+		
+		/**
+		 * Help class for storing syntax group values
+		 */
+		private final class SyntaxValues {
+			public RGB color;
+			public boolean isBold;
+			public boolean isItalic;
+		}
+		
+		
+		private final String colorNameProperty;
+		private final String boldNameProperty;
+		private final String italicNameProperty;
+		
+		
+		/**
+		 * True if user made an attempt to change the value
+		 */
+		private boolean changed = false;
+		
+		
+		/**
+		 * This flag is set to true when user asks to load default values
+		 */
+		private boolean defaultRequest = false;
+		
+		
+		/**
+		 * Reference to the real values for the group 
+		 */
+		private SyntaxValues values = null;
+		
+		
+		/**
+		 * Name which user will be glad to see in the tree
+		 */
+		private final String name;
+		
+		public SyntaxPreferencesGroup(String name, String colorName, String boldName, String italicName) {
+			this.name = name;
+			colorNameProperty = colorName;
+			boldNameProperty = boldName;
+			italicNameProperty = italicName;
+		}
+		
+		
+		/**
+		 * Saves values
+		 */
+		public void save() {
+			if (changed || defaultRequest) {
+				PreferenceConverter.setValue(getPreferenceStore(), colorNameProperty, getValues().color);
+				getPreferenceStore().setValue(boldNameProperty, getValues().isBold);
+				getPreferenceStore().setValue(italicNameProperty, getValues().isItalic);
+			}
+		}
+		
+		
+		/**
+		 * Asks to load default values
+		 */
+		public void resetToDefaults() {
+			values = null;
+			defaultRequest = true;
+			changed = false;
+		}
+		
+		
+		/**
+		 * This method gets real values from the preference store
+		 * This method provide implementation of the Lazy Load pattern and
+		 * should be used for internal access to values
+		 * @return values
+		 */
+		private SyntaxValues getValues() {
+			if (values == null) {
+				
+				values = new SyntaxValues();
+				
+				if (defaultRequest) {
+					values.color = PreferenceConverter.getDefaultColor(getPreferenceStore(), colorNameProperty);
+					values.isBold = getPreferenceStore().getDefaultBoolean(boldNameProperty);
+					values.isItalic = getPreferenceStore().getDefaultBoolean(italicNameProperty);
+				} else {
+					values.color = PreferenceConverter.getColor(getPreferenceStore(), colorNameProperty);
+					values.isBold = getPreferenceStore().getBoolean(boldNameProperty);
+					values.isItalic = getPreferenceStore().getBoolean(italicNameProperty);
+				}
+				
+				defaultRequest = false;
+			}
+			
+			return values;
+		}
+		
+		
+		/**
+		 * Gets color value in RGB
+		 * @return RGB representation of the color
+		 */
+		public RGB getColorValue() {
+			return getValues().color;
+		}
+		
+		
+		/**
+		 * Sets new color value
+		 * @param rgb
+		 */
+		public void changeColorValue(RGB rgb) {
+			changed = true;
+			getValues().color = rgb;
+		}
+		
+		
+		/**
+		 * Returns true if font for this group is bold
+		 * @return true if font is bold
+		 */
+		public boolean isBold() {
+			return getValues().isBold;
+		}
+		
+		
+		/**
+		 * Sets new value of the boldness
+		 * @param newIsBold new value of the boldness
+		 */
+		public void changeBoldValue(boolean newIsBold) {
+			changed = true;
+			getValues().isBold = newIsBold;
+		}
+		
+		
+		/**
+		 * Returns true if font for this group is italic
+		 * @return true if font is bold
+		 */
+		public boolean isItalic() {
+			return getValues().isItalic;
+		}
+		
+		
+		/**
+		 * Sets new value for the italic preference of the font
+		 * @param newIsItalic new value for the italic preference of the font
+		 */
+		public void changeItalicValue(boolean newIsItalic) {
+			changed = true;			
+			getValues().isItalic = newIsItalic;
+		}
+		
+		/**
+		 * Access to human readable name of the group
+		 * @return name of the group
+		 */
+		public String getName() {
+			return name;
+		}		
 	}
-
+	
+	/**
+	 * haXe source viewer options
+	 */
+	private final ArrayList<SyntaxPreferencesGroup> haxeOptions = new ArrayList<SyntaxPreferencesGroup>();
+	
+	/**
+	 * Controls for syntax options
+	 */
+	private SyntaxEditorsGroup syntaxEditors = null;
+	
+	
 	public void init(IWorkbench workbench) {
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Line comment",
+				PreferenceConstants.HX_EDITOR_COMMENT_COLOR,
+				PreferenceConstants.HX_EDITOR_COMMENT_BOLD,
+				PreferenceConstants.HX_EDITOR_COMMENT_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Multiline comment",
+				PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_COLOR,
+				PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_BOLD,
+				PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"String",
+				PreferenceConstants.HX_EDITOR_STRING_COLOR,
+				PreferenceConstants.HX_EDITOR_STRING_BOLD,
+				PreferenceConstants.HX_EDITOR_STRING_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Regular expression",
+				PreferenceConstants.HX_EDITOR_REGEXPR_COLOR,
+				PreferenceConstants.HX_EDITOR_REGEXPR_BOLD,
+				PreferenceConstants.HX_EDITOR_REGEXPR_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Brackets",
+				PreferenceConstants.HX_EDITOR_BRACKET_COLOR,
+				PreferenceConstants.HX_EDITOR_BRACKET_BOLD,
+				PreferenceConstants.HX_EDITOR_BRACKET_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Braces",
+				PreferenceConstants.HX_EDITOR_BRACE_COLOR,
+				PreferenceConstants.HX_EDITOR_BRACE_BOLD,
+				PreferenceConstants.HX_EDITOR_BRACE_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Number",
+				PreferenceConstants.HX_EDITOR_NUMBER_COLOR,
+				PreferenceConstants.HX_EDITOR_NUMBER_BOLD,
+				PreferenceConstants.HX_EDITOR_NUMBER_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Declare keyword",
+				PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_COLOR,
+				PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_BOLD,
+				PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Keyword",
+				PreferenceConstants.HX_EDITOR_KEYWORDS_COLOR,
+				PreferenceConstants.HX_EDITOR_KEYWORDS_BOLD,
+				PreferenceConstants.HX_EDITOR_KEYWORDS_ITALIC
+			)
+		);
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Basic types",
+				PreferenceConstants.HX_EDITOR_TYPE_COLOR,
+				PreferenceConstants.HX_EDITOR_TYPE_BOLD,
+				PreferenceConstants.HX_EDITOR_TYPE_ITALIC
+			)
+		);
+		
+		/*
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Template",
+				PreferenceConstants.HX_EDITOR_TEMPLATE_COLOR,
+				PreferenceConstants.HX_EDITOR_TEMPLATE_BOLD,
+				PreferenceConstants.HX_EDITOR_TEMPLATE_ITALIC
+			)
+		);*/
+		
+		haxeOptions.add(
+			new SyntaxPreferencesGroup(
+				"Default",
+				PreferenceConstants.HX_EDITOR_DEFAULT_COLOR,
+				PreferenceConstants.HX_EDITOR_DEFAULT_BOLD,
+				PreferenceConstants.HX_EDITOR_DEFAULT_ITALIC
+			)
+		);
+		
+		Collections.sort(haxeOptions, 
+			new Comparator<SyntaxPreferencesGroup>() 
+			{
+				public int compare(SyntaxPreferencesGroup o1,
+						SyntaxPreferencesGroup o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			}
+		);
+	}
+	
+	
+	/**
+	 * Creates tree for options
+	 * @param parent composite where tree must be placed
+	 */
+	private void createSyntaxOptionsTree(Composite parent) {
+
+		final Tree tree = new Tree(parent, SWT.BORDER | SWT.SINGLE);
+		
+		FillLayout treeLayout = new FillLayout();
+		parent.setLayout(treeLayout);
+			
+		final LinkedList<TreeItem> rootStyleNodes = new LinkedList<TreeItem>();
+		
+		final TreeItem haxeCodeParent = new TreeItem(tree, SWT.NONE);
+		rootStyleNodes.add(haxeCodeParent);
+		haxeCodeParent.setText("haXe");
+		
+		final TreeItem haxeCodeDocParent = new TreeItem(tree, SWT.NONE);
+		rootStyleNodes.add(haxeCodeDocParent);
+		haxeCodeDocParent.setText("haXe doc");
+		
+		final TreeItem hxmlFileParent = new TreeItem(tree, SWT.NONE);
+		rootStyleNodes.add(hxmlFileParent);
+		hxmlFileParent.setText("hxml");
+		
+		for (SyntaxPreferencesGroup option: haxeOptions) {
+			TreeItem child = new TreeItem(haxeCodeParent, SWT.NONE);
+			child.setText(option.getName());
+			child.setData(option);
+		}
+		
+		tree.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				TreeItem[] selectedItems = tree.getSelection();
+				
+				if (selectedItems.length > 0) {
+					TreeItem item = selectedItems[0];
+					if (item.getData() instanceof SyntaxPreferencesGroup) {
+						syntaxEditors.load((SyntaxPreferencesGroup)item.getData());
+					} else {
+						syntaxEditors.load(null);
+					}
+						
+				}				
+			}
+		});
+	}
+	
+	@Override
+	protected Control createContents(Composite parent) {
+
+		Composite mainComposite= new Composite(parent, SWT.NONE);
+		mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		GridLayout mainLayout= new GridLayout();
+		mainLayout.numColumns = 2;
+		mainLayout.marginHeight = 0;
+		mainLayout.marginWidth = 0;
+		mainComposite.setLayout(mainLayout);
+
+		Link link= new Link(mainComposite, SWT.NONE);
+		link.setText("Editors colors preferences");
+
+		GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+		gridData.horizontalSpan = 2;
+		link.setLayoutData(gridData);
+
+		Composite treeComposite = new Composite(mainComposite, SWT.NONE);
+		GridData treeData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		treeData.widthHint = 100;
+		treeComposite.setLayoutData(treeData);
+		
+		createSyntaxOptionsTree(treeComposite);		
+		
+		Composite preferencesComposite = new Composite(mainComposite, SWT.NONE | SWT.BORDER);
+		GridData preferenceData = new GridData(GridData.FILL_BOTH);
+		preferencesComposite.setLayoutData(preferenceData);
+
+		syntaxEditors = new SyntaxEditorsGroup(preferencesComposite);
+		
+		return parent;
+	}
+	
+	/**
+	 * Reset all syntax preferences to defaults values
+	 */
+	@Override
+	protected void performDefaults() {
+		for (SyntaxPreferencesGroup option : haxeOptions) {
+			option.resetToDefaults();
+			syntaxEditors.refresh();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
+	@Override
+	public boolean performOk() {
+		for (SyntaxPreferencesGroup option : haxeOptions) {
+			option.save();
+		}
+		
+		return super.performOk();
+	}
+
+	/**
+	 * Gets EclihX UI plug-in preference store
+	 */
+	@Override
+	public IPreferenceStore getPreferenceStore() {
+		return EclihxPlugin.getDefault().getPreferenceStore();
 	}
 }
