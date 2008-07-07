@@ -6,7 +6,7 @@
       <editor
             name="%hxEditor.name%"
             extensions="hx"
-            icon="icons/sample.gif"
+            icon="icons/haxe_file_small.ico"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="eclihx.ui.internal.ui.editors.hx.HXEditor"
             id="eclihx.ui.internal.ui.editors.HXEditor">
@@ -14,7 +14,7 @@
       <editor
             class="org.eclipse.ui.editors.text.TextEditor"
             extensions="hxml"
-            icon="icons/sample.gif"
+            icon="icons/hxml_file_small.ico"
             id="eclihx.ui.editor.hxml"
             name="%hxmlEditor.name%">
       </editor>
