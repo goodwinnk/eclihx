@@ -88,7 +88,7 @@ public class ColorManager implements ISharedTextColors {
 		final Display display= Display.getCurrent();
 		HashMap<RGB, Color> colorTable= fDisplayTable.get(display);
 		if (colorTable == null) {
-			colorTable= new HashMap<RGB, Color>(10);
+			colorTable = new HashMap<RGB, Color>(10);
 			fDisplayTable.put(display, colorTable);
 			if (fAutoDisposeOnDisplayDispose) {
 				display.disposeExec(new Runnable() {

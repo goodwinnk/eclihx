@@ -30,6 +30,7 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@SuppressWarnings({"deprecation"})
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
