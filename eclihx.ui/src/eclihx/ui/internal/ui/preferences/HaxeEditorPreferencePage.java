@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxPlugin;
@@ -148,6 +149,22 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		 * Help class for storing syntax group values
 		 */
 		private final class SyntaxValues {
+			
+//			/**
+//			 * Checks for equality
+//			 */
+//			@Override
+//			public boolean equals(Object valuesObject) {
+//				if (valuesObject instanceof SyntaxValues) {
+//					SyntaxValues values = (SyntaxValues)valuesObject;
+//					
+//					return isBold == values.isBold && isItalic == values.isItalic && 
+//						   ((color == null && values.color == null) || (color != null && color.equals(values.color)));
+//				}			
+//				
+//				return false;
+//			}
+			
 			public RGB color;
 			public boolean isBold;
 			public boolean isItalic;
@@ -206,11 +223,16 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		 * Asks to load default values
 		 */
 		public void resetToDefaults() {
-			values = null;
 			defaultRequest = true;
-			changed = false;
-		}
-		
+			
+			// Reset value
+			values = null;
+			
+			// We need saving now, because we are not sure that value hadn't changed
+			// The problem appears because we don't store initial loaded values, so
+			// we can't check was there any real changes
+			changed = true;
+		}		
 		
 		/**
 		 * This method gets real values from the preference store
@@ -219,15 +241,20 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		 * @return values
 		 */
 		private SyntaxValues getValues() {
+			
 			if (values == null) {
 				
 				values = new SyntaxValues();
 				
 				if (defaultRequest) {
+					
 					values.color = PreferenceConverter.getDefaultColor(getPreferenceStore(), colorNameProperty);
 					values.isBold = getPreferenceStore().getDefaultBoolean(boldNameProperty);
 					values.isItalic = getPreferenceStore().getDefaultBoolean(italicNameProperty);
-				} else {
+					
+
+					
+				} else {					
 					values.color = PreferenceConverter.getColor(getPreferenceStore(), colorNameProperty);
 					values.isBold = getPreferenceStore().getBoolean(boldNameProperty);
 					values.isItalic = getPreferenceStore().getBoolean(italicNameProperty);
@@ -317,6 +344,9 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 	
 	
 	public void init(IWorkbench workbench) {
+		
+		setTitle("Editors colors preferences");
+		
 		haxeOptions.add(
 			new SyntaxPreferencesGroup(
 				"Line comment",
@@ -442,31 +472,35 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 	 * Creates tree for options
 	 * @param parent composite where tree must be placed
 	 */
-	private void createSyntaxOptionsTree(Composite parent) {
+	private void createSyntaxOptionsTree(final Composite parent) {
 
-		final Tree tree = new Tree(parent, SWT.BORDER | SWT.SINGLE);
-		
-		FillLayout treeLayout = new FillLayout();
+		final FillLayout treeLayout = new FillLayout();
 		parent.setLayout(treeLayout);
+		
+		final Tree tree = new Tree(parent, SWT.BORDER | SWT.SINGLE);
+				
+		final String haxeName = "haXe";
+		final String haxeDocName = "haXe doc";
+		final String hxmlName = "hxml"; 
 			
-		final LinkedList<TreeItem> rootStyleNodes = new LinkedList<TreeItem>();
+		final LinkedList<TreeItem> rootTreeItems = new LinkedList<TreeItem>();
+		final String rootElementNames[] = new String[] {haxeName, haxeDocName, hxmlName};
 		
-		final TreeItem haxeCodeParent = new TreeItem(tree, SWT.NONE);
-		rootStyleNodes.add(haxeCodeParent);
-		haxeCodeParent.setText("haXe");
-		
-		final TreeItem haxeCodeDocParent = new TreeItem(tree, SWT.NONE);
-		rootStyleNodes.add(haxeCodeDocParent);
-		haxeCodeDocParent.setText("haXe doc");
-		
-		final TreeItem hxmlFileParent = new TreeItem(tree, SWT.NONE);
-		rootStyleNodes.add(hxmlFileParent);
-		hxmlFileParent.setText("hxml");
-		
-		for (SyntaxPreferencesGroup option: haxeOptions) {
-			TreeItem child = new TreeItem(haxeCodeParent, SWT.NONE);
-			child.setText(option.getName());
-			child.setData(option);
+		for (String rootName : rootElementNames) {
+			
+			// Create an element and add to root elements
+			final TreeItem rootItem = new TreeItem(tree, SWT.NONE);
+			rootItem.setText(rootName);
+			rootItem.setData(null);
+			rootTreeItems.add(rootItem);
+			
+			if (rootName.equals(haxeName)) {
+				for (SyntaxPreferencesGroup option : haxeOptions) {
+					TreeItem child = new TreeItem(rootItem, SWT.NONE);
+					child.setText(option.getName());
+					child.setData(option);
+				}
+			}			
 		}
 		
 		tree.addSelectionListener(new SelectionAdapter() {
@@ -479,15 +513,14 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 						syntaxEditors.load((SyntaxPreferencesGroup)item.getData());
 					} else {
 						syntaxEditors.load(null);
-					}
-						
+					}						
 				}				
 			}
 		});
 	}
 	
 	@Override
-	protected Control createContents(Composite parent) {
+	protected Control createContents(final Composite parent) {
 
 		Composite mainComposite= new Composite(parent, SWT.NONE);
 		mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -497,12 +530,30 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		mainLayout.marginWidth = 0;
 		mainComposite.setLayout(mainLayout);
 
-		Link link= new Link(mainComposite, SWT.NONE);
-		link.setText("Editors colors preferences");
-
-		GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+		
+		GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false);
 		gridData.horizontalSpan = 2;
+		
+		Link link = new Link(mainComposite, SWT.NONE);
+		link.setText("Default colors and font can be configured on the <a href=\"org.eclipse.ui.preferencePages.GeneralTextEditor\">Text Editors</a> and on the <a href=\"org.eclipse.ui.preferencePages.ColorsAndFonts\">Colors and Fonts</a> preference page.");
+		link.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				PreferencesUtil.createPreferenceDialogOn(parent.getShell(), e.text, null, null);
+			}
+		});		
 		link.setLayoutData(gridData);
+		
+		final GridData titlesData = new GridData(GridData.FILL_HORIZONTAL);
+		titlesData.horizontalSpan = 1;
+		titlesData.verticalIndent = 20;
+		
+		final Label treeTitle = new Label(mainComposite, SWT.NONE);
+		treeTitle.setText("Editor element");
+		treeTitle.setLayoutData(titlesData);
+		
+		final Label preferenceTitle = new Label(mainComposite, SWT.NONE);
+		preferenceTitle.setText("Preferences");
+		preferenceTitle.setLayoutData(titlesData);		
 
 		Composite treeComposite = new Composite(mainComposite, SWT.NONE);
 		GridData treeData = new GridData(SWT.FILL, SWT.FILL, true, true);

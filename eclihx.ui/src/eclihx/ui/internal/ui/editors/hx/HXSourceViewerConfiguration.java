@@ -10,6 +10,7 @@ import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.util.PropertyChangeEvent;
 
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxPlugin;
@@ -27,6 +28,15 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	private final AbstractScanner regexprScanner;
 	//private final AbstractScanner hxDocScanner;
 	private final AbstractScanner hxConditionCompilationScanner;
+	
+	public void adaptToPreferenceChange(PropertyChangeEvent event) {
+		hxCodeScanner.adaptToPreferenceChange(event);
+		singleLineCommentScanner.adaptToPreferenceChange(event);
+		multiLineCommentScanner.adaptToPreferenceChange(event);
+		stringScanner.adaptToPreferenceChange(event);
+		regexprScanner.adaptToPreferenceChange(event);
+		hxConditionCompilationScanner.adaptToPreferenceChange(event);
+	}
 
 	public HXSourceViewerConfiguration(ColorManager colorManager) {
 		//this.colorManager = colorManager;
@@ -38,8 +48,9 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 		stringScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_STRING_COLOR, PreferenceConstants.HX_EDITOR_STRING_BOLD, PreferenceConstants.HX_EDITOR_STRING_ITALIC);
 		regexprScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_REGEXPR_COLOR, PreferenceConstants.HX_EDITOR_REGEXPR_BOLD, PreferenceConstants.HX_EDITOR_REGEXPR_ITALIC);
 		hxConditionCompilationScanner = new SingleTokenScanner(colorManager, store, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_COLOR, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_BOLD, PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_ITALIC);
-		
 	}
+	
+	
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] {
 			IDocument.DEFAULT_CONTENT_TYPE,
@@ -50,6 +61,8 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 			IHXPartitions.HX_PREPROCESSOR
 		};
 	}
+	
+	
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
 		ISourceViewer sourceViewer,
 		String contentType) {
@@ -57,30 +70,37 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 			doubleClickStrategy = new HXDoubleClickStrategy();
 		return doubleClickStrategy;
 	}
+	
 
 	protected HXScanner getHXScanner() {
 		return hxCodeScanner;
 	}
 	
+	
 	protected AbstractScanner getSingleLineCommentScanner() {
 		return singleLineCommentScanner;
 	}
+	
 	
 	protected AbstractScanner getMultiLineCommentScanner() {
 		return multiLineCommentScanner;
 	}
 	
+	
 	protected AbstractScanner getStringScanner() {
 		return stringScanner;
 	}
+	
 	
 	protected AbstractScanner getRegexprScanner() {
 		return regexprScanner;
 	}
 	
+	
 	/*protected AbstractScanner getHXDocScanner() {
 		return hxDocScanner;
 	}*/
+	
 	
 	protected AbstractScanner getHXConditionCompilationScanner() {
 		return hxConditionCompilationScanner;

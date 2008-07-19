@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.eclipse.jface.text.rules.*;
 
 public class HXPartitionScanner extends RuleBasedPartitionScanner {
-
+	
 	public HXPartitionScanner() {
 		IToken hxMultilineComment = new Token(IHXPartitions.HX_MULTI_LINE_COMMENT);
 		IToken hxComment = new Token(IHXPartitions.HX_SINGLE_LINE_COMMENT);
@@ -15,8 +15,6 @@ public class HXPartitionScanner extends RuleBasedPartitionScanner {
 		IToken hxRegexpr = new Token(IHXPartitions.HX_REGEXPR);
 		IToken hxString = new Token(IHXPartitions.HX_STRING);
 		
-		
-
 		ArrayList<IRule> rules = new ArrayList<IRule>(5);
 
 		rules.add(new MultiLineRule("/*", "*/", hxMultilineComment));
@@ -30,4 +28,5 @@ public class HXPartitionScanner extends RuleBasedPartitionScanner {
 		rules.toArray(result);
 		setPredicateRules(result);
 	}
+
 }
