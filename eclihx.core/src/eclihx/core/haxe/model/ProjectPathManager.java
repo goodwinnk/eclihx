@@ -29,8 +29,9 @@ public class ProjectPathManager implements IProjectPathManager {
 	private IProject fProject;
 	
 	public IFolder outputFolder;
+	
 	public List<IFolder> sourceFolders = new LinkedList<IFolder>();
-	public List<IFile> buildFiles = new LinkedList<IFile>();
+	//public List<IFile> buildFiles = new LinkedList<IFile>();
 	public List<IFolder> libFolders = new LinkedList<IFolder>();
 	public List<IFile> libFiles = new LinkedList<IFile>();
 	
@@ -49,12 +50,16 @@ public class ProjectPathManager implements IProjectPathManager {
 				sourceFolders.add(project.getFolder(sourceFolder));
 			}
 		}
+		
+		/*
 		buildFiles.clear();
 		if (pathsStore.buildFiles != null) {
 			for (String buildFile : pathsStore.buildFiles) {
 				buildFiles.add(project.getFile(buildFile));
 			}
 		}
+		*/
+		
 		libFolders.clear();
 		if (pathsStore.libFolders != null) {
 			for (String libFolder : pathsStore.libFolders) {
@@ -84,12 +89,14 @@ public class ProjectPathManager implements IProjectPathManager {
 			arrayIndex++;
 		}
 		
+		/*
 		pathsStore.buildFiles = new String[buildFiles.size()];
 		arrayIndex = 0;
 		for (IFile file : buildFiles) {
 			pathsStore.buildFiles[arrayIndex] = file.getProjectRelativePath().toOSString();
 			arrayIndex++;
 		}
+		*/
 		
 		pathsStore.libFiles = new String[libFiles.size()];
 		arrayIndex = 0;
@@ -170,6 +177,7 @@ public class ProjectPathManager implements IProjectPathManager {
 		return pathManager;
 	}
 	
+	
 	public void addLibFolder(IFolder folder) {
 		assert(folder.getProject().equals(fProject));
 		
@@ -215,12 +223,15 @@ public class ProjectPathManager implements IProjectPathManager {
 		}
 	}
 
+	/*
 	public void addBuildFile(IFile file) {
 		assert(file.getProject().equals(fProject));
 		
 		buildFiles.add(file);
 	}
+	*/
 
+	/*
 	public List<IFile> getBuildFiles() {
 		return buildFiles;
 	}
@@ -230,5 +241,5 @@ public class ProjectPathManager implements IProjectPathManager {
 		for (IFile file : files) {
 			addBuildFile(file);
 		}		
-	}
+	}*/
 }

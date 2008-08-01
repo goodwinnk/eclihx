@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 
 // TODO 5 Implement default implementation for file parameter
-
-
 public class Parser {
 	
 	private Hashtable<String, Parameter> parametersStore = null;

@@ -3,7 +3,6 @@ package eclihx.core.util.console.parser.core;
 /**
  * Defines how to parse value string
  */
-
 public interface IValueParser {
 
 	/**

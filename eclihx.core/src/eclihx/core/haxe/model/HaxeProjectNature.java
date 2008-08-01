@@ -5,7 +5,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * Nature of the haXe eclipse project
+ * Nature of the haXe project
  * 
  * @see IProjectNature
  */
@@ -18,16 +18,16 @@ public class HaxeProjectNature implements IProjectNature{
 	 * @see org.eclipse.core.resources.IProjectNature#configure()
 	 */
 	public void configure() throws CoreException {
-		// TODO 6 Auto-generated method stub
-		
+		// TODO 6 Think of special project resources, which should be 
+		// deleted here
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.resources.IProjectNature#deconfigure()
 	 */
 	public void deconfigure() throws CoreException {
-		// TODO 6 Auto-generated method stub
-		
+		// TODO 6 Think of special project resources, which should be 
+		// deleted here
 	}
 
 	/* (non-Javadoc)

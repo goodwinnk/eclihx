@@ -5,17 +5,12 @@ package eclihx.tests.core;
 
 import static org.junit.Assert.*;
 
-import java.io.Console;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eclihx.core.haxe.internal.parser.BuildParamParser;
 import eclihx.core.util.console.parser.core.ParseError;
-import eclihx.core.util.console.parser.core.Parser;
+
 
 /**
  */

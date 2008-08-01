@@ -37,7 +37,11 @@ import eclihx.core.haxe.model.HaxeWorkspace;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IProjectPathManager;
 
-public class HaxeMainTab extends AbstractLaunchConfigurationTab {
+
+/**
+ * This class contains functionality for the main launch configuration tab
+ */
+public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	
 	// TODO 3 move strings constants to configure file
 
@@ -45,6 +49,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 *  If this variable is <code>null</code> it's mean that we hadn't found the project.
 	 */
 	IHaxeProject haxeProject;
+	String[] buildFilesCache;
 	
 	/* Controls */
 	private Text projectNameText;
@@ -54,10 +59,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	private Button projectBuildButton;
 	
 	private ModifyListener fModifyListener = 
-		new ModifyListener() { public void modifyText(ModifyEvent me) { updateLaunchConfigurationDialog(); } };
+		new ModifyListener() { public void modifyText(ModifyEvent modifyEvent) { updateLaunchConfigurationDialog(); } };
 	
 	/* Base selection listener. It reacts to events ignoring them */	
-	class SelectionListenerClass implements SelectionListener { 
+	private class SelectionListenerClass implements SelectionListener { 
 		public void widgetDefaultSelected(SelectionEvent e) {/*do nothing*/}
 		public void widgetSelected(SelectionEvent e) { /*do nothing*/ }
 	}	
@@ -75,19 +80,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		dialog.setTitle("Select Haxe Project");
 		dialog.setMessage("Enter a string to search for a project:");
 		
-		try {
-			dialog.setElements(new HaxeWorkspace(getWorkspaceRoot()).getHaxeProjectsNames());
-			
-			String haxeProjectName = projectNameText.getText();
-			if (haxeProjectName != null) {
-				dialog.setInitialSelections(new Object[] { haxeProjectName });
-			}
-			
-		} catch (Exception e) {
-			EclihxLogger.logError(e); 
-			// This is not critical - we will return an empty dialog
-		}
+		dialog.setElements(new HaxeWorkspace(getWorkspaceRoot()).getHaxeProjectsNames());
 		
+		dialog.setInitialSelections(new Object[] { projectNameText.getText() });
+			
 		return dialog;
 	}	
 	
@@ -106,16 +102,15 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		dialog.setTitle("Select Haxe Build File");
 		dialog.setMessage("Enter a string to search for a file:");
 		
-		try	{
-			
-			IProjectPathManager pathManager = haxeProject.getPathManager();
-			dialog.setElements(getAbsolutePaths(pathManager.getBuildFiles()).toArray());
-			
-			//TODO 2 understand what we should do with default selection 
-		} catch (Exception e) {
-			EclihxLogger.logError(e); 
-			// This is not critical - we will return an empty dialog
+
+		try {
+			dialog.setElements(getAbsolutePaths(haxeProject.getBuildFiles()));
+		} catch (CoreException e) {
+			EclihxLogger.logError(e);
+			dialog.setElements(new Object[0]);
 		}
+		
+		dialog.setInitialSelections(new Object[]{buildFileNameText.getText()});
 		
 		return dialog;
 	}		
@@ -125,19 +120,18 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 * @return
 	 */
 	private IWorkspaceRoot getWorkspaceRoot() {
-		// TODO Auto-generated method stub
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 	
 	/**
 	 * Converts IFile to absolute paths strings
 	 */
-	private List<String> getAbsolutePaths(List<IFile> files) {
-		List<String> paths = new ArrayList<String>(files.size());
+	private String[] getAbsolutePaths(IFile[] files) {
+		List<String> paths = new ArrayList<String>(files.length);
 		for (IFile file : files) {
 			paths.add(file.getLocation().toString());			
 		}
-		return paths;		
+		return paths.toArray(new String[0]);		
 	}
 	
 
@@ -148,18 +142,29 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void onProjectButtonSelected(SelectionEvent event) {
 		AbstractElementListSelectionDialog dialog = getHaxeProjectsDialog();
+		
 		if (dialog.open() == Window.OK) {
 			String projectNewName = dialog.getFirstResult().toString();
 			
 			projectNameText.setText(projectNewName);
-
-			IProjectPathManager pathManager = haxeProject.getPathManager();
-			// Sets build file as a first one in the projects paths
-			buildFileNameText.setText(pathManager.getBuildFiles().get(0).getLocation().toString());
-			// Output folder
-			outputDirectoryText.setText(pathManager.getOutputFolder().getLocation().toString());
-			// Source folder
-			sourceDirectoryText.setText(pathManager.getSourceFolders().get(0).getLocation().toString());
+			
+			// After that current project should be updated
+			if (haxeProject != null) {
+				IProjectPathManager pathManager = haxeProject.getPathManager();
+				
+				assert(buildFilesCache != null); // Because we should have set it with updating project variable
+				
+				if (buildFilesCache.length > 0) {
+					buildFileNameText.setText(buildFilesCache[0]);
+				} else {
+					buildFileNameText.setText("");
+				}
+				
+				// Output folder
+				outputDirectoryText.setText(pathManager.getOutputFolder().getLocation().toString());
+				// Source folder
+				sourceDirectoryText.setText(pathManager.getSourceFolders().get(0).getLocation().toString());
+			}
 		}
 	}
 	
@@ -181,12 +186,20 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#getImage()
+	 */
 	@Override
 	public Image getImage() {
 		// TODO 2 Add image for the main page of the launcher configuration
 		return super.getImage();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse.swt.widgets.Composite)
+	 */
 	public void createControl(Composite parent) {
 		Composite top = new Composite(parent, SWT.LEFT);
 
@@ -210,7 +223,7 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		projectNameText.addModifyListener(
 			new ModifyListener () {
 				public void modifyText(ModifyEvent me) {
-					checkProjectName();
+					UpdateCurrentProject(projectNameText.getText());
 				}
 			} 
 		);
@@ -272,10 +285,18 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		setControl(top);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
+	 */
 	public String getName() {
 		return "Main";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse.debug.core.ILaunchConfiguration)
+	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		initializeProjectName(configuration);
 		initializeBuildFile(configuration);
@@ -283,6 +304,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		initializeOutputDirectory(configuration);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
+	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.PROJECT_NAME, projectNameText.getText());
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText.getText());
@@ -294,6 +319,10 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
+	 */
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.PROJECT_NAME, "");
 		configuration.setAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, "");
@@ -355,28 +384,64 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		buildFileNameText.setText(buildFileString);		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.debug.core.ILaunchConfiguration)
+	 */
 	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
-
+		
+		// TODO 7 Make separate validator for configuration
+		
 		if (!super.isValid(launchConfig)) return false;
 		
 		try {
+			
+			// Project name
+			String projectName = launchConfig.getAttribute(IHaxeLaunchConfigurationConstants.PROJECT_NAME, "");				
+			if (projectName == null || projectName.isEmpty()) {
+				setMessage("Choose the haXe project");
+				setErrorMessage(null);
+				return false;
+			}
+			
+			// Build file check
+			if (buildFilesCache != null && buildFilesCache.length == 0)
+			{
+				setErrorMessage("This version of EclihX only supports building based on hxml-file." +
+						        "Please create one for this project before proceeding with launching");
+				setMessage(null);
+				return false;
+			}
+			
+			String buildFilePath = launchConfig.getAttribute(IHaxeLaunchConfigurationConstants.BUILD_FILE, "");
+			if (buildFilePath.isEmpty()){
+				setMessage("Please, select build file for this project.");
+				setErrorMessage(null);
+				return false;
+			}
 			
 			// compiler check
 			String executablePath = launchConfig.getAttribute(IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
 			if (executablePath.isEmpty()) {
 				setErrorMessage("Please, define haXe compiler first (Preferences->EclihX->Compiler).");
+				setMessage(null);
 	            return false;
+			} 
+			
+			if (haxeProject == null) {
+				setErrorMessage("There is no project with given name.");
+				setMessage(null);
+				return false;
 			}
 			
-			if (!checkProjectName()) return false; 
-			
-		} catch (Exception e) {
-			//setErrorMessage("hmmm... something is wrong");
-			//return false;
+		} catch (CoreException e) {
+			return false;
 		}	
 		
 		// Everything is OK
+		setErrorMessage(null);
+		setMessage(null);
 		return true;
 	}
 	
@@ -384,26 +449,24 @@ public class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 * Method checks if we entered valid project name
 	 * @return <code>true</code> if valid
 	 */
-	private boolean checkProjectName() {
-		String projectName = projectNameText.getText();
-		
-		if (projectName == null || projectName.isEmpty()) {
-			setMessage("Choose the haXe project");
-			setErrorMessage(null);
-			return false;
+	private void UpdateCurrentProject(String projectName) {
+		try {		
+			if (projectName.isEmpty()) {
+				haxeProject = null;
+			} else {
+				haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
+			}
+			
+			if (haxeProject != null) {
+				if (!haxeProject.isOpen()) {
+					haxeProject.open(null);
+				}				
+	
+				buildFilesCache = getAbsolutePaths(haxeProject.getBuildFiles());
+			}		
+		} catch (CoreException e) {
+			haxeProject = null;
+			buildFilesCache = null;
 		}
-		
-		haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
-		
-		if (haxeProject == null) {
-			setMessage(null);
-			setErrorMessage("Can't find the haXe project.");
-			projectBuildButton.setEnabled(false);
-			return false;
-		}
-		
-		setMessage(null);
-		setErrorMessage(null);		
-		return true;
 	}
 }
