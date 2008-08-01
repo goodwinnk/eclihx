@@ -159,7 +159,7 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 //					SyntaxValues values = (SyntaxValues)valuesObject;
 //					
 //					return isBold == values.isBold && isItalic == values.isItalic && 
-//						   ((color == null && values.color == null) || (color != null && color.equals(values.color)));
+//						   ((color == values.color) || (color != null && color.equals(values.color)));
 //				}			
 //				
 //				return false;

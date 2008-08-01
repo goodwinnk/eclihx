@@ -1,11 +1,9 @@
 package eclihx.core.util;
 
 /**
- * Not sure yet will this class be usefull
- * 
+ * Not sure yet will this class be useful
  * Going to be used to make OS specific operations
  */
-
 public final class OSUtil {
 	
 	/**

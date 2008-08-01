@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.debug.core,
  org.eclipse.core.runtime,
  eclihx.core
 Eclipse-LazyStart: true
-Export-Package: eclihx.debug.flash
 Bundle-ClassPath: .,
  lib/adobe/swfkit.jar,
  lib/adobe/fdb.jar
+Export-Package: eclihx.debug.flash

@@ -15,13 +15,15 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 		fRoot = root;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#getHaxeProjectsNames()
 	 */
 	public String[] getHaxeProjectsNames() {
+		
 		IProject[] allProjects = fRoot.getProjects();
+		
 		ArrayList<String> haxeProjectsStrings = new ArrayList<String>();
+		
 		for (IProject project : allProjects) {
 			if (HaxeProject.isHaxeProject(project)) {
 				haxeProjectsStrings.add(project.getName());
@@ -38,23 +40,25 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 	public void close(){
 		// store all projects info
 		IProject[] allProjects = fRoot.getProjects();
+		
 		for (IProject project : allProjects) {
 			if (HaxeProject.isHaxeProject(project)) {
 				(new HaxeProject(project)).store();
 			}
 		}
 		
-	}
-	
+	}	
 	
 	/* (non-Javadoc)
 	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#getHaxeProject(java.lang.String)
 	 */
 	public IHaxeProject getHaxeProject(String name){
+		
 		IProject project= fRoot.getProject(name);
 		if (project.exists()) {
 			return (new HaxeProject(project));
 		}
+		
 		return null;
 	}
 }

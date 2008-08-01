@@ -22,7 +22,6 @@ import eclihx.core.util.console.parser.core.Parser;
 /**
  * Class which should parse haXe builder parameters and store them
  * into the <code>HaxeConfigurationList</code>
- * Not thread safe yet 
  */
 public class BuildParamParser {
 	

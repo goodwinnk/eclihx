@@ -99,7 +99,7 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 			InputStream stream = new ByteArrayInputStream(("# " + project.getName() + " build file").getBytes());
 			file.create(stream, true, monitor);
 			
-			haxeProject.getPathManager().addBuildFile(file);
+			//haxeProject.getPathManager().addBuildFile(file);
 			
 			// Source folder
 			IFolder srcFolder = project.getFolder(firstPage.getSourceFolder());

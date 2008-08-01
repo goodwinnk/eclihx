@@ -1,5 +1,7 @@
 package eclihx.core.haxe.model.core;
 
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -16,12 +18,19 @@ public interface IHaxeProject {
 	IProject getProjectBase();
 	
 	/**
-	 * Get path manager. It can be used to find out info about folders, 
+	 * Gets path manager. It can be used to find out info about folders, 
 	 * like Source, Binary, Library
 	 *  
-	 * @return
+	 * @return Project path manager
 	 */
-	IProjectPathManager getPathManager();	
+	IProjectPathManager getPathManager();
+	
+	/**
+	 * Gets list of build files paths
+	 * @return array of IFile interfaces with build files
+	 * @throws CoreException 
+	 */
+	IFile[] getBuildFiles() throws CoreException;
 	
 	/**
 	 * Checks if project is opened. Project is considered to be opened if getProjectBase().isOpen()

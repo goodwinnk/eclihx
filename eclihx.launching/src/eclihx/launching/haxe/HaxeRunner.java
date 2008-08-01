@@ -83,13 +83,12 @@ public class HaxeRunner implements IHaxeRunner {
         // output directory
         File outputDirectory = new File(configuration.getOutputDirectory());
         
-        String commandLine = configuration.getCompilerPath() + 
+        String commandLine = quoteString(configuration.getCompilerPath()) + 
                              " -cp " + quoteString(configuration.getSourceDirectory()) +  
-                             ' ' + configuration.getBuildFile();
+                             ' ' + quoteString(configuration.getBuildFile());
         Process systemProcess = DebugPlugin.exec(DebugPlugin.parseArguments(commandLine), outputDirectory);
         
         DebugPlugin.newProcess(launch, systemProcess, null);
-
 	}
 
 }

@@ -4,7 +4,9 @@ Bundle-Name: Tests Plug-in
 Bundle-SymbolicName: eclihx.tests
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.tests.Activator
-Require-Bundle: eclihx.core
+Require-Bundle: eclihx.core,
+ eclihx.ui
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/junit-4.4.jar,
  .
+Import-Package: org.eclipse.jface.text.rules

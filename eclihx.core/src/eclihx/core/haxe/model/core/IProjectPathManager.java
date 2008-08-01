@@ -5,8 +5,11 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
+/**
+ *  
+ * 
+ */
 public interface IProjectPathManager {
-	
 	/**
 	 * Store paths
 	 */
@@ -64,19 +67,17 @@ public interface IProjectPathManager {
 	 * Get build files
 	 * @return
 	 */
-	List<IFile> getBuildFiles();
+	//List<IFile> getBuildFiles();
 	
 	/**
 	 * Override all build files
 	 * @param files
 	 */
-	void setBuildFiles(IFile[] files);
+	//void setBuildFiles(IFile[] files);
 	
 	/**
 	 * Add build file
 	 * @param file
 	 */
-	void addBuildFile(IFile file);
-	
-	
+	//void addBuildFile(IFile file);	
 }

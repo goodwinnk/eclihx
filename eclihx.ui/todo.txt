@@ -4,6 +4,7 @@ Colorizing:
 		+ Single Line Comment
 		+ haXe preprocessor
 		+- haXe code(see haXe code rules)
+		- bug in colorizing '"a"'
 		- haXe doc
 		+ haXe String
 		
@@ -27,9 +28,7 @@ Colorizing:
 		- Tokens absence custom exception
 
 Editor:
-	- auto formating
-		
-		
+	- auto formating		
 			
 Program Preference
 	Think of new system of preferences
@@ -40,14 +39,14 @@ Preferences
 	Main Page
 		- info about plug-in
 	Editor Page
-		- coloring settings
+		+ coloring settings
 	Compiler Page
 		+ haXe compiler path
 		- validation of the compiler 
 		
 Perspectives
 	haXe Perspective
-		- Default views in open views
+		+ Default views in open views
 		- Update new menu
 		
 Wizards
@@ -62,6 +61,7 @@ Wizards
 	    
 	New haXe File
 	    - Default hx resolution.
+		
 	New haXe Target
 		- select destination platform
 			- flash6
@@ -95,12 +95,9 @@ Launcher UI:
 	- Update bin folder after run
 		
 
-		
-
 haXe core
 	+ abstraction for haXe projects
 	+ project paths serializer	
-		 
     
 features
 	- after deleting project - suggest to remove concerned run configuration
@@ -114,7 +111,6 @@ Required Icons:
 	- haXe launcher (16x16, <= 256 colors)
 	- launcher main tab icon
 	
-
 ==== Current Task ============================
 
 	

@@ -14,7 +14,7 @@ public interface IParamExistense {
 	/**
 	 * Method which defines how to save parameter
 	 * @param exist is parameter exists
-	 * @throws ParseError TODO
+	 * @throws ParseError
 	 */
 	void save(boolean exist) throws ParseError;
 	
