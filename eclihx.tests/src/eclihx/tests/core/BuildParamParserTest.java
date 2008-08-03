@@ -1,6 +1,3 @@
-/**
- * 
- */
 package eclihx.tests.core;
 
 import static org.junit.Assert.*;
