@@ -11,7 +11,7 @@ import org.eclipse.ui.IEditorInput;
 
 import org.eclipse.ui.part.FileEditorInput;
 
-import eclihx.debug.flash.FlashBreakpoint;
+//import eclihx.debug.flash.FlashBreakpoint;
 
 public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 
@@ -103,18 +103,19 @@ public class HaxeDebugModelPresentation implements IDebugModelPresentation {
 	 */
 	
 	public String getEditorId(IEditorInput input, Object element) {
-		if (element instanceof IFile) {
-			IFile file = (IFile) element;
-			//if (file.getFileExtension().endsWith(".hx")) {
-				return "eclihx.ui.internal.ui.editors.HXEditor"; 
-			//}
-		} else if (element instanceof FlashBreakpoint ){
-			return "eclihx.ui.internal.ui.editors.HXEditor";
-		}
-			
-		//if (element instanceof IFile || element instanceof ILineBreakpoint)
-			
-		
+		//TODO 7 Implement this
+//		if (element instanceof IFile) {
+//			IFile file = (IFile) element;
+//			//if (file.getFileExtension().endsWith(".hx")) {
+//				return "eclihx.ui.internal.ui.editors.HXEditor"; 
+//			//}
+//		} else if (element instanceof FlashBreakpoint ){
+//			return "eclihx.ui.internal.ui.editors.HXEditor";
+//		}
+//			
+//		//if (element instanceof IFile || element instanceof ILineBreakpoint)
+//			
+//		
 		return null;
 	}
 

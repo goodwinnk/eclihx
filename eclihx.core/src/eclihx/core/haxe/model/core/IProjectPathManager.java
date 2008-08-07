@@ -2,7 +2,6 @@ package eclihx.core.haxe.model.core;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 
 /**

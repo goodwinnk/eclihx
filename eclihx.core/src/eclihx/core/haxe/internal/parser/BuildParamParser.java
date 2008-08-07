@@ -3,10 +3,7 @@ package eclihx.core.haxe.internal.parser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
 
-import eclihx.core.haxe.internal.ParamsContainer;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.configuration.InvalidConfiguration;

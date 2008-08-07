@@ -1,7 +1,6 @@
 package eclihx.debug.flash;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -17,11 +16,8 @@ import flash.tools.debugger.Session;
 import flash.tools.debugger.SessionManager;
 import flash.tools.debugger.VersionException;
 
-import eclihx.core.haxe.internal.IBuildParamsContainer;
-import eclihx.core.haxe.internal.ParamsContainer;
 import eclihx.core.haxe.internal.configuration.FlashConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
-import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.configuration.InvalidConfiguration;
 import eclihx.core.haxe.internal.parser.BuildParamParser;
 import eclihx.core.util.console.parser.core.ParseError;

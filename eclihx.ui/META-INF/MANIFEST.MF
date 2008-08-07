@@ -18,9 +18,21 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.core,
  eclihx.core,
  eclihx.launching
-Eclipse-LazyStart: true
 Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
-Export-Package: eclihx.ui,
- eclihx.ui.internal.ui.editors,
- eclihx.ui.launch
+Export-Package: eclihx,
+ eclihx.ui,
+ eclihx.ui.internal;x-internal:=true,
+ eclihx.ui.internal.ui;x-internal:=true,
+ eclihx.ui.internal.ui.editors;x-internal:=true,
+ eclihx.ui.internal.ui.editors.hx;x-internal:=true,
+ eclihx.ui.internal.ui.preferences;x-internal:=true,
+ eclihx.ui.internal.ui.properties;x-internal:=true,
+ eclihx.ui.internal.ui.views;x-internal:=true,
+ eclihx.ui.internal.ui.wizards;x-internal:=true,
+ eclihx.ui.launch,
+ eclihx.ui.launch.handlers,
+ eclihx.ui.launch.tabs,
+ eclihx.ui.wizards
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

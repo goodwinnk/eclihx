@@ -17,5 +17,4 @@ public class BuildPathPropertyPage extends PropertyPage implements
 		// TODO 4 Implement
 		return null;
 	}
-
 }

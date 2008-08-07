@@ -84,22 +84,17 @@
           name="%haxeEclihxPerspective.name"/>
  </extension>
  <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-          targetID="eclihx.ui.internal.ui.HaxePerspectiveFactory">
-       <newWizardShortcut
-             id="eclihx.ui.haxe">
-       </newWizardShortcut>
-    </perspectiveExtension>
- </extension>
- <extension
        point="org.eclipse.ui.propertyPages">
     <page
-          adaptable="false"
           class="eclihx.ui.internal.ui.properties.BuildPathPropertyPage"
           id="eclihx.ui.page1"
-          name="%projectBuildPathPage.name"
-          objectClass="org.eclipse.core.resources.IProject"/>
+          name="%projectBuildPathPage.name">
+       <enabledWhen>
+          <instanceof
+                value="org.eclipse.core.resources.IProject">
+          </instanceof>
+       </enabledWhen>
+    </page>
  </extension>
  <extension
        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
@@ -132,12 +127,6 @@
              </with>
           </enablement>
        </contextualLaunch>
-       <perspective
-             id="org.eclipse.debug.ui.DebugPerspective">
-       </perspective>
-       <perspective
-             id="eclihx.ui.internal.ui.HaxePerspectiveFactory">
-       </perspective>
     </shortcut>
  </extension>
  <extension
@@ -162,7 +151,7 @@
     </viewer>
     <viewerContentBinding
           viewerId="eclihx.ui.internal.ui.views.PackageExplorerView">
-       <includes>
+       <includes>       
           <contentExtension
                 pattern="org.eclipse.ui.navigator.resourceContent">
           </contentExtension>
