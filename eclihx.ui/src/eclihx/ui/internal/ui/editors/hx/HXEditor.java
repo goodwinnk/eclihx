@@ -1,9 +1,5 @@
 package eclihx.ui.internal.ui.editors.hx;
 
-import javax.security.auth.Refreshable;
-
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.TextEditor;
 

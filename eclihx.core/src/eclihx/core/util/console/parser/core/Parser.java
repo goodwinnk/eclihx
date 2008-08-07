@@ -1,7 +1,6 @@
 package eclihx.core.util.console.parser.core;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 

@@ -8,7 +8,7 @@
             id="eclihx.debug.ui.HaxeDebugModelPresentation">
       </debugModelPresentation>
    </extension>
-   <extension
+   <!--<extension
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="eclihx.ui.internal.ui.editors.hx.HXEditor"
@@ -17,7 +17,7 @@
                type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget">
          </adapter>
       </factory>
-   </extension>
+   </extension> -->
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup

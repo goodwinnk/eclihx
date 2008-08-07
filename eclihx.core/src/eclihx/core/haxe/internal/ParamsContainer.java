@@ -4,8 +4,7 @@ public class ParamsContainer implements IBuildParamsContainer {
 
 	private IBuildParamsContainer.TargetPlatform platform = null;
 
-	
-	private int platformVersion;
+	//private int platformVersion;
 	
 	private String fileName = null;
 	private boolean debugEnabled = false;
@@ -72,7 +71,7 @@ public class ParamsContainer implements IBuildParamsContainer {
 	 * @see eclihx.core.haxe.internal.IBuildParamsContainer#setTargetPlatformVersion(int)
 	 */
 	public void setTargetPlatformVersion(int version) {
-		this.platformVersion = version;		
+		//this.platformVersion = version;		
 	}
 	
 }
