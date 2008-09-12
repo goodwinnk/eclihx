@@ -6,9 +6,11 @@ Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.core.EclihxCore
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.debug.core;bundle-version="3.4.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: eclihx.core,
+ eclihx.core.haxe,
  eclihx.core.haxe.internal,
  eclihx.core.haxe.internal.configuration,
  eclihx.core.haxe.internal.parser,

@@ -1,8 +1,7 @@
 package eclihx.core.util;
 
 /**
- * Not sure yet will this class be useful
- * Going to be used to make OS specific operations
+ * Class for storing operation system specific options.
  */
 public final class OSUtil {
 	
@@ -18,5 +17,34 @@ public final class OSUtil {
 		
 		return extension;
 	}
+	
+	/**
+	 * Checks if path isn't quoted yet and adds quotation marks to the both
+	 * ends of the string if path has spaces characters.
+	 * 
+	 * @param path file path.
+	 * @return processed path.
+	 */
+	static public String quoteCompoundPath(String path) {
+		
+		if (path.indexOf(" ") != -1) {
+			if (!(path.startsWith("\"") || (path.endsWith("\"")))) {
+				return "\"" + path + "\"";
+			}
+		}
+
+		return path;
+	}	
+	
+	/**
+	 * Gets file filter for the compiler.
+	 * It can be something like "*.*" or "*.exe" or even "haxe.exe". 
+	 * @return File filter for compiler file dialog.
+	 */
+	static public String getCompilerExtensionFilter() {
+		// TODO 8 Support other operation systems
+		return "haxe.exe";
+	}
+	
 	
 }

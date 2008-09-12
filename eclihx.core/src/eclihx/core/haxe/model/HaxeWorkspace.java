@@ -1,6 +1,7 @@
 package eclihx.core.haxe.model;
 
 import java.util.ArrayList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 
@@ -9,7 +10,7 @@ import eclihx.core.haxe.model.core.IHaxeWorkspace;
 
 public class HaxeWorkspace implements IHaxeWorkspace{
 
-	private IWorkspaceRoot fRoot;
+	private final IWorkspaceRoot fRoot;
 	
 	public HaxeWorkspace(IWorkspaceRoot root) {
 		fRoot = root;
@@ -30,7 +31,7 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 			}
 		}
 		
-		return (String[])haxeProjectsStrings.toArray(new String[1]);
+		return haxeProjectsStrings.toArray(new String[0]);
 	}
 	
 		

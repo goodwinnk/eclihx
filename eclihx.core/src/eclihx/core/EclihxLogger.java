@@ -6,7 +6,6 @@ import org.eclipse.core.runtime.Status;
 /**
  * EclihX Logger Class
  */
-
 public class EclihxLogger {
 
 	public static void logInfo(String message) {

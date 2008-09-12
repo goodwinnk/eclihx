@@ -5,6 +5,8 @@ package eclihx.ui.internal.ui.editors.hx;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -37,6 +39,22 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 		regexprScanner.adaptToPreferenceChange(event);
 		hxConditionCompilationScanner.adaptToPreferenceChange(event);
 	}
+	
+	/**
+	 * Method for configuring content assistant in haXe code. 
+	 */
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		ContentAssistant assistant= new ContentAssistant();
+		
+		assistant.enableAutoActivation(true);
+		assistant.setAutoActivationDelay(300);
+		assistant.setContentAssistProcessor(new HXContextAssist(), IHXPartitions.HX_MULTI_LINE_COMMENT);
+		
+		return assistant;
+	}
+
+
 
 	public HXSourceViewerConfiguration(ColorManager colorManager) {
 		//this.colorManager = colorManager;

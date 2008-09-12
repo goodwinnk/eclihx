@@ -10,13 +10,17 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.IStatusHandler;
 
+import eclihx.core.haxe.HaxeLauncher;
+import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
+import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
+import eclihx.core.haxe.internal.parser.BuildParamParser;
+import eclihx.core.util.console.parser.core.ParseError;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.HaxeRunnerConfiguration;
 import eclihx.launching.IHaxeRunner;
 
 public class HaxeRunner implements IHaxeRunner {
 	
-
 	private void throwState(int severity, int code, String message) throws CoreException {
 		IStatus status = new Status(severity, EclihxLauncher.PLUGIN_ID, code, message, null); //$NON-NLS-1$
 		IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
@@ -34,18 +38,6 @@ public class HaxeRunner implements IHaxeRunner {
 				}
 			}
 		}				
-	}
-	
-	/**
-	 * Checks if string isn't quoted yet and adds quotation marks to the both ends of the string.
-	 * @param str
-	 * @return Quoted string
-	 */
-	private String quoteString(String str) {
-		if ( !(str.startsWith("\"") || (str.endsWith("\""))) ) {
-			return "\"" + str + "\"";
-		}
-		return str;				
 	}
 	
 	/**
@@ -78,17 +70,26 @@ public class HaxeRunner implements IHaxeRunner {
 					ILaunch launch, 
 					IProgressMonitor monitor) throws CoreException {
 		
-		validateConfiguration(configuration);		
+		validateConfiguration(configuration);
 		
-        // output directory
+		// output directory
         File outputDirectory = new File(configuration.getOutputDirectory());
         
-        String commandLine = quoteString(configuration.getCompilerPath()) + 
-                             " -cp " + quoteString(configuration.getSourceDirectory()) +  
-                             ' ' + quoteString(configuration.getBuildFile());
-        Process systemProcess = DebugPlugin.exec(DebugPlugin.parseArguments(commandLine), outputDirectory);
-        
-        DebugPlugin.newProcess(launch, systemProcess, null);
+        BuildParamParser parser = new BuildParamParser();
+                
+        HaxeConfiguration haxeConfig;
+		try {
+			haxeConfig = parser.parseFile(configuration.getBuildFile()).getMainConfiguration();
+			haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
+			
+			new HaxeLauncher().run(
+			  	haxeConfig, launch, 
+			   	configuration.getCompilerPath(), outputDirectory);
+			
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		} catch (ParseError e) {
+			e.printStackTrace();
+		}
 	}
-
 }

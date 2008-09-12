@@ -18,22 +18,6 @@
          </adapter>
       </factory>
    </extension> -->
-   <extension
-         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
-      <launchConfigurationTabGroup
-            class="eclihx.ui.launch.HaxetLaunchConfigurationTabGroup"
-            id="eclihx.ui.launch.HaxetLaunchConfigurationTabGroup"
-            type="eclihx.launching.HaxeLaunchDelegate">
-         <launchMode
-               description="haXe launch mode"
-               mode="run">
-         </launchMode>
-         <launchMode
-               description="haXe debug mode"
-               mode="debug"
-               perspective="org.eclipse.debug.ui.DebugPerspective">
-         </launchMode>
-      </launchConfigurationTabGroup>
-   </extension>
+
 
 </plugin>

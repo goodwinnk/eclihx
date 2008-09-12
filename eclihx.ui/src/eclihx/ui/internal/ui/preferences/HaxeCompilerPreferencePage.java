@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import eclihx.core.util.OSUtil;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.LauncherPreferenceInitializer;
 
@@ -41,8 +42,7 @@ public class HaxeCompilerPreferencePage extends PreferencePage implements
 		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH));
 		compilerPathField.setEmptyStringAllowed(true);
 		
-		// TODO 7 Support of different OSes
-		compilerPathField.setFileExtensions(new String[]{"*.exe"});
+		compilerPathField.setFileExtensions(new String[]{OSUtil.getCompilerExtensionFilter()});
 		compilerPathField.load();
 				
 		return top;
