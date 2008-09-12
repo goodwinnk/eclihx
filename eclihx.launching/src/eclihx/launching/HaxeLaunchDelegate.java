@@ -26,7 +26,7 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 			return new HaxeRunner();
 		}
 		
-		//TODO 5 shout loudly in this place
+		assert(false);
 		return null;
 	}
 	

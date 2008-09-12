@@ -10,17 +10,15 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 
-
+import eclihx.core.haxe.internal.configuration.FlashConfiguration;
+import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
+import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
+import eclihx.core.haxe.internal.parser.BuildParamParser;
+import eclihx.core.util.console.parser.core.ParseError;
 import flash.tools.debugger.Bootstrap;
 import flash.tools.debugger.Session;
 import flash.tools.debugger.SessionManager;
 import flash.tools.debugger.VersionException;
-
-import eclihx.core.haxe.internal.configuration.FlashConfiguration;
-import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
-import eclihx.core.haxe.internal.configuration.InvalidConfiguration;
-import eclihx.core.haxe.internal.parser.BuildParamParser;
-import eclihx.core.util.console.parser.core.ParseError;
 
 
 public class FlashRunner {
@@ -42,7 +40,7 @@ public class FlashRunner {
 			HaxeConfiguration config;
 			try {
 				config = parser.parseFile(fileName).getMainConfiguration();
-			} catch (InvalidConfiguration e) {
+			} catch (InvalidConfigurationException e) {
 				// TODO 6 Bad thing. We can fall here 
 				return;
 			} catch (ParseError e) {
@@ -54,7 +52,7 @@ public class FlashRunner {
 			
 			if (!(flashConfig != null && config.isDebug() && config.hasCompilationFlags("fdb"))) return;
 			
-			String uriPath = outputFolder + "/" + flashConfig.getOutFile();
+			String uriPath = outputFolder + "/" + flashConfig.getOutputFile();
 
 			SessionManager flashManager = Bootstrap.sessionManager();
 

@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
-import eclihx.core.haxe.internal.configuration.InvalidConfiguration;
+import eclihx.core.haxe.internal.configuration.InvalidConfigurationOperationException;
+import eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform;
 import eclihx.core.util.console.parser.Builder;
-import eclihx.core.util.console.parser.IParamExistense;
 import eclihx.core.util.console.parser.IIntValue;
+import eclihx.core.util.console.parser.IParamExistense;
 import eclihx.core.util.console.parser.IStringValue;
 import eclihx.core.util.console.parser.core.InitializeParseError;
 import eclihx.core.util.console.parser.core.Parameter;
@@ -29,7 +31,7 @@ public class BuildParamParser {
 	
 	private class NextFlagParam implements IParamExistense {
 		public void save(boolean exist) throws ParseError {
-			// Should never be in this parser 
+			// TODO 2 Make something better here.
 			assert(exist != true);		
 		}		
 	}
@@ -45,31 +47,44 @@ public class BuildParamParser {
 			currentConfig.addCompilationFlag(value);
 		}
 	}
-	
-	private class DebugParam implements IParamExistense {
-		public void save(boolean exist) throws ParseError {
-			currentConfig.setDebug(exist);
+
+	private class SwfOutput implements IStringValue {
+		public void save(String value) throws ParseError {
+			
+			try {
+				currentConfig.setPlatform(Platform.Flash);
+			} catch (InvalidConfigurationOperationException e) {
+				// Wrap message and store the reason
+				throw new ParseError(e.getMessage());
+			}
+			
+			currentConfig.getFlashConfig().setOutputFile(value);
 		}
 	}
 	
-	private class SwfOutput implements IStringValue {
+	private class Swf9Output implements IStringValue {
 		public void save(String value) throws ParseError {
 			try {
-				currentConfig.setFlashOutFile(value);
-			} catch (InvalidConfiguration e) {
+				currentConfig.setPlatform(Platform.Flash);
+				currentConfig.getFlashConfig().setOutputFile(value);
+				currentConfig.getFlashConfig().setVersion(9);
+			} catch (InvalidConfigurationOperationException e) {
+				// Wrap message and store the reason
 				throw new ParseError(e.getMessage());
-			}
+			}			
 		}
 	}
 	
 	private class SwfVersion implements IIntValue {
 		public void save(int value) throws ParseError {
 			// TODO 3 Implement check for version value lies between 6 and 10
-			try {
-				currentConfig.setFlashVersion(value);
-			} catch (InvalidConfiguration e) {
-				throw new ParseError(e.getMessage());
-			}
+			currentConfig.getFlashConfig().setVersion(value);
+		}
+	}
+	
+	private class MainClass implements IStringValue {
+		public void save(String value) throws ParseError {
+			currentConfig.setStartupClass(value);
 		}
 	}
 	
@@ -78,7 +93,7 @@ public class BuildParamParser {
 		public void save(String value) throws ParseError {
 			
 			if (parsingFile) {
-				
+
 				// If we're already parsing file we shouldn't accept this parameter
 				throw new ParseError("Invalid parameter in the hxml-file");
 			
@@ -91,15 +106,14 @@ public class BuildParamParser {
 		}		
 	}
 	
-	
-	private class NotImplementedString implements IStringValue {
+	private class SourceDirectory implements IStringValue {
 		public void save(String value) throws ParseError {
-			// TODO Auto-generated method stub
+			currentConfig.addSourceDirectory(value);	
 		}		
 	}
 	
-	private class NotImplementedInt implements IIntValue {
-		public void save(int value) throws ParseError {
+	private class NotImplementedString implements IStringValue {
+		public void save(String value) throws ParseError {
 			// TODO Auto-generated method stub
 		}		
 	}
@@ -114,14 +128,15 @@ public class BuildParamParser {
 		
 		// TODO 9 Remove this variables
 		NotImplementedString nis = new NotImplementedString();
-		NotImplementedInt nii = new NotImplementedInt();
 		NotImpementedFlag nif = new NotImpementedFlag();
 		
 		Parameter params[] = new Parameter[] {
 			
 			// -cp <path> : add a directory to find source files
-			Builder.createStringParam("-cp", nis),		
-			
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_SOURCE_DIRECTORY, 
+				new SourceDirectory()),
+						
 			// -js <file> : compile code to JavaScript file
 			Builder.createStringParam("-js", nis),
 			
@@ -129,10 +144,19 @@ public class BuildParamParser {
 			Builder.createStringParam("-as3", nis),
 			
 			// -swf <file> : compile code to Flash SWF file
-			Builder.createStringParam("-swf", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_SWF_OUTPUT, 
+				new SwfOutput()),
+				
+			// -swf <file> : compile code to Flash SWF file
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_SWF9_OUTPUT, 
+				new Swf9Output()),
 			
 			// -swf-version <version> : change the SWF version (6,7,8,9)
-			Builder.createIntParam("-swf-version", nii),
+			Builder.createIntParam(
+				HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION, 
+				new SwfVersion()),
 			
 			// -swf-header <header> : define SWF header (width:height:fps:color)
 			Builder.createStringParam("-swf-header", nis),
@@ -150,7 +174,9 @@ public class BuildParamParser {
 			Builder.createStringParam("-xml", nis),
 			
 			// -main <class> : select startup class
-			Builder.createStringParam("-main", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS, 
+				new MainClass()),
 			
 			// -lib <library[:version]> : use an haxelib library
 			Builder.createStringParam("-lib", new LibraryParam()),
@@ -168,7 +194,16 @@ public class BuildParamParser {
 			Builder.createFlagParam("-v", nif),
 			
 			// -debug : add debug informations to the compiled code
-			Builder.createFlagParam("-debug", new DebugParam()),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_DEBUG_MODE_FLAG, 
+				new IParamExistense () {
+					public void save(boolean exist) {
+						if (exist) {
+							currentConfig.enableDebug();
+						}
+					}
+				}),
+			
 			
 			// -prompt : prompt on error
 			Builder.createFlagParam("-prompt", nif),
@@ -207,7 +242,16 @@ public class BuildParamParser {
 			Builder.createStringParam("--display", nis),
 			
 			//  --no-output : compiles but does not generate any file
-			Builder.createFlagParam("--no-output", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_NO_OUTPUT_FLAG,
+				new IParamExistense () {
+					public void save(boolean exist) {
+						if (exist) {
+							currentConfig.setExplicitNoOutput();
+						}
+					}
+				}),
+			
 			
 			//  --times : mesure compilation times
 			Builder.createFlagParam("--times", nif),
@@ -216,10 +260,26 @@ public class BuildParamParser {
 			Builder.createFlagParam("--no-inline", nif),
 			
 			//  -help  Display this list of options
-			Builder.createFlagParam("-help", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_HELP1_FLAG,
+				new IParamExistense () {
+					public void save(boolean exist) {
+						if (exist) {
+							currentConfig.enableHelp();
+						}
+					}
+				}),
 			
 			//  --help  Display this list of options
-			Builder.createFlagParam("--help", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_HELP2_FLAG,
+				new IParamExistense () {
+					public void save(boolean exist) {
+						if (exist) {
+							currentConfig.enableHelp();
+						}
+					}
+				}),
 			
 			// hxml file
 			Builder.createStringParam("", new HxmlStringParam())
@@ -254,10 +314,8 @@ public class BuildParamParser {
 		
 		HaxeConfigurationList configList = new HaxeConfigurationList();
 	
-		for (String configStr : configStrs) {
-			
-			configList.add(parseConfiguration(configStr.replaceAll("\\s+", " ").split(" ")));
-			
+		for (String configStr : configStrs) {			
+			configList.add(parseConfiguration(configStr.replaceAll("\\s+", " ").split(" ")));			
 		}
 		
 		return configList;
@@ -276,12 +334,17 @@ public class BuildParamParser {
 			BufferedReader in = new BufferedReader(new FileReader(fileName));
 			String buffer, fileContent = new String();
 			while((buffer = in.readLine())!= null) {
-				fileContent += buffer + "";
+				String trimString = buffer.trim();
+				
+				if (!(trimString.length() == 0 || trimString.startsWith("#"))) {
+					// We adds only non-comments and not-empty strings 
+					fileContent += trimString + " ";
+				}
 			}
 			in.close();
 			
 			// Remove all not necessary spaces and new line symbols
-			return parse(fileContent.replaceAll("\\n+"," "));
+			return parse(fileContent);
 			
 		} catch (IOException e) {
 			throw new ParseError("Can't open file!");

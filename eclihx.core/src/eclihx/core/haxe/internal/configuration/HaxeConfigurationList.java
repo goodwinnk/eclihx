@@ -8,15 +8,13 @@ public class HaxeConfigurationList implements Iterable<HaxeConfiguration>{
 	private final LinkedList<HaxeConfiguration> configs = 
 		new LinkedList<HaxeConfiguration>();
 
-	// TODO 9 Know how to return constant value!!!
-	
 	/**
 	 * Gets main configuration. By default it's a first configuration
 	 * of the list
 	 */
-	public HaxeConfiguration getMainConfiguration() throws InvalidConfiguration {
+	public HaxeConfiguration getMainConfiguration() throws InvalidConfigurationException {
 		if (configs.isEmpty()) {
-			throw new InvalidConfiguration("Should be at least one configuration");
+			throw new InvalidConfigurationException("Should be at least one configuration");
 		}
 		
 		return configs.getFirst();
