@@ -6,22 +6,17 @@ import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.util.OSUtil;
 
 /**
- * Stores Neko platform options
+ * Stores JavaScript platform options
  */
-public class NekoConfiguration extends AbstractConfiguration {
+public class JSConfiguration extends AbstractConfiguration {
 	
 	/**
-	 * Stores the output file name for the Neko platform.
+	 * Stores the output file name for the JavaScript target platform.
 	 */
 	private String outputFile;
 	
 	/**
-	 * Flag for keeping neko sources.
-	 */
-	private boolean keepNekoSource;
-	
-	/**
-	 * Sets the output for the Neko platform.
+	 * Sets the output for the JS platform.
 	 * @param outputFile
 	 * 		Name of the file.
 	 */
@@ -30,33 +25,20 @@ public class NekoConfiguration extends AbstractConfiguration {
 	}
 	
 	/**
-	 * Gets the file name of Neko platform
+	 * Gets the file name of JS platform
 	 * @return The full name of the file.
 	 */
 	public String getOutputFile() {
 		return outputFile;
 	}
 	
-	/**
-	 * Checks if generated neko sources should be kept.
-	 * @return status of "keeping neko sources" mode.
-	 */
-	public boolean isKeepNekoSource() {
-		return keepNekoSource;
-	}
-
-	/**
-	 * Enables "keeping neko sources" mode.
-	 */
-	public void enableKeepNekoSource() {
-		this.keepNekoSource = true;
-	}
-
 	/* (non-Javadoc)
 	 * @see eclihx.core.haxe.internal.configuration.AbstractConfiguration#internalValidate()
 	 */
 	@Override
 	protected ArrayList<String> internalValidate() {
+		// No errors because validating of the parameter should be done in
+		// setter.
 		return new ArrayList<String>();
 	}
 
@@ -65,17 +47,8 @@ public class NekoConfiguration extends AbstractConfiguration {
 	 */
 	@Override
 	public String printConfiguration() throws InvalidConfigurationException {
-		
-		String output = "";
-		
-		output += HaxeConfiguration.GenerateParameter(
-			HaxePreferencesManager.PARAM_PREFIX_NEKO_OUTPUT, 
+		return HaxeConfiguration.GenerateParameter(
+			HaxePreferencesManager.PARAM_PREFIX_JAVA_SCRIPT_OUTPUT, 
 			OSUtil.quoteCompoundPath(outputFile));
-		
-		output += HaxeConfiguration.GenerateFlagParameter(
-			HaxePreferencesManager.PARAM_PREFIX_NEKO_SOURCE_FLAG, 
-			keepNekoSource);
-		 
-		return output;
-	}
+	}	
 }

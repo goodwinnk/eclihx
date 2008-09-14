@@ -21,7 +21,7 @@ public class HaxeConfiguration extends AbstractConfiguration {
 		ActionScript,
 		JavaScript,
 		Neko,
-		PHP, // TODO 4 support this platform.
+		PHP,
 		NoOutput
 	}
 
@@ -43,14 +43,13 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	private boolean explicitNoOutput;
 
 	//Platform specific configuration storages.
-	//private JavaScriptConfiguration jsConfig = null;
-	//private PHPConfiguration phpConfig = null;
+	private final PHPConfiguration phpConfig = new PHPConfiguration();
 	private final FlashConfiguration flashConfig = new FlashConfiguration();
 	private final ASConfiguration asConfig = new ASConfiguration();
 	private final NekoConfiguration nekoConfig = new NekoConfiguration();
+	private final JSConfiguration jsConfig = new JSConfiguration();
 
 	// Common haXe configuration options.
-	
 	/**
 	 * Source directory configuration (-cp).
 	 */
@@ -83,9 +82,84 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	private boolean displayTips;
 	
 	/**
-	 * Help flag
+	 * The name of the file for the code tip.
+	 */
+	private String tipFileName;
+	
+	/**
+	 * Position in the file for code tip.
+	 */
+	private int tipFilePosition;
+	
+	/**
+	 * Help flag.
 	 */
 	private boolean helpMode;
+	
+	/**
+	 * Verbose mode.
+	 */
+	private boolean verboseMode;
+	
+	/**
+	 * Time measure mode state.
+	 */
+	private boolean timeMesureMode;
+	
+	/**
+	 * No-inline mode state. 	
+	 */
+	private boolean noInlineMode;
+	
+	/**
+	 * Output file for xml-description.
+	 */
+	private String outputXmlFile;
+	
+	/**
+	 * Prompt on error state.
+	 */
+	private boolean promptOnErrorMode;
+	
+	/**
+	 * Command which should be done after compilation.
+	 */
+	private String cmdCommand;
+	
+	/**
+	 * No traces mode state.
+	 */
+	private boolean noTracesMode;
+	
+	/**
+	 * Output file for generated haXe headers from swf file.
+	 */
+	private String swfFileForHeaders;
+	
+	/**
+	 * Flash strict mode state.
+	 */
+	private boolean flashStrictMode;
+	
+	/**
+	 * "Place objects found on the stage of the SWF lib" mode state. 
+	 */
+	private boolean flashUseStageMode;
+
+	/**
+	 * Remap packages directives.
+	 */
+	private final ArrayList<String> remapString = new ArrayList<String>();
+	
+	/**
+	 * Resources.
+	 */
+	private final ArrayList<String> resourceFiles = new ArrayList<String>();
+
+	/**
+	 * Collection of the file with the classes excluded from code generation.
+	 */
+	private final ArrayList<String> excludeFiles = new ArrayList<String>();
 
 	/**
 	 * Creates the string representation of the haXe build parameter by the key
@@ -145,27 +219,14 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	}
 
 	/**
-	 * Set output platform. Note that this method can be called only once.
-	 * Changing of the target platform isn't allowed and second call of the
-	 * method will cause throwing of the exception.
+	 * Set output platform. 
 	 * @param platform
 	 *            the platform to set. Can't be <code>null</code>.
-	 * @throws InvalidConfigurationException if this method called 
-	 * 		   more than once.
 	 */
-	// TODO 4 Correct method behavior.
-	public void setPlatform(Platform platform) 
-			throws InvalidConfigurationOperationException {
+	public void setPlatform(Platform platform) {
 		
 		if (platform == null) {
 			throw new NullPointerException("platform parameter can't be null");
-		}
-		
-		// There is an attempt to set target platform more than once.
-		if (isPlatformExplicitlySet) {
-			throw new InvalidConfigurationOperationException(
-				"Multi output targets are not allowed in haXe configuration."
-			);
 		}
 		
 		isPlatformExplicitlySet = true;
@@ -178,6 +239,13 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	public void setExplicitNoOutput() {
 		explicitNoOutput = true;
 	}
+	
+	/**
+	 * Checks if output is disabled in this configuration.
+	 */
+	public boolean isNoOutputMode() {
+		return (explicitNoOutput || platform == Platform.NoOutput);
+	}	
 
 	/**
 	 * Get flash configuration.
@@ -197,12 +265,28 @@ public class HaxeConfiguration extends AbstractConfiguration {
 
 	/**
 	 * Get Neko configuration.
-	 * @return the ActionScript configuration container
+	 * @return the ActionScript configuration container.
 	 */
 	public NekoConfiguration getNekoConfig() {
 		return nekoConfig;
 	}
-
+	
+	/**
+	 * Returns the PHP target platform options container.
+	 * @return the PHP options container.
+	 */
+	public PHPConfiguration getPHPConfig() {
+		return phpConfig;
+	}
+	
+	/**
+	 * Returns the JS target platform options container.
+	 * @return the JS platform options container.
+	 */
+	public JSConfiguration getJSConfig() {
+		return jsConfig;
+	}
+	
 	/**
 	 * Check if debug mode is enabled.
 	 * @return state of debug mode.
@@ -234,6 +318,25 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	public void addLibrary(String library) {
 		// TODO 6 Add check for validness and uniqueness
 		libraries.add(library);
+	}
+	
+	/**
+	 * Add resource file.
+	 * @param resource
+	 *			Resource file.
+	 */
+	public void addResource(String resource) {
+		// TODO 5 Add validating and parsing.
+		resourceFiles.add(resource);
+	}
+	
+	/**
+	 * Add file with the excluded classes
+	 * @param excludeFile
+	 * 			The name of the file with the excluded files.
+	 */
+	public void addExcludeFile(String excludeFile) {
+		excludeFiles.add(excludeFile);
 	}
 
 	/**
@@ -283,7 +386,7 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	}
 
 	/**
-	 * Set the startup class.
+	 * Set the startup class. 
 	 * @param startupClass the name of the startup class.
 	 */
 	public void setStartupClass(String startupClass) {
@@ -301,24 +404,123 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	/**
 	 * Enables display tips mode.
 	 */
-	public void enableTips() {
+	public void enableTips(String fileName, int position) {
 		displayTips = true;
+		
+		setExplicitNoOutput();
+		
+		tipFileName = fileName;
+		tipFilePosition = position;
 	}
 	
 	/**
-	 * Returns help mode status
+	 * Returns help mode status.
 	 */
 	public boolean isHelpMode() {
 		return helpMode;
 	}	
 	
 	/**
-	 * Enables help mode
+	 * Enables help mode.
 	 */
 	public void enableHelp() {
 		helpMode = true;
 	}
 	
+	/**
+	 * Enables verbose mode.
+	 */
+	public void enableVerbose() {
+		verboseMode = true;
+	}
+	
+	/**
+	 * Enables time measure mode.
+	 */
+	public void enableTimeMesureMode() {
+		timeMesureMode = true;
+	}
+
+	/**
+	 * Enables no-inline mode.
+	 */
+	public void enableNoInlineMode() {
+		noInlineMode = true;
+	}
+
+	/**
+	 * Output file for xml-description.
+	 */
+	public void setXmlDescriptionFile(String outputXmlFile) {
+		this.outputXmlFile = outputXmlFile;
+	}
+	
+	/**
+	 * Output file for xml-description.
+	 */
+	public String getXmlDescriptionFile() {
+		return outputXmlFile;
+	}	
+	
+	/**
+	 * Enables prompt on error mode.
+	 */
+	public void enablePromptOnErrorMode() {
+		promptOnErrorMode = true;
+	}
+	
+	/**
+	 * Sets command for execution after compilation.
+	 * @param command to execute
+	 */
+	public void setCmdCommand(String command) {
+		cmdCommand = command;
+	}
+	
+	/**
+	 * Enables no-traces mode.
+	 */
+	public void enableNoTracesMode() {
+		noTracesMode = true;
+	}
+	
+	/**
+	 * Checks if this configuration will not compile traces instructions.
+	 * @return the state of no-traces mode.
+	 */
+	public boolean isNoTracesMode() {
+		return noTracesMode;
+	}
+	
+	/**
+	 * Sets output file for generated haXe headers from swf file.
+	 * @param fileForHeader file name.
+	 */
+	public void setSwfFileForHeaders(String fileForHeader) {
+		swfFileForHeaders = fileForHeader;
+	}
+	
+	/**
+	 * Enables flash strict mode.
+	 */
+	public void enableflashStrictMode() {
+		flashStrictMode = true;
+	}
+	
+	/**
+	 * Enables "place objects found on the stage of the SWF lib" mode. 
+	 */
+	public void enableFlashUseStageMode() {
+		flashUseStageMode = true;
+	}
+
+	/**
+	 * Remap packages directives.
+	 * @param remapDirective remap directive.
+	 */
+	public void addRemapPackage(String remapDirective) {
+		remapString.add(remapDirective);
+	}
 	
 	/**
 	 * Prints the configuration.
@@ -340,7 +542,7 @@ public class HaxeConfiguration extends AbstractConfiguration {
 				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
 				startupClass));
 		
-		// Store libraries
+		// Stored libraries
 		for (String library : libraries) {
 			outputBuilder.append(
 				GenerateParameter(
@@ -348,7 +550,7 @@ public class HaxeConfiguration extends AbstractConfiguration {
 					library));
 		}
 		
-		// Store libraries
+		// Compilation flags
 		for (String compileFlag: compilationFlags) {
 			outputBuilder.append(
 				GenerateParameter(
@@ -382,8 +584,111 @@ public class HaxeConfiguration extends AbstractConfiguration {
 				HaxePreferencesManager.PARAM_PREFIX_NO_OUTPUT_FLAG, 
 				explicitNoOutput));
 		
-		if (platform == Platform.Flash) {
-			outputBuilder.append(flashConfig.printConfiguration());
+		// Code tips directive.
+		if (displayTips) {
+			outputBuilder.append(
+				GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_NO_OUTPUT_FLAG, 
+					tipFileName + "@" + tipFilePosition
+				));
+		}
+		
+		// Verbose mode flag.
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_VERBOSE_MODE_FLAG, 
+				verboseMode));
+		
+		// No-inline flag
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_NO_INLINE_FLAG, 
+				noInlineMode));
+		
+		// Time measure mode
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_TIME_MESURE_FLAG, 
+				timeMesureMode));
+		
+		// Resources
+		for (String resourceFile : resourceFiles) {
+			outputBuilder.append(
+				GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_RESOURCE_FILE, 
+					resourceFile));
+		}
+		
+		// Exclude files
+		for (String excludeFile : excludeFiles) {
+			outputBuilder.append(
+				GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_EXCLUDE_FILE, 
+					excludeFile));
+		}
+		
+		
+		// Xml description
+		if (outputXmlFile != null) {
+			outputBuilder.append(
+				GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_XML_DESCRIPTION_OUTPUT, 
+					outputXmlFile));					
+		}
+		
+		// Prompt on error.
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_PROMT_ERROR_MODE_FLAG,
+				promptOnErrorMode));
+		
+		// CMD command
+		if (cmdCommand != null) {
+			outputBuilder.append(
+				GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_CMD_COMMAND, 
+					cmdCommand));
+		}
+		
+		// No traces mode state
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_NO_TRACES_FLAG,
+				noTracesMode));
+		
+		// File for generated headers
+		if (swfFileForHeaders != null) {
+			outputBuilder.append(GenerateParameter(
+				HaxePreferencesManager.PARAM_PREFIX_GENERATE_HAXE_CLASSES_SWF,
+				swfFileForHeaders));
+		}
+		
+		// Flash strict mode
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_FLASH_STRICT_FLAG,
+				flashStrictMode));
+		
+		// Flash strict mode
+		outputBuilder.append(
+			GenerateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_FLASH_USE_STAGE_FLAG,
+				flashUseStageMode));
+		
+		// Remap package directives
+		for (String directive : remapString) {
+			// Flash strict mode
+			outputBuilder.append(
+				GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_REMAP_PACKAGE,
+					directive));
+		}
+		
+		// Platforms
+		if (isPlatformExplicitlySet) {
+			if (platform == Platform.Flash) {
+				outputBuilder.append(flashConfig.printConfiguration());
+			}
 		}
 		
 		return outputBuilder.toString();

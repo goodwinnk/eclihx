@@ -1,0 +1,4 @@
+-swf out.swf
+-swf-version 8
+-main TestWhile
+-debug

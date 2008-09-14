@@ -33,8 +33,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	/**
 	 * SWF libraries.
 	 */
-	// TODO 6 write accessors and investigate the mechanizm of work.
-	//private String[] swfLibraries;
+	private final ArrayList<String> swfLibraries = new ArrayList<String>();
 
 	
 	/**
@@ -96,6 +95,15 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		// TODO 3 add checks here
 		this.header = header;
 	}
+	
+	/**
+	 * Method adds swf library to configuration.
+	 * @param libraryName
+	 * 			The name of the library to add.
+	 */
+	public void addLibrary(String libraryName) {
+		swfLibraries.add(libraryName);
+	}
 
 	/**
 	 * Prints the configuration.
@@ -137,7 +145,15 @@ public final class FlashConfiguration extends AbstractConfiguration {
 				HaxePreferencesManager.PARAM_PREFIX_SWF_HEADER,
 				header				
 			));
-		}	
+		}
+		
+		// SWF libraries
+		for (String libName : swfLibraries) {
+			outputBuilder.append(HaxeConfiguration.GenerateParameter(
+				HaxePreferencesManager.PARAM_PREFIX_SWF_LIB, 
+				libName
+			));		
+		}
 		
 		return outputBuilder.toString();
 	}
