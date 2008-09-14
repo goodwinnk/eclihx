@@ -67,11 +67,39 @@ public class BuildParamParserTest {
 	}
 	
 	/**
-	 * Invalid configuration
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parse(java.lang.String)}.
+	 * Invalid configuration.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
 	 */
-	@Test(expected=ParseError.class)
+	@Test
 	public void badConfigurationParse() throws ParseError {
-		parser.parseString("-debug 	-D fdb hahaha  -swf Test.swf   -swf-version 9");
+		parser.parseString("-debug -D fdb -swf Test.swf -swf-version 9 TestWhile");
+	}
+	
+	/**
+	 * Test --display option.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 */
+	@Test
+	public void testDisplayOption() throws ParseError {
+		parser.parseString("--display hihihihi@1");
+	}
+	
+	@Test
+	public void testParse() throws ParseError, InvalidConfigurationException {
+		
+		String filePath = String.format(
+			"%s\\Resources\\part.hxml", System.getProperty("user.dir")); 
+		
+		HaxeConfiguration config = 
+			parser.parseString(
+				String.format(
+					"--no-traces --no-output -D fdb -debug %s",
+					filePath)).getMainConfiguration();
+		
+		Assert.assertTrue(config.isDebug());
+		Assert.assertTrue(config.hasCompilationFlags("fdb"));
+		Assert.assertTrue(config.isNoOutputMode());
+		Assert.assertTrue(config.isNoTracesMode());
+		
 	}
 }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
-import eclihx.core.haxe.internal.configuration.InvalidConfigurationOperationException;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform;
 import eclihx.core.util.console.parser.Builder;
 import eclihx.core.util.console.parser.IIntValue;
@@ -22,19 +21,48 @@ import eclihx.core.util.console.parser.core.Parser;
  * Class which should parse haXe builder parameters and store them
  * into the <code>HaxeConfigurationList</code>
  */
-public class BuildParamParser {
+public final class BuildParamParser {
+	
+	private final class MultiParameterRestrictor {
+		
+		private int counter = 0;
+		private final String errorMessage;
+		
+		public MultiParameterRestrictor(String errorMessage) {
+			this.errorMessage = errorMessage;
+		}
+		
+		public void check() throws ParseError {
+			if (++counter > 1) {
+				throw new ParseError(
+					String.format(errorMessage)
+				);
+			}
+		}
+		
+		public void reset() {
+			counter = 0;
+		}
+	}
+	
+	private final MultiParameterRestrictor mainParam = 
+		new MultiParameterRestrictor(
+			String.format("Multiple: %s.", 
+				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS));
+	
+	private final MultiParameterRestrictor phpFrontParam = 
+		new MultiParameterRestrictor(
+			String.format("Multiple: %s.", 
+				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS));
+	
+	private final MultiParameterRestrictor platformParam =
+		new MultiParameterRestrictor(
+				String.format("Multiple targets"));	
 	
 	private final Parser parser;
 	private HaxeConfiguration currentConfig = null;
 	private boolean parsingFile = false;
 	private boolean confintueConfig = false;
-	
-	private class NextFlagParam implements IParamExistense {
-		public void save(boolean exist) throws ParseError {
-			// TODO 2 Make something better here.
-			assert(exist != true);		
-		}		
-	}
 	
 	private class LibraryParam implements IStringValue {
 		public void save(String value) throws ParseError {
@@ -51,39 +79,33 @@ public class BuildParamParser {
 	private class SwfOutput implements IStringValue {
 		public void save(String value) throws ParseError {
 			
-			try {
-				currentConfig.setPlatform(Platform.Flash);
-			} catch (InvalidConfigurationOperationException e) {
-				// Wrap message and store the reason
-				throw new ParseError(e.getMessage());
-			}
-			
+			platformParam.check();				
+			currentConfig.setPlatform(Platform.Flash);
+				
 			currentConfig.getFlashConfig().setOutputFile(value);
 		}
 	}
 	
 	private class Swf9Output implements IStringValue {
 		public void save(String value) throws ParseError {
-			try {
-				currentConfig.setPlatform(Platform.Flash);
-				currentConfig.getFlashConfig().setOutputFile(value);
-				currentConfig.getFlashConfig().setVersion(9);
-			} catch (InvalidConfigurationOperationException e) {
-				// Wrap message and store the reason
-				throw new ParseError(e.getMessage());
-			}			
+			
+			platformParam.check();
+			currentConfig.setPlatform(Platform.Flash);
+			
+			currentConfig.getFlashConfig().setOutputFile(value);
+			currentConfig.getFlashConfig().setVersion(9);
 		}
 	}
 	
 	private class SwfVersion implements IIntValue {
 		public void save(int value) throws ParseError {
-			// TODO 3 Implement check for version value lies between 6 and 10
 			currentConfig.getFlashConfig().setVersion(value);
 		}
 	}
 	
 	private class MainClass implements IStringValue {
 		public void save(String value) throws ParseError {
+			mainParam.check();
 			currentConfig.setStartupClass(value);
 		}
 	}
@@ -99,8 +121,19 @@ public class BuildParamParser {
 			
 			} else {
 				
-				confintueConfig = true;
-				parseFile(value);
+				if (value.startsWith("-")) {
+					throw new ParseError(
+						String.format("Invalid option: %s", value));
+					
+				} else if (value.endsWith("hxml")) {
+					confintueConfig = true;
+					parseFile(value);
+				} else {
+					
+					mainParam.check();
+					currentConfig.setStartupClass(value);
+					
+				}		
 				
 			}			
 		}		
@@ -112,24 +145,15 @@ public class BuildParamParser {
 		}		
 	}
 	
-	private class NotImplementedString implements IStringValue {
+	private class NekoOutput implements IStringValue {
+		@Override
 		public void save(String value) throws ParseError {
-			// TODO Auto-generated method stub
-		}		
-	}
-	
-	private class NotImpementedFlag implements IParamExistense {
-		public void save(boolean exist) throws ParseError {
-			// TODO Auto-generated method stub
+			platformParam.check();
+			currentConfig.setPlatform(Platform.Neko);
+			currentConfig.getNekoConfig().setOutputFile(value);
 		}
 	}
-	
 	private void init() {
-		
-		// TODO 9 Remove this variables
-		NotImplementedString nis = new NotImplementedString();
-		NotImpementedFlag nif = new NotImpementedFlag();
-		
 		Parameter params[] = new Parameter[] {
 			
 			// -cp <path> : add a directory to find source files
@@ -138,17 +162,35 @@ public class BuildParamParser {
 				new SourceDirectory()),
 						
 			// -js <file> : compile code to JavaScript file
-			Builder.createStringParam("-js", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_JAVA_SCRIPT_OUTPUT, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						platformParam.check();
+						currentConfig.setPlatform(Platform.JavaScript);
+						currentConfig.getJSConfig().setOutputFile(value);
+					}
+				}),
 			
 			// -as3 <directory> : generate AS3 code into target directory
-			Builder.createStringParam("-as3", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_ACTION_SCRIPT3_DIRECTORY, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						platformParam.check();
+						currentConfig.setPlatform(Platform.ActionScript);
+						currentConfig.getASConfig().setOutputDirectory(value);						
+					}
+				}),
 			
 			// -swf <file> : compile code to Flash SWF file
 			Builder.createStringParam(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_OUTPUT, 
 				new SwfOutput()),
 				
-			// -swf <file> : compile code to Flash SWF file
+			// -swf9 <file> : compile code to Flash9 SWF file
 			Builder.createStringParam(
 				HaxePreferencesManager.PARAM_PREFIX_SWF9_OUTPUT, 
 				new Swf9Output()),
@@ -159,19 +201,56 @@ public class BuildParamParser {
 				new SwfVersion()),
 			
 			// -swf-header <header> : define SWF header (width:height:fps:color)
-			Builder.createStringParam("-swf-header", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_SWF_HEADER, 
+				new IStringValue () {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.getFlashConfig().setHeader(value);
+					}
+				}),
 			
 			// -swf-lib <file> : add the SWF library to the compiled SWF
-			Builder.createStringParam("-swf-lib", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_SWF_LIB,
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.getFlashConfig();
+					}
+				}),
 			
 			// -neko <file> : compile code to Neko Binary
-			Builder.createStringParam("-neko", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_NEKO_OUTPUT, 
+				new NekoOutput()),
+			
+			// -php <directory> : generate PHP code into target directory
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_PHP_DIRECTORY, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						platformParam.check();
+						currentConfig.setPlatform(Platform.PHP);
+						currentConfig.getPHPConfig().setOutputDirectory(value);
+					}
+				}),
 			
 			// -x <file> : shortcut for compiling and executing a neko file
-			Builder.createStringParam("-x", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_NEKO_SHORT_OUTPUT, 
+				new NekoOutput()),
 			
 			// -xml <file> : generate XML types description
-			Builder.createStringParam("-xml", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_XML_DESCRIPTION_OUTPUT, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.setXmlDescriptionFile(value);
+					}
+				}),
 			
 			// -main <class> : select startup class
 			Builder.createStringParam(
@@ -179,67 +258,166 @@ public class BuildParamParser {
 				new MainClass()),
 			
 			// -lib <library[:version]> : use an haxelib library
-			Builder.createStringParam("-lib", new LibraryParam()),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_HAXE_LIB, 
+				new LibraryParam()),
 			
 			// -D <var> : define a conditional compilation flag
-			Builder.createStringParam("-D", new CompilationFlagParam()),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_COMPILATION_FLAG, 
+				new CompilationFlagParam()),
 			
 			// -resource <file@name> : add a named resource file
-			Builder.createStringParam("-resource", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_RESOURCE_FILE, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.addResource(value);
+					}
+				}),
 			
 			// -exclude <filename> : don't generate code for classes listed in this file
-			Builder.createStringParam("-exclude", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_EXCLUDE_FILE, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.addExcludeFile(value);
+					}
+				}),
 			
 			// -v : turn on verbose mode
-			Builder.createFlagParam("-v", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_VERBOSE_MODE_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableVerbose();
+						}
+					}					
+				}),
 			
 			// -debug : add debug informations to the compiled code
 			Builder.createFlagParam(
 				HaxePreferencesManager.PARAM_PREFIX_DEBUG_MODE_FLAG, 
-				new IParamExistense () {
+				new IParamExistense() {
 					public void save(boolean exist) {
 						if (exist) {
 							currentConfig.enableDebug();
 						}
 					}
-				}),
-			
+				}),			
 			
 			// -prompt : prompt on error
-			Builder.createFlagParam("-prompt", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_PROMT_ERROR_MODE_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enablePromptOnErrorMode();
+						}
+					}
+				}),
 			
 			// -cmd : run the specified command after successful compilation
-			Builder.createStringParam("-cmd", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_CMD_COMMAND, 
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.setCmdCommand(value);
+					}
+				}),
 			
 			// --flash-strict : more type strict flash API
-			Builder.createFlagParam("--flash-strict", nif),
-			
-			// --override : ensure that overriden methods are declared with 'override'
-			Builder.createFlagParam("--override", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_FLASH_STRICT_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableflashStrictMode();
+						}						
+					}
+				}),
 			
 			// --no-traces : don't compile trace calls in the program
-			Builder.createFlagParam("--no-traces", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_NO_TRACES_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableNoTracesMode();
+						}
+					}
+				}),
 			
-			// --flash-use-stage : place objects found on the stage of the SWF lib
-			Builder.createFlagParam("--flash-use-stage", nif),
+			// --flash-use-stage : place objects found on the 
+			// stage of the SWF lib
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_FLASH_USE_STAGE_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableFlashUseStageMode();
+						}
+					}
+				}),
 			
 			// --neko-source : keep generated neko source
-			Builder.createFlagParam("--neko-source", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_NEKO_SOURCE_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.getNekoConfig().
+								enableKeepNekoSource();
+						}
+					}
+				}),
 			
 			//  --gen-hx-classes <file> : generate hx headers from SWF9 file
-			Builder.createStringParam(" --gen-hx-classes", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_GENERATE_HAXE_CLASSES_SWF,
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.setSwfFileForHeaders(value);
+					}
+				}),
 			
-			//  --next : separate several haxe compilations
-			Builder.createFlagParam("--next", new NextFlagParam()),
-			
-			//  --altfmt : use alternative error output format
-			Builder.createFlagParam("--altfmt", nif),
-			
-			//  --auto-xml : automatically create an XML for each target
-			Builder.createFlagParam("--auto-xml", nif),
+			//  --next : separate several haXe compilations
+			// We shouldn't meet this in parsing. This parameter should be 
+			// processed on another level of parsing.
 			
 			//  --display : display code tips
-			Builder.createStringParam("--display", nis),
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG,
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						
+						String[] splitResult = value.split("@");
+						
+						if (splitResult.length != 2) {
+							throw new ParseError("Invalid format of --debug option");
+						}
+						
+						try {
+							int position = Integer.parseInt(splitResult[1]);
+							currentConfig.enableTips(splitResult[0], position);
+						} catch (NumberFormatException e) {
+							throw new ParseError(e.getMessage());
+						}						
+					}
+				}
+			),
 			
 			//  --no-output : compiles but does not generate any file
 			Builder.createFlagParam(
@@ -254,10 +432,49 @@ public class BuildParamParser {
 			
 			
 			//  --times : mesure compilation times
-			Builder.createFlagParam("--times", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_TIME_MESURE_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableTimeMesureMode();
+						}
+					}
+				}),
 			
 			//  --no-inline : disable inlining
-			Builder.createFlagParam("--no-inline", nif),
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_NO_INLINE_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableNoInlineMode();
+						}						
+					}
+				}),
+			
+			//--php-front <filename> : select the name for the php front file
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_PHP_FRONT_FILE,
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						phpFrontParam.check();
+						currentConfig.getPHPConfig().setFrontFile(value);						
+					}
+				}),	
+				
+			// --remap <package:target> : remap a package to another one
+			Builder.createStringParam(
+				HaxePreferencesManager.PARAM_PREFIX_REMAP_PACKAGE,
+				new IStringValue() {
+					@Override
+					public void save(String value) throws ParseError {
+						currentConfig.addRemapPackage(value);
+					}
+				}),		
 			
 			//  -help  Display this list of options
 			Builder.createFlagParam(
@@ -300,6 +517,12 @@ public class BuildParamParser {
 	private  HaxeConfiguration parseConfiguration(String strArray[]) throws ParseError {
 		
 		if (!confintueConfig) {
+			
+			// Reset counters 
+			platformParam.reset();
+			mainParam.reset();
+			phpFrontParam.reset();
+			
 			currentConfig = new HaxeConfiguration();
 		}
 		

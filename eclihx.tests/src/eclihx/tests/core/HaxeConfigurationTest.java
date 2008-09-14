@@ -30,24 +30,31 @@ public class HaxeConfigurationTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
 	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationOperationException 
 	 */
 	@Test
-	public void testPrintConfigurationSimple() throws InvalidConfigurationException {
+	public void testPrintConfigurationSimple() 
+		throws InvalidConfigurationException, 
+			   InvalidConfigurationOperationException {
+		
 		configuration.enableDebug();
 		configuration.setStartupClass("TestWhile");
 		
 		Assert.assertEquals(
 			"-main TestWhile -debug ", configuration.printConfiguration());
+	
 	}
 	
 	/**
 	 * Checks printing of the source directories.
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
 	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationOperationException 
 	 */
 	@Test
 	public void testPrintConfigurationSourceDirectory() 
-		throws InvalidConfigurationException {
+		throws InvalidConfigurationException, 
+			   InvalidConfigurationOperationException {
 		
 		configuration.enableDebug();
 		configuration.setStartupClass("TestWhile");
@@ -73,22 +80,6 @@ public class HaxeConfigurationTest {
 		configuration.setExplicitNoOutput();
 	}
 	
-	/**
-	 * This test checks that is't not valid to set output platform for several
-	 * times.
-	 * 
-	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#setPlatform(eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform)}.
-	 */
-	@Test(expected = InvalidConfigurationOperationException.class)
-	public void testSetPlatformMultiFail() 
-		throws InvalidConfigurationOperationException {
-		
-		configuration.setPlatform(Platform.Flash);
-		configuration.setExplicitNoOutput();
-		configuration.setExplicitNoOutput();
-		configuration.setPlatform(Platform.ActionScript);		
-	}
-
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.AbstractConfiguration#validate()}.
 	 */

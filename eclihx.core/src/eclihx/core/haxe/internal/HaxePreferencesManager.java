@@ -23,7 +23,7 @@ public class HaxePreferencesManager {
 	public static final String PARAM_PREFIX_SWF_LIB = "-swf-lib";
 	public static final String PARAM_PREFIX_NEKO_OUTPUT = "-neko";
 	public static final String PARAM_PREFIX_PHP_DIRECTORY = "-php";
-	public static final String PARAM_PREFIX_SHORT_NEKO_OUTPUT = "-x";
+	public static final String PARAM_PREFIX_NEKO_SHORT_OUTPUT = "-x";
 	public static final String PARAM_PREFIX_XML_DESCRIPTION_OUTPUT = "-xml";
 	public static final String PARAM_PREFIX_STARTUP_CLASS = "-main";
 	public static final String PARAM_PREFIX_HAXE_LIB = "-lib";

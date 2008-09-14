@@ -21,6 +21,15 @@ import eclihx.launching.IHaxeRunner;
 
 public class HaxeRunner implements IHaxeRunner {
 	
+	private CoreException generateCoreException(Exception e) {
+		return new CoreException(
+			new Status(
+				Status.ERROR, "eclihx.core", 
+				"Invalid configuration for launch: " + e.getMessage())
+		);
+	}
+	
+	
 	private void throwState(int severity, int code, String message) throws CoreException {
 		IStatus status = new Status(severity, EclihxLauncher.PLUGIN_ID, code, message, null); //$NON-NLS-1$
 		IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
@@ -87,9 +96,9 @@ public class HaxeRunner implements IHaxeRunner {
 			   	configuration.getCompilerPath(), outputDirectory);
 			
 		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
+			throw generateCoreException(e);
 		} catch (ParseError e) {
-			e.printStackTrace();
+			throw generateCoreException(e);
 		}
 	}
 }

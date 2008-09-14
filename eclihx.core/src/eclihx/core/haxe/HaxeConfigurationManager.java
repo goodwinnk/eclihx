@@ -3,15 +3,16 @@ package eclihx.core.haxe;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 
 public class HaxeConfigurationManager {
-
-	static public HaxeConfiguration MakeNoOutput(HaxeConfiguration configuration) {
-		try {
-			configuration.setPlatform(HaxeConfiguration.Platform.NoOutput);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return configuration;
+	
+	
+	static public void MakeNoOutput(HaxeConfiguration configuration) {
+		configuration.setExplicitNoOutput();
+	}
+	
+	static public void MakeTips(
+		HaxeConfiguration configuration, String fileName, int position) {
+		
+		configuration.setExplicitNoOutput();
+		configuration.enableTips(fileName, position);
 	}
 }
