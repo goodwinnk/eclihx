@@ -52,7 +52,8 @@ public class BuildParamParserTest {
 	public void testParseFileWithComments() 
 		throws ParseError {
 		
-		String path = System.getProperty("user.dir") + "\\Resources\\testComments.hxml";
+		String path = System.getProperty("user.dir") + 
+			"\\Resources\\testComments.hxml";
 		parser.parseFile(path);
 	}
 
