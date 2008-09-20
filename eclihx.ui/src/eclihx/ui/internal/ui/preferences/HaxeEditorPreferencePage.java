@@ -144,7 +144,6 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 	 * for values until user will ask for it.
 	 */
 	private final class SyntaxPreferencesGroup {
-		
 		/**
 		 * Help class for storing syntax group values
 		 */
@@ -329,13 +328,17 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		 */
 		public String getName() {
 			return name;
-		}		
+		}
 	}
 	
 	/**
 	 * haXe source viewer options
 	 */
-	private final ArrayList<SyntaxPreferencesGroup> haxeOptions = new ArrayList<SyntaxPreferencesGroup>();
+	private final ArrayList<SyntaxPreferencesGroup> haxeOptions = 
+		new ArrayList<SyntaxPreferencesGroup>();
+	
+	private final ArrayList<SyntaxPreferencesGroup> haxeDocOptions =
+		new ArrayList<SyntaxPreferencesGroup>();
 	
 	/**
 	 * Controls for syntax options
@@ -347,124 +350,146 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		
 		setTitle("Editors colors preferences");
 		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Line comment",
-				PreferenceConstants.HX_EDITOR_COMMENT_COLOR,
-				PreferenceConstants.HX_EDITOR_COMMENT_BOLD,
-				PreferenceConstants.HX_EDITOR_COMMENT_ITALIC
-			)
-		);
+		{
+			// Initialize haXe code preferences
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Line comment",
+					PreferenceConstants.HX_EDITOR_COMMENT_COLOR,
+					PreferenceConstants.HX_EDITOR_COMMENT_BOLD,
+					PreferenceConstants.HX_EDITOR_COMMENT_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Multiline comment",
+					PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_COLOR,
+					PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_BOLD,
+					PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"String",
+					PreferenceConstants.HX_EDITOR_STRING_COLOR,
+					PreferenceConstants.HX_EDITOR_STRING_BOLD,
+					PreferenceConstants.HX_EDITOR_STRING_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Regular expression",
+					PreferenceConstants.HX_EDITOR_REGEXPR_COLOR,
+					PreferenceConstants.HX_EDITOR_REGEXPR_BOLD,
+					PreferenceConstants.HX_EDITOR_REGEXPR_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Brackets",
+					PreferenceConstants.HX_EDITOR_BRACKET_COLOR,
+					PreferenceConstants.HX_EDITOR_BRACKET_BOLD,
+					PreferenceConstants.HX_EDITOR_BRACKET_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Braces",
+					PreferenceConstants.HX_EDITOR_BRACE_COLOR,
+					PreferenceConstants.HX_EDITOR_BRACE_BOLD,
+					PreferenceConstants.HX_EDITOR_BRACE_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Number",
+					PreferenceConstants.HX_EDITOR_NUMBER_COLOR,
+					PreferenceConstants.HX_EDITOR_NUMBER_BOLD,
+					PreferenceConstants.HX_EDITOR_NUMBER_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Declare keyword",
+					PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_COLOR,
+					PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_BOLD,
+					PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Keyword",
+					PreferenceConstants.HX_EDITOR_KEYWORDS_COLOR,
+					PreferenceConstants.HX_EDITOR_KEYWORDS_BOLD,
+					PreferenceConstants.HX_EDITOR_KEYWORDS_ITALIC
+				)
+			);
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Basic types",
+					PreferenceConstants.HX_EDITOR_TYPE_COLOR,
+					PreferenceConstants.HX_EDITOR_TYPE_BOLD,
+					PreferenceConstants.HX_EDITOR_TYPE_ITALIC
+				)
+			);
+			
+			/*
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Template",
+					PreferenceConstants.HX_EDITOR_TEMPLATE_COLOR,
+					PreferenceConstants.HX_EDITOR_TEMPLATE_BOLD,
+					PreferenceConstants.HX_EDITOR_TEMPLATE_ITALIC
+				)
+			);*/
+			
+			haxeOptions.add(
+				new SyntaxPreferencesGroup(
+					"Default",
+					PreferenceConstants.HX_EDITOR_DEFAULT_COLOR,
+					PreferenceConstants.HX_EDITOR_DEFAULT_BOLD,
+					PreferenceConstants.HX_EDITOR_DEFAULT_ITALIC
+				)
+			);
+		}
 		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Multiline comment",
-				PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_COLOR,
-				PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_BOLD,
-				PreferenceConstants.HX_EDITOR_MULTILINE_COMMENT_ITALIC
-			)
-		);
+		{
+			// Initialize haXe doc preferences
+			haxeDocOptions.add(
+				new SyntaxPreferencesGroup(
+					"Common text",
+					PreferenceConstants.HX_EDITOR_HAXE_DOC_COLOR,
+					PreferenceConstants.HX_EDITOR_HAXE_DOC_BOLD,
+					PreferenceConstants.HX_EDITOR_HAXE_DOC_ITALIC
+				)
+			);
+		}
 		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"String",
-				PreferenceConstants.HX_EDITOR_STRING_COLOR,
-				PreferenceConstants.HX_EDITOR_STRING_BOLD,
-				PreferenceConstants.HX_EDITOR_STRING_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Regular expression",
-				PreferenceConstants.HX_EDITOR_REGEXPR_COLOR,
-				PreferenceConstants.HX_EDITOR_REGEXPR_BOLD,
-				PreferenceConstants.HX_EDITOR_REGEXPR_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Brackets",
-				PreferenceConstants.HX_EDITOR_BRACKET_COLOR,
-				PreferenceConstants.HX_EDITOR_BRACKET_BOLD,
-				PreferenceConstants.HX_EDITOR_BRACKET_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Braces",
-				PreferenceConstants.HX_EDITOR_BRACE_COLOR,
-				PreferenceConstants.HX_EDITOR_BRACE_BOLD,
-				PreferenceConstants.HX_EDITOR_BRACE_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Number",
-				PreferenceConstants.HX_EDITOR_NUMBER_COLOR,
-				PreferenceConstants.HX_EDITOR_NUMBER_BOLD,
-				PreferenceConstants.HX_EDITOR_NUMBER_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Declare keyword",
-				PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_COLOR,
-				PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_BOLD,
-				PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Keyword",
-				PreferenceConstants.HX_EDITOR_KEYWORDS_COLOR,
-				PreferenceConstants.HX_EDITOR_KEYWORDS_BOLD,
-				PreferenceConstants.HX_EDITOR_KEYWORDS_ITALIC
-			)
-		);
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Basic types",
-				PreferenceConstants.HX_EDITOR_TYPE_COLOR,
-				PreferenceConstants.HX_EDITOR_TYPE_BOLD,
-				PreferenceConstants.HX_EDITOR_TYPE_ITALIC
-			)
-		);
-		
-		/*
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Template",
-				PreferenceConstants.HX_EDITOR_TEMPLATE_COLOR,
-				PreferenceConstants.HX_EDITOR_TEMPLATE_BOLD,
-				PreferenceConstants.HX_EDITOR_TEMPLATE_ITALIC
-			)
-		);*/
-		
-		haxeOptions.add(
-			new SyntaxPreferencesGroup(
-				"Default",
-				PreferenceConstants.HX_EDITOR_DEFAULT_COLOR,
-				PreferenceConstants.HX_EDITOR_DEFAULT_BOLD,
-				PreferenceConstants.HX_EDITOR_DEFAULT_ITALIC
-			)
-		);
-		
-		Collections.sort(haxeOptions, 
-			new Comparator<SyntaxPreferencesGroup>() 
-			{
-				public int compare(SyntaxPreferencesGroup o1,
-						SyntaxPreferencesGroup o2) {
-					return o1.getName().compareTo(o2.getName());
-				}
-			}
-		);
+		{  // Sort groups
+			
+			// This comparator take in account only names of the groups and it's
+			// used to sort number of groups in alphabetic order.
+			Comparator<SyntaxPreferencesGroup> nameComparator = 
+				new Comparator<SyntaxPreferencesGroup>() {
+					public int compare(SyntaxPreferencesGroup o1,
+							SyntaxPreferencesGroup o2) {
+						return o1.getName().compareTo(o2.getName());
+					}
+				};
+			
+			Collections.sort(haxeOptions, nameComparator);
+			Collections.sort(haxeDocOptions, nameComparator);
+		}
 	}
 	
 	
@@ -500,10 +525,17 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 					child.setText(option.getName());
 					child.setData(option);
 				}
-			}			
+			} else if (rootName.equals(haxeDocName)) {
+				for (SyntaxPreferencesGroup option : haxeDocOptions) {
+					TreeItem child = new TreeItem(rootItem, SWT.NONE);
+					child.setText(option.getName());
+					child.setData(option);
+				}
+			}
 		}
 		
 		tree.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				TreeItem[] selectedItems = tree.getSelection();
 				
@@ -537,6 +569,7 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		Link link = new Link(mainComposite, SWT.NONE);
 		link.setText("Default colors and font can be configured on the <a href=\"org.eclipse.ui.preferencePages.GeneralTextEditor\">Text Editors</a> and on the <a href=\"org.eclipse.ui.preferencePages.ColorsAndFonts\">Colors and Fonts</a> preference page.");
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(), e.text, null, null);
 			}
@@ -580,6 +613,11 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 			option.resetToDefaults();
 			syntaxEditors.refresh();
 		}
+		
+		for (SyntaxPreferencesGroup option : haxeDocOptions) {
+			option.resetToDefaults();
+			syntaxEditors.refresh();
+		}
 	}
 
 	/*
@@ -589,6 +627,10 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 	@Override
 	public boolean performOk() {
 		for (SyntaxPreferencesGroup option : haxeOptions) {
+			option.save();
+		}
+		
+		for (SyntaxPreferencesGroup option : haxeDocOptions) {
 			option.save();
 		}
 		

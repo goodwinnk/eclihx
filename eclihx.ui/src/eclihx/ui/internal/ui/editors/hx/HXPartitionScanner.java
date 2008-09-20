@@ -3,7 +3,14 @@ package eclihx.ui.internal.ui.editors.hx;
 
 import java.util.ArrayList;
 
-import org.eclipse.jface.text.rules.*;
+import org.eclipse.jface.text.rules.EndOfLineRule;
+import org.eclipse.jface.text.rules.IPredicateRule;
+import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
+import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
+import org.eclipse.jface.text.rules.SingleLineRule;
+import org.eclipse.jface.text.rules.Token;
 
 public class HXPartitionScanner extends RuleBasedPartitionScanner {
 	
@@ -17,10 +24,10 @@ public class HXPartitionScanner extends RuleBasedPartitionScanner {
 		
 		ArrayList<IRule> rules = new ArrayList<IRule>(5);
 
+		rules.add(new MultiLineRule("/**", "*/", hxDoc));
 		rules.add(new MultiLineRule("/*", "*/", hxMultilineComment));
 		rules.add(new EndOfLineRule("//", hxComment));
 		rules.add(new EndOfLineRule("#", hxPreprocessor));
-		rules.add(new MultiLineRule("/**", "**/", hxDoc));
 		rules.add(new MultiLineRule("~/", "/", hxRegexpr));
 		rules.add(new SingleLineRule("\"", "\"", hxString, '\\'));
 

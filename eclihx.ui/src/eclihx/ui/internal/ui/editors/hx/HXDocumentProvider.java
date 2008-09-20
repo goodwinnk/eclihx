@@ -25,6 +25,7 @@ public class HXDocumentProvider extends FileDocumentProvider {
 						IHXPartitions.HX_MULTI_LINE_COMMENT,
 						IHXPartitions.HX_STRING,
 						IHXPartitions.HX_REGEXPR,
+						IHXPartitions.HX_DOC,
 						IHXPartitions.HX_PREPROCESSOR });
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
