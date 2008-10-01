@@ -5,23 +5,31 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import eclihx.core.EclihxLogger;
+import eclihx.core.IPluginLogger;
 import eclihx.ui.PreferenceConstants;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class EclihxPlugin extends AbstractUIPlugin {
-
-	// The plug-in ID
+public class EclihxUIPlugin extends AbstractUIPlugin {
+	/**
+	 * Plug-in identifier.
+	 */
 	public static final String PLUGIN_ID = "eclihx.ui";
 
 	// The shared instance
-	private static EclihxPlugin plugin;
+	private static EclihxUIPlugin plugin;
+	
+	/**
+	 * Logger helper.
+	 */
+	private static IPluginLogger logger;
 
 	/**
 	 * The constructor
 	 */
-	public EclihxPlugin() {
+	public EclihxUIPlugin() {
 		plugin = this;
 	}
 
@@ -30,6 +38,7 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	@SuppressWarnings({"deprecation"})
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -43,6 +52,7 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
@@ -53,7 +63,7 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	 * 
 	 * @return the shared instance
 	 */
-	public static EclihxPlugin getDefault() {
+	public static EclihxUIPlugin getDefault() {
 		return plugin;
 	}
 
@@ -75,5 +85,25 @@ public class EclihxPlugin extends AbstractUIPlugin {
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		PreferenceConstants.initializeDefaultValues(store);
+	}
+	
+	/**
+	 * Gets the plug-in unique id.
+	 * @return plug-in unique id.
+	 */
+	public static String getPluginId() {
+		return EclihxUIPlugin.PLUGIN_ID;
+	}	
+
+	/**
+	 * Get plug-in log helper.  
+	 * @return plug-in helper.
+	 */
+	public static IPluginLogger getLogHelper() {
+		if (logger == null) {
+			logger = new EclihxLogger(getDefault(), PLUGIN_ID);
+		}
+		
+		return logger;
 	}
 }

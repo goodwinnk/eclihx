@@ -2,7 +2,6 @@ package eclihx.core.haxe.model;
 
 import java.util.ArrayList;
 
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -11,7 +10,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import eclihx.core.EclihxLogger;
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IProjectPathManager;
 
@@ -37,7 +36,7 @@ public final class HaxeProject implements IHaxeProject {
 			try {
 				addHaxeNature(); // Say eclipse, that it's a haXe project
 			} catch (CoreException e) {
-				EclihxLogger.logError(e);
+				EclihxCore.getLogHelper().logError(e);
 			} 			
 		}		
 	}

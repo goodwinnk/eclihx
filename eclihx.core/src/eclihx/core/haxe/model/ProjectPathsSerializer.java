@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="ProjectPaths")
-class ProjectPathsSerializer {
+public class ProjectPathsSerializer {
 	
 	@XmlElement(name="OutputFolder")
 	public String outputFolder;

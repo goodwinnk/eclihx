@@ -23,9 +23,13 @@ public class NonRuleBasedDamagerRepairer
 	
 	/**
 	 * Constructor for NonRuleBasedDamagerRepairer.
+	 * @param defaultTextAttribute Default text attribute.
 	 */
 	public NonRuleBasedDamagerRepairer(TextAttribute defaultTextAttribute) {
-		assert(defaultTextAttribute != null);
+		if (defaultTextAttribute == null) {
+			throw new NullPointerException(
+					"defaultTextAttribute parameter can't be null");
+		}			
 
 		fDefaultTextAttribute = defaultTextAttribute;
 	}

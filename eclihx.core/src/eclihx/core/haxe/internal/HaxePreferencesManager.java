@@ -9,7 +9,6 @@ public class HaxePreferencesManager {
 	/**
 	 * Supported flash version. 0 in invalid and it's not allowed in that list.
 	 */
-	// TODO 1 fix zero restriction
 	public static final int[] SUPPORTED_VERSIONS = new int[] {6, 7, 8, 9};
 	
 	// Compile options
