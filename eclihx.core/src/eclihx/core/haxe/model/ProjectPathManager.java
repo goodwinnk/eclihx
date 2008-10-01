@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
-import eclihx.core.EclihxLogger;
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IProjectPathManager;
 
 /**
@@ -26,7 +26,7 @@ public class ProjectPathManager implements IProjectPathManager {
 	
 	private static final String fileName = ".paths";
 
-	private IProject fProject;
+	private final IProject fProject;
 	
 	public IFolder outputFolder;
 	
@@ -137,10 +137,10 @@ public class ProjectPathManager implements IProjectPathManager {
 			
 		
 		} catch (JAXBException e) {
-			EclihxLogger.logError(e);
+			EclihxCore.getLogHelper().logError(e);
 		
 		} catch (CoreException e) {
-			EclihxLogger.logError(e);
+			EclihxCore.getLogHelper().logError(e);
 		}
 		
 	}
@@ -163,9 +163,9 @@ public class ProjectPathManager implements IProjectPathManager {
 			    
 			    return (new ProjectPathManager(project, pps));
 			} catch (JAXBException e) {
-				EclihxLogger.logError(e);
+				EclihxCore.getLogHelper().logError(e);
 			} catch (CoreException e) {
-				EclihxLogger.logError(e);
+				EclihxCore.getLogHelper().logError(e);
 			}
 		}
 		

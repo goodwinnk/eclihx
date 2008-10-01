@@ -9,4 +9,10 @@
       <run class="eclihx.core.haxe.model.HaxeProjectNature"/>
    	</runtime>
 	</extension>
+<extension
+      point="org.eclipse.core.runtime.preferences">
+   <initializer
+         class="eclihx.core.CorePreferenceInitializer">
+   </initializer>
+</extension>
 </plugin>

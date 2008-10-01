@@ -3,7 +3,7 @@ package eclihx.ui.internal.ui.editors.hx;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.TextEditor;
 
-import eclihx.ui.internal.ui.EclihxPlugin;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 public class HXEditor extends TextEditor {
 
@@ -25,7 +25,7 @@ public class HXEditor extends TextEditor {
 		super();
 		
 		// Set preference store to the store of the ui plugin
-		setPreferenceStore(EclihxPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(EclihxUIPlugin.getDefault().getPreferenceStore());
 		setDocumentProvider(new HXDocumentProvider());
 		
 		colorManager = new ColorManager();

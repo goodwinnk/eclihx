@@ -1,7 +1,7 @@
 package eclihx.ui.internal.ui.preferences;
 
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,10 +10,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import eclihx.core.CorePreferenceInitializer;
+import eclihx.core.EclihxCore;
 import eclihx.core.util.OSUtil;
-import eclihx.launching.EclihxLauncher;
-import eclihx.launching.LauncherPreferenceInitializer;
 
+/**
+ * Preference page for setting up the path to the haXe compiler.
+ */
 public class HaxeCompilerPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
 
@@ -21,10 +24,19 @@ public class HaxeCompilerPreferencePage extends PreferencePage implements
 	
 	private FileFieldEditor compilerPathField;
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	protected Control createContents(Composite parent) {
 
@@ -38,25 +50,49 @@ public class HaxeCompilerPreferencePage extends PreferencePage implements
 		// children to populate.
 		top.setLayout(new GridLayout());
 				
-		compilerPathField = new FileFieldEditor(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH, "haXe compiler:", true, top);
-		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH));
+		compilerPathField = new FileFieldEditor(
+				CorePreferenceInitializer.HAXE_COMPILER_PATH, 
+				"haXe compiler:", true, top);
+		
+		String initialCompilerValue = 
+				EclihxCore.getDefault().getPluginPreferences().getString(
+						CorePreferenceInitializer.HAXE_COMPILER_PATH);  
+		
+		compilerPathField.setStringValue(initialCompilerValue);
 		compilerPathField.setEmptyStringAllowed(true);
 		
-		compilerPathField.setFileExtensions(new String[]{OSUtil.getCompilerExtensionFilter()});
+		compilerPathField.setFileExtensions(
+				new String[]{OSUtil.getCompilerExtensionFilter()});
 		compilerPathField.load();
 				
 		return top;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+	 */
 	@Override
 	protected void performDefaults() {
-		compilerPathField.setStringValue(EclihxLauncher.getDefault().getPluginPreferences().getDefaultString(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH));
+		compilerPathField.setStringValue(
+				EclihxCore.getDefault().getPluginPreferences().
+						getDefaultString(
+								CorePreferenceInitializer.HAXE_COMPILER_PATH));
+		
 		super.performDefaults();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
 	@Override
 	public boolean performOk() {
-		EclihxLauncher.getDefault().getPluginPreferences().setValue(LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH, compilerPathField.getStringValue());
+		
+		EclihxCore.getDefault().getPluginPreferences().setValue(
+				CorePreferenceInitializer.HAXE_COMPILER_PATH, 
+				compilerPathField.getStringValue());
+		
 		return super.performOk();
 	}
 }

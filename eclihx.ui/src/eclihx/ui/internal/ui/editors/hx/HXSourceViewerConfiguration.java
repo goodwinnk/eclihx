@@ -15,7 +15,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
 import eclihx.ui.PreferenceConstants;
-import eclihx.ui.internal.ui.EclihxPlugin;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
 import eclihx.ui.internal.ui.editors.SingleTokenScanner;
 
@@ -50,7 +50,7 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 		
 		assistant.enableAutoActivation(true);
 		assistant.setAutoActivationDelay(300);
-		assistant.setContentAssistProcessor(new HXContextAssist(), IHXPartitions.HX_DOC);
+		assistant.setContentAssistProcessor(new HXContextAssist(), IDocument.DEFAULT_CONTENT_TYPE);
 		
 		return assistant;
 	}
@@ -59,7 +59,7 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 
 	public HXSourceViewerConfiguration(ColorManager colorManager) {
 		
-		IPreferenceStore store = EclihxPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = EclihxUIPlugin.getDefault().getPreferenceStore();
 		hxCodeScanner = new HXScanner(colorManager, store);
 		
 		singleLineCommentScanner = new SingleTokenScanner(

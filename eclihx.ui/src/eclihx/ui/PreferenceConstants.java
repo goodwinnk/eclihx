@@ -4,7 +4,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 
-import eclihx.ui.internal.ui.EclihxPlugin;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
  * Preference IDs and default values for EclihX-UI plug-in
@@ -188,6 +188,6 @@ public final class PreferenceConstants {
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {
-		return EclihxPlugin.getDefault().getPreferenceStore();
+		return EclihxUIPlugin.getDefault().getPreferenceStore();
 	}
 }

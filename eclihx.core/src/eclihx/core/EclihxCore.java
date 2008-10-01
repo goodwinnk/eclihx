@@ -1,30 +1,39 @@
 package eclihx.core;
 
-import eclihx.core.haxe.model.HaxeWorkspace;
-import eclihx.core.haxe.model.core.IHaxeWorkspace;
-
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+import eclihx.core.haxe.model.HaxeWorkspace;
+import eclihx.core.haxe.model.core.IHaxeWorkspace;
+
 /**
- * The activator class controls the plug-in life cycle
+ * The activator class controls the plug-in life cycle.
  */
 public class EclihxCore extends Plugin {
 
-	/*
-	 * (non-javadoc)
+	/**
+	 * Wrapper for the original workspace to work with haXe language.
 	 */
 	private IHaxeWorkspace haxeWorkspace;
+	
+	/**
+	 * Logger helper.
+	 */
+	private static IPluginLogger logger;
 
-	// The plug-in ID
+	/**
+	 * The plug-in ID.
+	 */
 	public static final String PLUGIN_ID = "eclihx.core";
 
-	// The shared instance
+	/**
+	 * The shared instance of plug-in.
+	 */
 	private static EclihxCore plugin;
 
 	/**
-	 * The constructor
+	 * The default constructor.
 	 */
 	public EclihxCore() {
 		plugin = this;
@@ -33,25 +42,30 @@ public class EclihxCore extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * @see
+	 * org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
 		haxeWorkspace = new HaxeWorkspace(ResourcesPlugin.getWorkspace()
-				.getRoot());
+				.getRoot());		
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * @see
+	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 
 		haxeWorkspace.close();
 
 		plugin = null;
+
 		super.stop(context);
 	}
 
@@ -73,5 +87,16 @@ public class EclihxCore extends Plugin {
 	public IHaxeWorkspace getHaxeWorkspace() {
 		return haxeWorkspace;
 	}
-
+	
+	/**
+	 * Get plug-in log helper.  
+	 * @return plug-in helper.
+	 */
+	public static IPluginLogger getLogHelper() {
+		if (logger == null) {
+			logger = new EclihxLogger(getDefault(), PLUGIN_ID);
+		}		
+		
+		return logger;
+	}
 }

@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import eclihx.ui.PreferenceConstants;
-import eclihx.ui.internal.ui.EclihxPlugin;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 
 public class HaxeEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -642,6 +642,6 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 	 */
 	@Override
 	public IPreferenceStore getPreferenceStore() {
-		return EclihxPlugin.getDefault().getPreferenceStore();
+		return EclihxUIPlugin.getDefault().getPreferenceStore();
 	}
 }

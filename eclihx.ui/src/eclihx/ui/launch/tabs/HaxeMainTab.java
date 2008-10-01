@@ -26,13 +26,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
+import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
-import eclihx.core.EclihxLogger;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IProjectPathManager;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
-import eclihx.launching.LauncherPreferenceInitializer;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
  * This class contains functionality for the main launch configuration tab
@@ -194,7 +194,8 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			if (buildFileName != null) {
 				buildFileNameText.setText(buildFileName);
 			} else {
-				EclihxLogger.logInfo("The selected file wasn't found.");
+				EclihxUIPlugin.getLogHelper().
+						logInfo("The selected file wasn't found.");
 			}
 		}
 	}
@@ -240,7 +241,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		projectNameText.addModifyListener(fModifyListener);
 		projectNameText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent me) {
-				UpdateCurrentProject(projectNameText.getText());
+				updateCurrentProject(projectNameText.getText());
 			}
 		});
 
@@ -350,7 +351,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(
 			IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH,
 			EclihxLauncher.getDefault().getPluginPreferences().getString(
-				LauncherPreferenceInitializer.ECLIHAXE_HAXE_COMPILER_PATH
+				CorePreferenceInitializer.HAXE_COMPILER_PATH
 			)
 		);
 
@@ -386,7 +387,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 					IHaxeLaunchConfigurationConstants.PROJECT_NAME,
 					projectNameString);
 		} catch (CoreException e) {
-			EclihxLogger.logError(e);
+			EclihxCore.getLogHelper().logError(e);
 		}
 
 		projectNameText.setText(projectNameString);
@@ -403,7 +404,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 					IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY,
 					workingDirectoryString);
 		} catch (CoreException e) {
-			EclihxLogger.logError(e);
+			EclihxCore.getLogHelper().logError(e);
 		}
 		sourceDirectoryText.setText(workingDirectoryString);
 	}
@@ -418,7 +419,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 					IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY,
 					outputDirectoryString);
 		} catch (CoreException e) {
-			EclihxLogger.logError(e);
+			EclihxCore.getLogHelper().logError(e);
 		}
 		outputDirectoryText.setText(outputDirectoryString);
 	}
@@ -433,7 +434,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 					IHaxeLaunchConfigurationConstants.BUILD_FILE,
 					buildFileString);
 		} catch (CoreException e) {
-			EclihxLogger.logError(e);
+			EclihxCore.getLogHelper().logError(e);
 		}
 		buildFileNameText.setText(buildFileString);
 	}
@@ -510,11 +511,10 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	}
 
 	/**
-	 * Method checks if we entered valid project name
-	 * 
-	 * @return <code>true</code> if valid
+	 * Update local variables after changing of the selected project.
+	 * @param projectName new project name.
 	 */
-	private void UpdateCurrentProject(String projectName) {
+	private void updateCurrentProject(String projectName) {
 		try {
 			if (projectName.isEmpty()) {
 				haxeProject = null;
