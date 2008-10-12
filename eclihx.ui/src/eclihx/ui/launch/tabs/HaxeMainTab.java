@@ -30,7 +30,6 @@ import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IProjectPathManager;
-import eclihx.launching.EclihxLauncher;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
@@ -350,7 +349,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		// TODO 1 Make separate place for overriding initializer
 		configuration.setAttribute(
 			IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH,
-			EclihxLauncher.getDefault().getPluginPreferences().getString(
+			EclihxCore.getDefault().getPluginPreferences().getString(
 				CorePreferenceInitializer.HAXE_COMPILER_PATH
 			)
 		);
@@ -486,6 +485,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			// compiler check
 			String executablePath = launchConfig.getAttribute(
 					IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
+			
 			if (executablePath.isEmpty()) {
 				setErrorMessage(
 					"Please, define haXe compiler first " +
