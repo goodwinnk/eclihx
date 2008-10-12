@@ -12,15 +12,16 @@ import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 import eclihx.core.haxe.internal.configuration.JSConfiguration;
 
 /**
- * @author GoodwinNK
- *
+ * Testing of the JS configuration container.
+ * {@link eclihx.core.haxe.internal.configuration.JSConfiguration}
  */
 public class JSConfigurationTest {
 	
 	private JSConfiguration config;
 
 	/**
-	 * @throws java.lang.Exception
+	 * Setting Up
+	 * @throws java.lang.Exception exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -29,7 +30,7 @@ public class JSConfigurationTest {
 
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.JSConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationException configuration exception
 	 */
 	@Test
 	public void testPrintConfiguration() 
@@ -41,7 +42,7 @@ public class JSConfigurationTest {
 	
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.JSConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationException configuration exception
 	 */
 	@Test
 	public void testPrintConfigurationCompound() 

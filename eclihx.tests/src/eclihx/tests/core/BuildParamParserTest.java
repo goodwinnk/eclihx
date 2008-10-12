@@ -101,6 +101,6 @@ public class BuildParamParserTest {
 		Assert.assertTrue(config.hasCompilationFlags("fdb"));
 		Assert.assertTrue(config.isNoOutputMode());
 		Assert.assertTrue(config.isNoTracesMode());
-		
 	}
+
 }

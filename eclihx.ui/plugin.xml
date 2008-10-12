@@ -2,19 +2,28 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="Editing haXe Source Context"
+            id="eclihx.ui.haxeEditorScope"
+            name="Editing haXe Source"
+            parentId="org.eclipse.ui.textEditorScope">
+      </context>
+   </extension>
+   <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="%hxEditor.name%"
-            extensions="hx"
-            icon="icons/haxe_file_small.ico"
-            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="eclihx.ui.internal.ui.editors.hx.HXEditor"
-            id="eclihx.ui.internal.ui.editors.HXEditor">
+            contributorClass="eclihx.ui.internal.ui.editors.hx.HxEditorActionContributor"
+            extensions="hx"
+            icon="icons/h_file_s.gif"
+            id="eclihx.ui.internal.ui.editors.HXEditor"
+            name="%hxEditor.name%">
       </editor>
       <editor
             class="org.eclipse.ui.editors.text.TextEditor"
             extensions="hxml"
-            icon="icons/hxml_file_small.ico"
+            icon="icons/build_file_s.png"
             id="eclihx.ui.editor.hxml"
             name="%hxmlEditor.name%">
       </editor>
@@ -44,7 +53,7 @@
 		<wizard
             category="eclihx.ui.haxe"
             class="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
-            icon="icons/sample.gif"
+            icon="icons/h_project_s.gif"
             id="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
             name="%newHaxeProject.name"
             project="true">
@@ -55,7 +64,7 @@
 		<wizard
         	category="eclihx.ui.haxe"
         	class="eclihx.ui.internal.ui.wizards.HaxeFileWizard"
-        	icon="icons/sample.gif"
+        	icon="icons/h_file_s.gif"
         	id="eclihx.ui.internal.ui.wizards.HaxeFileWizard"
         	name="%newHaxeFile.name"
         	project="false">
@@ -66,7 +75,7 @@
 		<wizard
 			category="eclihx.ui.haxe"
 			class="eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard"
-			icon="icons/sample.gif"
+			icon="icons/build_file_s.png"
 			id="eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard"
 			name="%newHaxeBuildFile.name"
 			project="false">
@@ -79,7 +88,7 @@
        point="org.eclipse.ui.perspectives">
     <perspective
           class="eclihx.ui.internal.ui.HaxePerspectiveFactory"
-          icon="icons/sample.gif"
+          icon="icons/h_perspective_s.gif"
           id="eclihx.ui.internal.ui.HaxePerspectiveFactory"
           name="%haxeEclihxPerspective.name"/>
  </extension>
@@ -100,7 +109,7 @@
        point="org.eclipse.debug.ui.launchConfigurationTypeImages">
     <launchConfigurationTypeImage
           configTypeID="eclihx.launching.HaxeLaunchDelegate"
-          icon="icons/sample.gif"
+          icon="icons/h_app_s.gif"
           id="eclihx.ui.launchConfigurationImage"/>
  </extension>
  <extension
@@ -108,7 +117,7 @@
     <shortcut
           class="eclihx.ui.launch.HaxeLaunchShortcut"
           helpContextId="eclihx.ui.launch.haxe_launch_shortcut"
-          icon="icons/sample.gif"
+          icon="icons/h_app_s.gif"
           id="eclihx.ui.launch.HaxeLaunchShortcut"
           label="haXe application"
           modes="run">
@@ -212,5 +221,18 @@
                perspective="org.eclipse.debug.ui.DebugPerspective">
          </launchMode>
       </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            id="eclihx.ui.editors.haxepopup"
+            targetID="#HaxeEditorContext">
+         <action
+               class="eclihx.ui.actions.FormatAllAction"
+               id="eclihx.ui.actions.edit.haxe.format"
+               label="Format File"
+               menubarPath="additions">
+         </action>
+      </viewerContribution>
    </extension>
 </plugin>

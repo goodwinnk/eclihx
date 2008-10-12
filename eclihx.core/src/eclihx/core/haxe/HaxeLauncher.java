@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 import eclihx.core.util.OSUtil;
@@ -31,11 +32,16 @@ public class HaxeLauncher {
 				DebugPlugin.parseArguments(commandLine), outputDirectory);
 			
 			//DebugPlugin.newProcess(launch, systemProcess, "HaxeProcess");
-			ProcessUtil.executeProcess(
-					commandLine, outputDirectory, new StringBuilder(), new StringBuilder());
 			
-			//[F:/Programs/runtime-EclipseApplication/Test/src/Test.hx:9: characters 4-5 : Unexpected }]
+			StringBuilder errors = new StringBuilder();
+			StringBuilder output = new StringBuilder();
 						
+			ProcessUtil.executeProcess(
+					commandLine, outputDirectory, errors, output);
+			
+			EclihxCore.getLogHelper().logError(errors.toString());
+			EclihxCore.getLogHelper().logInfo(errors.toString());
+			
 		} catch (InvalidConfigurationException e) {
 			throw new CoreException(
 				new Status(

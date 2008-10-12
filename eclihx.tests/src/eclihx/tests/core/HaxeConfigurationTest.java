@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
-import eclihx.core.haxe.internal.configuration.InvalidConfigurationOperationException;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform;
 
 /**
@@ -20,7 +19,8 @@ public class HaxeConfigurationTest {
 	private HaxeConfiguration configuration;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * Setting up.
+	 * @throws java.lang.Exception exception.
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -29,13 +29,11 @@ public class HaxeConfigurationTest {
 
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
-	 * @throws InvalidConfigurationOperationException 
+	 * @throws InvalidConfigurationException If configuration is invalid.
 	 */
 	@Test
 	public void testPrintConfigurationSimple() 
-		throws InvalidConfigurationException, 
-			   InvalidConfigurationOperationException {
+		throws InvalidConfigurationException {
 		
 		configuration.enableDebug();
 		configuration.setStartupClass("TestWhile");
@@ -48,13 +46,10 @@ public class HaxeConfigurationTest {
 	/**
 	 * Checks printing of the source directories.
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
-	 * @throws InvalidConfigurationOperationException 
+	 * @throws InvalidConfigurationException If configuration is invalid.
 	 */
 	@Test
-	public void testPrintConfigurationSourceDirectory() 
-		throws InvalidConfigurationException, 
-			   InvalidConfigurationOperationException {
+	public void testPrintConfigurationSourceDirectory() throws InvalidConfigurationException {
 		
 		configuration.enableDebug();
 		configuration.setStartupClass("TestWhile");
@@ -67,17 +62,35 @@ public class HaxeConfigurationTest {
 	}
 	
 	/**
+	 * Checks printing of the js configuration.
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * @throws InvalidConfigurationException invalid setting of the configuration. 
+	 */
+	@Test
+	public void testPrintConfigurationJS() throws InvalidConfigurationException {
+
+		configuration.setStartupClass("TestJs");
+		configuration.setPlatform(Platform.JavaScript);
+		configuration.getJSConfig().setOutputFile("output.js");
+		
+		Assert.assertEquals(
+			"-main TestJs -js output.js ", 
+			configuration.printConfiguration());
+		
+	}
+	
+	/**
 	 * Successful platform setting.
 	 * 
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#setPlatform(eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform)}.
 	 */
 	@Test
-	public void testSetPlatformSuccessful() 
-		throws InvalidConfigurationOperationException {
+	public void testSetPlatformSuccessful() {
 		
 		configuration.setExplicitNoOutput();
 		configuration.setPlatform(Platform.Flash);
 		configuration.setExplicitNoOutput();
+		
 	}
 	
 	/**

@@ -11,7 +11,7 @@ import eclihx.core.util.OSUtil;
  * Storage for haXe compiler configuration. This class is used by the parser of
  * haXe compiler parameters.
  */
-public class HaxeConfiguration extends AbstractConfiguration {
+public final class HaxeConfiguration extends AbstractConfiguration {
 
 	/**
 	 * Output platforms.
@@ -711,11 +711,10 @@ public class HaxeConfiguration extends AbstractConfiguration {
 					directive));
 		}
 
+		
 		// Platforms
 		if (isPlatformExplicitlySet) {
-			if (platform == Platform.Flash) {
-				outputBuilder.append(flashConfig.printConfiguration());
-			}
+			outputBuilder.append(getTargetConfiguration().printConfiguration());
 		}
 
 		return outputBuilder.toString();
@@ -731,5 +730,22 @@ public class HaxeConfiguration extends AbstractConfiguration {
 	protected ArrayList<String> internalValidate() {
 		// TODO 9 Add validation of the configuration
 		return new ArrayList<String>();
+	}
+	
+	/**
+	 * Get the selected target configuration.
+	 */
+	private IConfiguration getTargetConfiguration() {
+		if (platform == Platform.Flash) {
+			return flashConfig;
+		} else if (platform == Platform.JavaScript) {
+			return jsConfig;
+		} else if (platform == Platform.ActionScript) {
+			return asConfig;
+		} else if (platform == Platform.Neko) {
+			return nekoConfig;
+		}
+		
+		return null;
 	}
 }

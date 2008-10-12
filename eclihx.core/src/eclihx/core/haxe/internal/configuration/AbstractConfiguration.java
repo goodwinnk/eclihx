@@ -10,8 +10,8 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	/**
 	 * Prints the configuration.
 	 * 
-	 * @throws InvalidConfigurationException 
-	 * 		exception with the errors descriptions if configuration is invalid
+	 * @throws InvalidConfigurationException exception with the errors 
+	 * 		   descriptions if configuration is invalid.
 	 */
 	abstract public String printConfiguration() 
 		throws InvalidConfigurationException;
@@ -38,8 +38,8 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	 * Validates the configuration and throws an exception if configuration
 	 * invalid.
 	 *
-	 * @throws InvalidConfigurationException 
-	 * 			exception with the errors descriptions.
+	 * @throws InvalidConfigurationException exception with 
+	 * 		   the errors descriptions.
 	 */
 	@Override
 	public final void validateException() throws InvalidConfigurationException {
