@@ -61,7 +61,9 @@ public class EclihxCore extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-
+		
+		savePluginPreferences();
+		
 		haxeWorkspace.close();
 
 		plugin = null;

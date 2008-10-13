@@ -27,6 +27,6 @@ public final class CorePreferenceInitializer
 	@Override
 	public void initializeDefaultPreferences() {
 		Preferences store = EclihxCore.getDefault().getPluginPreferences();
-		store.setDefault(PREFERENCE_PREFIX, "");
+		store.setDefault(HAXE_COMPILER_PATH, "");
 	}
 }
