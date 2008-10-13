@@ -10,20 +10,21 @@ import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.Token;
 
 /**
- * This rule reads words defined by the <code>IWordDetector</code> and performs additional 
- * check for the matching with regular expression.
+ * This rule reads words defined by the <code>IWordDetector</code> and performs 
+ * additional check for the matching with regular expression.
  * 
- * Pay attention to the fact that <b>all</b> word should match the expression. This means that
- * if you have forgotten to add '^' and '$' they would be added automatically
+ * Pay attention to the fact that <b>all</b> word should match the expression. 
+ * This means that if you have forgotten to add '^' and '$' they would be 
+ * added automatically.
  * 
- * Note that some regular expressions can be processed for <b>too long</b> and it could be a problem
- * for the text rule.
+ * Note that some regular expressions can be processed for <b>too long</b> and 
+ * it could be a problem for the text rule.
  */
 public class RegexRule implements IRule {
 	
 	private class TokenPair {
-		private IToken token;
-		private Pattern pattern;
+		private final IToken token;
+		private final Pattern pattern;
 		
 		public TokenPair(String regex, IToken token) {
 			this.token = token;
