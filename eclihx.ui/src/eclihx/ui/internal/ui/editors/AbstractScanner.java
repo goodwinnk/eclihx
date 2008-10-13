@@ -2,13 +2,8 @@
 
 package eclihx.ui.internal.ui.editors;
 
-import java.util.HashMap;
 import java.util.ArrayList;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
+import java.util.HashMap;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -19,6 +14,10 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 
 import eclihx.ui.internal.ui.editors.hx.ColorManager;
 
@@ -35,6 +34,14 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	 */
 	public static class TextAttributesKey {
 		
+		/**
+		 * Default constructor with all keys.
+		 * @param colorKey the color key.
+		 * @param boldKey the bold key.
+		 * @param italicKey the italic key.
+		 * @param strikethroughKey the strike through key.
+		 * @param underlineKey the underline key.
+		 */
 		public TextAttributesKey(String colorKey, 
 				           String boldKey, 
 				           String italicKey, 
@@ -78,10 +85,10 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 		public String propertyNameUnderline;
 	}
 	
-	private ColorManager fColorManager;
-	private IPreferenceStore fPreferenceStore;
+	private final ColorManager fColorManager;
+	private final IPreferenceStore fPreferenceStore;
 
-	private HashMap<String, Token> fTokenMap= new HashMap<String, Token>();
+	private final HashMap<String, Token> fTokenMap= new HashMap<String, Token>();
 	
 	private TextAttributesKey[] fAttributesKeys;
 	
@@ -101,6 +108,8 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 
 	/**
 	 * Creates an abstract scanner.
+	 * @param manager color manager.
+	 * @param store the store with the preferences.
 	 */
 	public AbstractScanner(ColorManager manager, IPreferenceStore store) {
 		super();

@@ -4,21 +4,28 @@ import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
- * Simple class which extend number of operations available for ICharacterScanner
- * Note that you can't unread more character you have read before
+ * Simple class which extend number of operations available for 
+ * ICharacterScanner.
+ * Note that you <b>can't</b> unread more character you have read before.
  * 
  * Class is not finished yet.
  */
 public final class ScannerController {
+	
+	/**
+	 * Original scanner.
+	 */
 	private final ICharacterScanner scanner;
+	
+	/**
+	 * Number of characters we had read.
+	 */
 	private int readLength; 
 	
-	
-	public static boolean NotEOF(int readResult) {
-		return readResult != ICharacterScanner.EOF;
-	}
-	
-
+	/**
+	 * Constructor which wrap the original scanner.
+	 * @param scanner base scanner.
+	 */
 	public ScannerController(ICharacterScanner scanner) {
 		this.scanner = scanner;
 	}
@@ -26,8 +33,8 @@ public final class ScannerController {
 	/**
 	 * Reading defined number of characters
 	 * 
-	 * @param length
-	 * @return
+	 * @param length number of characters to read.
+	 * @return the string we had read.
 	 */
 	public String readString(int length) {
 		
@@ -35,7 +42,7 @@ public final class ScannerController {
 		
 		for (int readResult = read(), counter = 0; counter < length; ++counter, readResult = read()) {
 
-			if (NotEOF(readResult)) { // We can't read anymore
+			if (notEOF(readResult)) { // We can't read anymore
 				break;
 			}
 			
@@ -47,30 +54,27 @@ public final class ScannerController {
 	}
 
 	
-	public int read() {
-		int result = scanner.read();
-		readLength += 1;
-		
-		return result;
-	}	
-
 	/**
 	 * Read the string defined by the word detector
-	 * @param wordDetectror
-	 * @return String we had read or <code>null</code> if scanner was at the end or start character is invalid
+	 * @param wordDetectror the word detector.
+	 * @return String we had read or <code>null</code> if scanner was at the end 
+	 * 		   or start character is invalid.
 	 */
 	public String readString(IWordDetector wordDetectror) {
 		int readResult = read();
 		
-		if (NotEOF(readResult) && wordDetectror.isWordStart((char)readResult)) {
+		if (notEOF(readResult) && wordDetectror.isWordStart((char)readResult)) {
 			StringBuilder builder = new StringBuilder();
 			
 			do {
 				builder.append((char)readResult);
 				readResult = read();
-			} while (NotEOF(readResult) && wordDetectror.isWordPart((char)readResult));
+			} while (notEOF(readResult) && 
+					 wordDetectror.isWordPart((char)readResult));
 			
-			unread(); // We should unread last character because it doesn't belong to the string
+			// We should unread last character because it doesn't belong to the string
+			unread(); 
+			
 			return builder.toString();
 
 		} else {
@@ -79,8 +83,19 @@ public final class ScannerController {
 	}
 	
 	/**
-	 * Unread one character
-	 * Note that you can't unread more character you have read before
+	 * Read one character.
+	 * @return result of the ICharacterScanner.read() operation.
+	 */
+	public int read() {
+		int result = scanner.read();
+		readLength += 1;
+		
+		return result;
+	}	
+	
+	/**
+	 * Unread one character.
+	 * Note that you can't unread more character you have read before.
 	 * @return <code>true</code> if we unread something
 	 */
 	private boolean unread() {
@@ -93,8 +108,8 @@ public final class ScannerController {
 	}
 	
 	/**
-	 * Unread all characters scanner had read before
-	 * @return <code>true</code> if we unread something
+	 * Unread all characters scanner had read before.
+	 * @return <code>true</code> if we unread something.
 	 */
 	public boolean unreadAll() {
 		if (readLength == 0) return false;
@@ -104,5 +119,14 @@ public final class ScannerController {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Check if the read result isn't end of file flag.
+	 * @param readResult the result of the read operation.
+	 * @return <code>true</code> if parameter <b>isn't</b> end of file.  
+	 */
+	private static boolean notEOF(int readResult) {
+		return readResult != ICharacterScanner.EOF;
 	}
 }

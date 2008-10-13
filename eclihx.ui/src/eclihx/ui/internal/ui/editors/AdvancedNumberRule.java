@@ -18,8 +18,15 @@ import org.eclipse.jface.text.rules.Token;
  */
 public class AdvancedNumberRule implements IRule {
 	
-	RegexRule regexRule;
+	/**
+	 * Storage of number regular expressions.
+	 */
+	private final RegexRule regexRule;
 
+	/**
+	 * Constructs the rule for the number.
+	 * @param token the token for the number. 
+	 */
 	public AdvancedNumberRule(IToken token) {
 
 		CharSetWordDetector numberDetector = new CharSetWordDetector(
@@ -51,7 +58,11 @@ public class AdvancedNumberRule implements IRule {
 		regexRule.addRegex( "^\\d+(\\.\\d*)?[eE][+-]?\\d+$", token);	
 	}
 	
-
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.text.rules.IRule#evaluate(org.eclipse.jface.text.rules.ICharacterScanner)
+	 */
+	@Override
 	public IToken evaluate(ICharacterScanner scanner) {
 		return regexRule.evaluate(scanner);
 	}
