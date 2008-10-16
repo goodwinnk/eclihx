@@ -8,14 +8,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -24,7 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
-import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
@@ -32,6 +29,7 @@ import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IProjectPathManager;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.ui.internal.ui.utils.StandardDialogs;
 
 /**
  * This class contains functionality for the main launch configuration tab
@@ -60,76 +58,11 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	private Button projectBuildButton;
 
 	private final ModifyListener fModifyListener = new ModifyListener() {
+		@Override
 		public void modifyText(ModifyEvent modifyEvent) {
 			updateLaunchConfigurationDialog();
 		}
 	};
-
-	/**
-	 * Base selection listener. It reacts to events ignoring them 
-	 */
-	private class SelectionListenerClass implements SelectionListener {
-		public void widgetDefaultSelected(SelectionEvent e) {/* do nothing */
-		}
-
-		public void widgetSelected(SelectionEvent e) { /* do nothing */
-		}
-	}
-
-	/**
-	 * Get a project selector dialog
-	 * 
-	 * @return
-	 */
-	private AbstractElementListSelectionDialog getHaxeProjectsDialog() {
-		// TODO 4 make icons for project selection
-
-		ILabelProvider labelProvider = new LabelProvider();
-		ElementListSelectionDialog dialog = 
-			new ElementListSelectionDialog(getShell(), labelProvider);
-
-		// Messages
-		dialog.setTitle("Select Haxe Project");
-		dialog.setMessage("Enter a string to search for a project:");
-		dialog.setEmptyListMessage(
-			"There are no haXe projects. You should create one first.");
-
-		// Initialize the list of elements
-		String[] projectNames = 
-			EclihxCore.getDefault().getHaxeWorkspace().getHaxeProjectsNames();
-		
-		dialog.setElements(projectNames);
-		dialog.setInitialSelections(new Object[] { projectNameText.getText() });
-		
-		return dialog;
-	}
-
-	/**
-	 * Choose a haXe build file dialog
-	 * 
-	 * @return
-	 */
-	private AbstractElementListSelectionDialog getBuildFilesDialog() {
-		// TODO 4 make icons for project selection
-
-		ILabelProvider labelProvider = new LabelProvider();
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				getShell(), labelProvider);
-
-		// Messages
-		dialog.setTitle("Select Haxe Build File");
-		dialog.setMessage("Enter a string to search for a file:");
-		dialog.setEmptyListMessage(
-			"The project has no build files. " +
-			"Please, create one before to proceed.");
-
-		// Initialize
-		dialog.setElements(buildFilesCache);
-		dialog.setInitialSelections(
-			new Object[] { buildFileNameText.getText() });
-
-		return dialog;
-	}
 
 	/**
 	 * Converts array of <code>IFile</code> objects
@@ -150,8 +83,10 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected void onProjectButtonSelected(SelectionEvent event) {
 
-		AbstractElementListSelectionDialog dialog = getHaxeProjectsDialog();
-
+		AbstractElementListSelectionDialog dialog = 
+			StandardDialogs.createHaxeProjectsDialog(
+					getShell(), projectNameText.getText()); 
+			
 		if (dialog.open() == Window.OK) {
 			String projectNewName = dialog.getFirstResult().toString();
 
@@ -185,7 +120,10 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 * @param event
 	 */
 	protected void onBuildFileSelected(SelectionEvent event) {
-		AbstractElementListSelectionDialog dialog = getBuildFilesDialog();
+		
+		AbstractElementListSelectionDialog dialog =
+			StandardDialogs.createBuildFilesDialog(
+					getShell(), haxeProject, buildFileNameText.getText());
 
 		if (dialog.open() == Window.OK) {
 			String buildFileName = dialog.getFirstResult().toString();
@@ -223,8 +161,8 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		top.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		top.setLayout(new GridLayout());
 
-		GridData horizontantalGrid = new GridData(GridData.GRAB_HORIZONTAL
-				| GridData.HORIZONTAL_ALIGN_FILL);
+		GridData horizontantalGrid = new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
 		GridLayout layout = new GridLayout(1, false);
 
 		// Add project group
@@ -246,7 +184,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 		Button projectButton = createPushButton(projectGroup,
 				"Select Project...", null);
-		projectButton.addSelectionListener(new SelectionListenerClass() {
+		projectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				onProjectButtonSelected(e);
@@ -267,7 +205,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 		projectBuildButton = createPushButton(buildFileGroup, "Build file...",
 				null);
-		projectBuildButton.addSelectionListener(new SelectionListenerClass() {
+		projectBuildButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				onBuildFileSelected(event);

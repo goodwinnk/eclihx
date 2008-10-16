@@ -18,6 +18,8 @@ import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
  * Bundle of most images used by the Java plug-in.
+ * 
+ * On the base of jdt.ui
  */
 public class PluginImages {
 
@@ -31,6 +33,8 @@ public class PluginImages {
 	private static HashMap<String, ImageDescriptor> fgAvoidSWTErrorMap = null;
 	
 	private static final String ASSIST_PREFIX = "assist";
+	private static final String WIZARDS_PREFIX = "wizards";
+	private static final String UNDEFINED = "";
 
 	/*
 	 * Keys for images available from the Java-UI plug-in image registry.
@@ -53,6 +57,13 @@ public class PluginImages {
 	public static final String IMG_FIELD_DEFAULT = NAME_PREFIX
 			+ "field_default_obj.gif"; //$NON-NLS-1$
 	
+	public static final String IMG_PROJECT = NAME_PREFIX + "h_project_s.gif";
+	public static final String IMG_SOURCE_FOLDER = NAME_PREFIX + 
+			"sourcefolder_s.gif";
+	public static final String IMG_BUILD_FILE = NAME_PREFIX + 
+			"build_file_s.png";
+	
+	
 	/*
 	 * Set of predefined Image Descriptors.
 	 */
@@ -73,6 +84,18 @@ public class PluginImages {
 			createManagedFromKey(ASSIST_PREFIX, IMG_FIELD_PRIVATE);
 	public static final ImageDescriptor DESC_FIELD_DEFAULT = 
 			createManagedFromKey(ASSIST_PREFIX, IMG_FIELD_DEFAULT);
+	
+	public static final ImageDescriptor DESC_OBJ_PROJECT =
+			createManagedFromKey(UNDEFINED, IMG_PROJECT);
+	
+	public static final ImageDescriptor DESC_OBJ_SOURCE_FOLDER =
+		createManagedFromKey(UNDEFINED, IMG_SOURCE_FOLDER);
+	
+	public static final ImageDescriptor DESC_OBJ_BUILD_FILE =
+		createManagedFromKey(UNDEFINED, IMG_BUILD_FILE);
+	
+	public static final ImageDescriptor DESC_WIZBAN_NEWPACK = 
+			createUnManaged(WIZARDS_PREFIX, "newpack_wiz.png"); 
 
 
 	private static final class CachedImageDescriptor extends ImageDescriptor {

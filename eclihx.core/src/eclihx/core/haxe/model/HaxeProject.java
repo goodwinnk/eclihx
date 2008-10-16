@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -11,7 +12,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.core.haxe.model.core.IProjectPathManager;
 
 /**
@@ -29,12 +32,19 @@ public final class HaxeProject implements IHaxeProject {
 	 */
 	IProjectPathManager fPathManager; 
 
+	/**
+	 * Create the haXe project on the base of the IProject.
+	 * This constructor will add a haXe nature to the project.
+	 *
+	 * @param project the project which should become a haXe project. It should
+	 *        be opened.
+	 */
 	public HaxeProject(IProject project) {
 		fProject = project;
 		
 		if (fProject.isOpen()) {
 			try {
-				addHaxeNature(); // Say eclipse, that it's a haXe project
+				addHaxeNature(); // Say to eclipse, that it's a haXe project
 			} catch (CoreException e) {
 				EclihxCore.getLogHelper().logError(e);
 			} 			
@@ -42,7 +52,7 @@ public final class HaxeProject implements IHaxeProject {
 	}
 	
 	/**
-	 * Stores project
+	 * Stores project.
 	 */
 	public void store() {
 		// TODO 7 Make properties change listener
@@ -50,13 +60,12 @@ public final class HaxeProject implements IHaxeProject {
 			fPathManager.store();
 		}
 	}
-
 	
 	/**
-	 * Returns true if current project has haXe nature
+	 * Returns true if current project has haXe nature.
 	 * 
-	 * @param project
-	 * @return true if current project has haXe nature
+	 * @param project the project for check.
+	 * @return true if current project has haXe nature.
 	 */
 	public static boolean isHaxeProject(IProject project) {
 		try {
@@ -182,6 +191,36 @@ public final class HaxeProject implements IHaxeProject {
 
 		}
 		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#getName()
+	 */
+	@Override
+	public String getName() {
+		return fProject.getName();
+	}
+
+	@Override
+	public IHaxeSourceFolder[] getSourceFolders() {
+		ArrayList<IHaxeSourceFolder> sourceFolders = 
+			new ArrayList<IHaxeSourceFolder>();
+		
+		for(IFolder folder : getPathManager().getSourceFolders()) {
+			sourceFolders.add(new HaxeSourceFolder(this, folder));
+		}
+		
+		return sourceFolders.toArray(new IHaxeSourceFolder[0]);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getParent()
+	 */
+	@Override
+	public IHaxeElement getParent() {
+		return EclihxCore.getDefault().getHaxeWorkspace();
 	}
 	
 

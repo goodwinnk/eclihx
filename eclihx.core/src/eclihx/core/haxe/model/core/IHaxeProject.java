@@ -6,14 +6,19 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-
-public interface IHaxeProject {
+/**
+ * Interface for the haXe project.
+ */
+public interface IHaxeProject extends IHaxeElement {
 	
+	/**
+	 * haXe project nature.
+	 */
 	public final static String HAXE_PROJECT_NATURE_ID = "eclihx.core.haxenature";
 	
 	/**
 	 * Return the base object
-	 * @return
+	 * @return the base IProject object.
 	 */
 	IProject getProjectBase();
 	
@@ -33,9 +38,15 @@ public interface IHaxeProject {
 	IFile[] getBuildFiles() throws CoreException;
 	
 	/**
-	 * Checks if project is opened. Project is considered to be opened if getProjectBase().isOpen()
-	 * @return
-	 * @see IProject.isOpen()
+	 * Returns the source folder of the project.
+	 * @return an array of the source folders.
+	 */
+	IHaxeSourceFolder[] getSourceFolders();
+	
+	/**
+	 * Checks if project is opened.
+	 * 
+	 * @return <code>true</code> if project is open.
 	 */
 	boolean isOpen();
 	
@@ -43,7 +54,12 @@ public interface IHaxeProject {
 	 * Opens base project and do some advanced work for the haXe project
 	 * @param monitor
 	 * @throws CoreException
-	 * @see IProject.open()
 	 */
 	void open(IProgressMonitor monitor) throws CoreException;
+	
+	/**
+	 * Get the name of the project.
+	 * @return the project name.
+	 */
+	String getName();
 }

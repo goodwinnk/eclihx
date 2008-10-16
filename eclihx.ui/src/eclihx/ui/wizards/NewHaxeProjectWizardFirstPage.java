@@ -18,12 +18,19 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.util.OSUtil;
 
+/**
+ * First page of the haXe project creation wizard.
+ */
 public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage {
 	// TODO 3 move string constants to separate file
 
+	/**
+	 * Suffix for the build files.
+	 */
 	private static String buildExtenstionSuffix = OSUtil
 			.getFullFileExtension(HaxePreferencesManager.BUILD_FILE_EXTENSION);
 
+	// Editor fields.
 	private Text buildFileField;
 	private Text srcFolderField;
 	private Text binFolderField;
@@ -37,6 +44,9 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
 		}
 	};
 
+	/**
+	 * Default constructor.
+	 */
 	public NewHaxeProjectWizardFirstPage() {
 		super("New haXe project");
 		setTitle("Create a haXe project");
