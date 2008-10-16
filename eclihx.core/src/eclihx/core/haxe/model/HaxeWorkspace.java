@@ -5,13 +5,22 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 
+import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeWorkspace;
 
+/**
+ * Class extends original IWorskpaceRoot object with the haXe functionality.
+ */
 public class HaxeWorkspace implements IHaxeWorkspace{
 
 	private final IWorkspaceRoot fRoot;
-	
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param root original workspace root.
+	 */
 	public HaxeWorkspace(IWorkspaceRoot root) {
 		fRoot = root;
 	}
@@ -21,14 +30,10 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 	 */
 	public String[] getHaxeProjectsNames() {
 		
-		IProject[] allProjects = fRoot.getProjects();
-		
 		ArrayList<String> haxeProjectsStrings = new ArrayList<String>();
 		
-		for (IProject project : allProjects) {
-			if (HaxeProject.isHaxeProject(project)) {
-				haxeProjectsStrings.add(project.getName());
-			}
+		for (IHaxeProject project : getHaxeProjects()) {
+			haxeProjectsStrings.add(project.getName());
 		}
 		
 		return haxeProjectsStrings.toArray(new String[0]);
@@ -62,4 +67,35 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 		
 		return null;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#getHaxeProjects()
+	 */
+	@Override
+	public IHaxeProject[] getHaxeProjects() {
+		IProject[] allProjects = fRoot.getProjects();
+		
+		ArrayList<IHaxeProject> haxeProjects = new ArrayList<IHaxeProject>();
+		
+		for (IProject project : allProjects) {
+			if (HaxeProject.isHaxeProject(project)) {
+				haxeProjects.add(new HaxeProject(project));
+			}
+		}
+		
+		return haxeProjects.toArray(new IHaxeProject[0]);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getParent()
+	 */
+	@Override
+	public IHaxeElement getParent() {
+		// HaxeWorkspace doesn't have a parent.
+		return null;
+	}
+	
+	
 }

@@ -32,7 +32,9 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
-
+/**
+ * Page with the preferences for editor.
+ */
 public class HaxeEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	/**
@@ -277,7 +279,7 @@ public class HaxeEditorPreferencePage extends PreferencePage implements IWorkben
 		
 		/**
 		 * Sets new color value
-		 * @param rgb
+		 * @param rgb new color value.
 		 */
 		public void changeColorValue(RGB rgb) {
 			changed = true;

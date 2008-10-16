@@ -44,5 +44,9 @@ public class HaxePerspectiveFactory implements IPerspectiveFactory {
 		
 		layout.addNewWizardShortcut(
 				"eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard");
+		
+		layout.addNewWizardShortcut(
+				"eclihx.ui.internal.ui.wizards.HaxePackageWizard");
+		
 	}
 }

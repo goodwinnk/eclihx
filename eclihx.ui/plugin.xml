@@ -51,12 +51,13 @@
 			id="eclihx.ui.haxe"
 			name="%newWizardCategoryName"/>
 		<wizard
-            category="eclihx.ui.haxe"
-            class="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
-            icon="icons/h_project_s.gif"
-            id="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
-            name="%newHaxeProject.name"
-            project="true">
+        category="eclihx.ui.haxe"
+        class="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
+        finalPerspective="eclihx.ui.internal.ui.HaxePerspectiveFactory"
+        icon="icons/h_project_s.gif"
+        id="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
+        name="%newHaxeProject.name"
+        project="true">
             <description>
             	%newHaxeProject.description
             </description>
@@ -83,6 +84,17 @@
 				%newHaxeBuildFile.description
 			</description>
 		</wizard>
+  <wizard
+        category="eclihx.ui.haxe"
+        class="eclihx.ui.internal.ui.wizards.HaxePackageWizard"
+        icon="icons/newpack_wiz_s.gif"
+        id="eclihx.ui.internal.ui.wizards.HaxePackageWizard"
+        name="%newHaxePackage.name"
+        project="false">
+     <description>
+        %newHaxePackage.description
+     </description>
+  </wizard>
 	</extension>
  <extension
        point="org.eclipse.ui.perspectives">

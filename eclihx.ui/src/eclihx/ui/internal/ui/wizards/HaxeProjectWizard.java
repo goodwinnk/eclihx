@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -19,24 +20,35 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import eclihx.core.haxe.model.HaxeProject;
 import eclihx.ui.wizards.NewHaxeProjectWizardFirstPage;
 
-
-public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements INewWizard, IExecutableExtension{
+/**
+ * Wizard for the haXe project creation. 
+ */
+public class HaxeProjectWizard extends AbstractMonitorWizard 
+		implements INewWizard, IExecutableExtension{
 	// TODO 3 move string to constants 
 	
+	@Override
 	protected void doCancel(IProgressMonitor monitor) {
 		// TODO 6 Test with unreadable folders 
 	}
 
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		fConfigElement = config;
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+	 */
+	public void setInitializationData(
+			IConfigurationElement config, 
+			String propertyName, 
+			Object data) throws CoreException {
+		
+		//fConfigElement = config;
 	}
 	
-	private IConfigurationElement fConfigElement;
+	//private IConfigurationElement fConfigElement;
 	
 	private NewHaxeProjectWizardFirstPage firstPage; 
 	
@@ -47,8 +59,8 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 		super.addPage(firstPage);
 	}
 	
-	@Override
-	 public boolean performFinish() {
+/*	@Override
+	public boolean performFinish() {
 		if (runFinishOperation()) {
 			// Switch to haXe perspective
 			BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
@@ -56,19 +68,25 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 			return true;
 		}
 		return false;
-    }
+    }*/
 	
 	@Override
 	protected void doFinish(IProgressMonitor monitor) {
 		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		project = firstPage.getProjectHandle();
-		IProjectDescription description = workspace.newProjectDescription(project.getName());
+		IProject project = firstPage.getProjectHandle();
+		
+		IProjectDescription description = workspace.newProjectDescription(
+				project.getName());
+		
 		IPath path = Platform.getLocation();
+		
 		IPath projectPath = firstPage.getLocationPath();
 		
 		// Creation task
-		monitor.beginTask(MessageFormat.format("Creating...", new Object[] { project.getName().toString() }), 4);
+		monitor.beginTask(
+				MessageFormat.format("Creating...", 
+						new Object[] { project.getName().toString() }), 4);
 		
 		// If location is out the workspace
 		if (!path.equals(projectPath)) {
@@ -120,16 +138,18 @@ public class HaxeProjectWizard extends AbstractProjectRelativeWizard implements 
 		} 
 	}
 
+	/**
+	 * Default constructor.
+	 */
 	public HaxeProjectWizard() {
 		setWindowTitle("New haXe project");
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.ui.internal.ui.wizards.AbstractProjectRelativeWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		//fWorkbench = workbench;
-		//fSelection = selection;
-		
-		//setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWJPRJ);
-		//setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-		//setWindowTitle("Create haXe project");
 	}
 }
