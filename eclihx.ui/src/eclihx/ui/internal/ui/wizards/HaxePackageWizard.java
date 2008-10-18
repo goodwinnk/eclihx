@@ -2,7 +2,6 @@ package eclihx.ui.internal.ui.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -14,7 +13,8 @@ import eclihx.ui.wizards.NewHaxePackageWizardPage;
 /**
  * Wizard for the haXe package.
  */
-public class HaxePackageWizard extends AbstractMonitorWizard implements INewWizard {
+public class HaxePackageWizard extends 
+		AbstractMonitorWizard implements INewWizard {
 	
 	/**
 	 * Store the reference to the page.
@@ -24,17 +24,17 @@ public class HaxePackageWizard extends AbstractMonitorWizard implements INewWiza
 	/**
 	 * Stores the selection. 
 	 */
-	private ISelection selection;
+	private IStructuredSelection selection;
 
 	/**
 	 * Constructor for HaxePackageWizard.
 	 */
 	public HaxePackageWizard() {
+		
 		super();
 		
-		setNeedsProgressMonitor(true);
 		setDefaultPageImageDescriptor(PluginImages.DESC_WIZBAN_NEWPACK);
-		setWindowTitle("New haXe Package"); 
+		setWindowTitle("New haXe Package");
 		
 	}
 
@@ -80,6 +80,6 @@ public class HaxePackageWizard extends AbstractMonitorWizard implements INewWiza
 	
 	@Override
 	protected void doCancel(IProgressMonitor monitor) {
-		// TODO 5 Remove created resource		
+		// TODO 5 Remove created resource
 	}
 }

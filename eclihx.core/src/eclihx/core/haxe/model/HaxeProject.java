@@ -1,5 +1,7 @@
 package eclihx.core.haxe.model;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
@@ -12,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
@@ -114,6 +117,31 @@ public final class HaxeProject implements IHaxeProject {
 		return new ArrayList<IFile>();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#hasBuildFile(java.lang.String)
+	 */
+	public boolean hasBuildFile(String fileName) {
+		return fProject.getFile(fileName).exists();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#createBuildFile(java.lang.String)
+	 */
+	@Override
+	public void createBuildFile(String fileName, IProgressMonitor monitor) 
+			throws CoreException {
+		
+		if (HaxeElementValidator.validateBuildFileName(fileName).isOK() &&  
+			!hasBuildFile(fileName)) {
+			
+			// Creates an empty file.
+			InputStream stream = new ByteArrayInputStream(("").getBytes());
+			fProject.getFile(fileName).create(stream, true, monitor);
+			
+		}
+	}
 	
 	/*
 	 * (non-Javadoc)

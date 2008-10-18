@@ -84,7 +84,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	protected void onProjectButtonSelected(SelectionEvent event) {
 
 		AbstractElementListSelectionDialog dialog = 
-			StandardDialogs.createHaxeProjectsDialog(
+			StandardDialogs.createHaxeProjectsNamesDialog(
 					getShell(), projectNameText.getText()); 
 			
 		if (dialog.open() == Window.OK) {
