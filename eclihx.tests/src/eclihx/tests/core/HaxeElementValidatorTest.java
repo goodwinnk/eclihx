@@ -78,13 +78,76 @@ public class HaxeElementValidatorTest {
 	}
 	
 	/**
-	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validatePackageName(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
 	@Test
-	public void testValidatePackageNameSuccess() {
-		Assert.assertTrue(
-				HaxeElementValidator.validatePackageName("my.lib.pack").isOK());		
+	public void testValidateBuildFileNameNull() {
+		Assert.assertFalse(
+				HaxeElementValidator.validateBuildFileName(null).isOK());		
 		
 	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 */
+	@Test
+	public void testValidateBuildFileNameEmpty() {
+		Assert.assertFalse(
+				HaxeElementValidator.validateBuildFileName("").isOK());		
+		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 */
+	/*
+	@Test
+	public void testValidateBuildFileNameInvalidChars() {
+		Assert.assertFalse(
+				HaxeElementValidator.validateBuildFileName("text?.hxml").isOK());		
+		
+	}
+	*/
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 */
+	@Test
+	public void testValidateBuildFileNameInvalidExtension() {
+		Assert.assertFalse(
+				HaxeElementValidator.validateBuildFileName("ha.txt").isOK());		
+		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 */
+	@Test
+	public void testValidateBuildFileNameBackSlash() {
+		Assert.assertFalse(
+				HaxeElementValidator.validateBuildFileName("hi\\ha.hxml").isOK());		
+		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 */
+	@Test
+	public void testValidateBuildFileNameSlash() {
+		Assert.assertFalse(
+				HaxeElementValidator.validateBuildFileName("hi/ha.hxml").isOK());		
+		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 */
+	/*
+	@Test
+	public void testValidateBuildFileNameSuccess() {
+		Assert.assertTrue(
+				HaxeElementValidator.validateBuildFileName("build.hxml").isOK());		
+	}
+	*/
 
 }

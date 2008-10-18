@@ -38,6 +38,27 @@ public interface IHaxeProject extends IHaxeElement {
 	IFile[] getBuildFiles() throws CoreException;
 	
 	/**
+	 * Examines the project for build file existence.
+	 * 
+	 * @param fileName the name of the build file.
+	 *  
+	 * @return <code>true</code> if this project has already build file with
+	 *         such name. 
+	 */
+	boolean hasBuildFile(String fileName);
+	
+	/**
+	 * Creates new build file if it is doesn't exist.
+	 * 
+	 * @param fileName the name of the build file.
+	 * @param monitor the operation monitor. <code>null</code> 
+	 *        value is allowed.
+	 * @throws CoreException if there are some errors during file creation.
+	 */
+	void createBuildFile(String fileName, IProgressMonitor monitor) 
+			throws CoreException;
+	
+	/**
 	 * Returns the source folder of the project.
 	 * @return an array of the source folders.
 	 */

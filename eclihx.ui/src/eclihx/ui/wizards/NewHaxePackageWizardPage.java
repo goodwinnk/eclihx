@@ -3,13 +3,9 @@ package eclihx.ui.wizards;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -31,7 +27,7 @@ import eclihx.ui.internal.ui.utils.StandardDialogs;
 /**
  * Page for the package creation.
  */
-public final class NewHaxePackageWizardPage extends WizardPage {
+public final class NewHaxePackageWizardPage extends AbstractSelectionPage {
 	
 	/**
 	 * The haXe source folder.
@@ -49,29 +45,17 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 	private Text packageText;
 	
 	/**
-	 * Selection of the wizard.
-	 */
-	private final ISelection selection;
-	
-	private final ModifyListener fUpdateDialogListener = new ModifyListener() {
-		@Override
-		public void modifyText(ModifyEvent modifyEvent) {
-			dialogChangedHandler();
-		}
-	};
-
-	/**
 	 * Default constructor with the parameter of the selection.
 	 * 
 	 * @param selection original selection.
 	 */
-	public NewHaxePackageWizardPage(ISelection selection) {
-		super("New haXe Package");
+	public NewHaxePackageWizardPage(IStructuredSelection selection) {
+		
+		super("New haXe Package", selection);
 		
 		setTitle("New haXe Package");
 		setDescription("This wizard creates a new haXe package.");
 		
-		this.selection = selection;
 	}
 
 	/**
@@ -95,7 +79,7 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 				EclihxUIPlugin.getLogHelper().logError(
 						"Ivalid result value in " + 
 						"NewHaxePackageWizardPage.onSourceFolderBrowseButton");
-			}			
+			}
 		}
 		
 	}
@@ -104,6 +88,7 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		
 		Composite top = new Composite(parent, SWT.LEFT);
@@ -161,7 +146,8 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 	 * Method sets initial values of the fields according to the current
 	 * selection.
 	 */
-	private void initialize() {
+	@Override
+	protected void initialize() {
 		
 		// Reset fields.
 		sourceFolderText.setText("");
@@ -172,7 +158,7 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 			
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection structedSelection = 
-						(IStructuredSelection) selection;
+						selection;
 				
 				// For the case when single element was selected
 				if (structedSelection.size() == 1) {
@@ -207,21 +193,22 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 	/**
 	 * Checks the changed dialog and validate the new state.
 	 */
-	private void dialogChangedHandler() {
+	@Override
+	protected void dialogChangedHandler() {
 		
 		{
 			// Source folder validate
 			
 			if (sourceFolder == null) {
-				updateStatus("Source folder name is empty");
+				updateStatus("Source folder name is empty.");
 				return;
 			}
 			
 			if (!sourceFolder.getBase().isAccessible()) {
-				updateStatus("Source folder doesn't exist");
+				updateStatus("Source folder doesn't exist.");
 				
 				EclihxUIPlugin.getLogHelper().logError(
-						"Source folder doesn't exist");
+						"Source folder doesn't exist.");
 				
 				return;
 			}
@@ -242,7 +229,7 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 			assert(sourceFolder != null);
 			
 			if (sourceFolder.hasPackage(packageName)) {
-				updateStatus("Package already exists");
+				updateStatus("Package already exists.");
 				return;
 			}
 			
@@ -251,18 +238,6 @@ public final class NewHaxePackageWizardPage extends WizardPage {
 		updateStatus(null);
 	}
 
-	/**
-	 * Updates status of the dialog. If there is no error message then the
-	 * page is considered to be complete.
-	 * 
-	 * @param errorMessage the error message. If message is <code>null</code>
-	 *        then the page is complete.
-	 */
-	private void updateStatus(String errorMessage) {
-		setErrorMessage(errorMessage);
-		setPageComplete(errorMessage == null);
-	}
-	
 	/**
 	 * Generate text representation for the haXe source folder.
 	 * 

@@ -8,6 +8,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
+import eclihx.ui.internal.ui.EclihxUIPlugin;
+
 /**
  * Extension for the standard {@link Wizard} class with implementation of the
  * progress monitor based operations.
@@ -111,11 +113,14 @@ public abstract class AbstractMonitorWizard extends Wizard {
 	protected abstract void doFinish(IProgressMonitor monitor);
 
 	/**
-	 * Show asynchronous error message.
+	 * Show asynchronous error dialog with the message.
 	 * 
-	 * @param message
+	 * @param message the message to show
 	 */
 	protected void showErrorBox(final String message) {
+		
+		EclihxUIPlugin.getLogHelper().logError(message);
+		
 		getShell().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openError(getShell(), "EclihX", message);

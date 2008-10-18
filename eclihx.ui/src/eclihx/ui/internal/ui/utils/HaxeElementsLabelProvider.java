@@ -12,7 +12,7 @@ import eclihx.ui.PluginImages;
  * 
  * TODO 6 Make it work not only for the IHaxeProject and IHaxeSourceFolder
  */
-public class HaxeElementsLabelProvider extends LabelProvider {
+class HaxeElementsLabelProvider extends LabelProvider {
 	
 	/*
 	 * (non-Javadoc)
