@@ -12,6 +12,10 @@ public interface IHaxeElement {
 	 */
 	IHaxeElement getParent();
 	
+	/**
+	 * Get the element name.
+	 * @return the element name.
+	 */
+	String getName();
 	
-
 }

@@ -39,4 +39,10 @@ public interface IHaxeSourceFolder extends IHaxeElement {
 	 */
 	public void createPackage(
 			String packageName, IProgressMonitor monitor) throws CoreException;
+	
+	/**
+	 * Get the array of the all haXe packages in the folder.
+	 * @return the array with the packages.
+	 */
+	public IHaxePackage[] getPackages();
 }

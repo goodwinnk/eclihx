@@ -5,6 +5,7 @@ package eclihx.tests.core;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eclihx.core.haxe.internal.HaxeElementValidator;
@@ -100,14 +101,13 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
-	/*
+	@Ignore
 	@Test
 	public void testValidateBuildFileNameInvalidChars() {
 		Assert.assertFalse(
 				HaxeElementValidator.validateBuildFileName("text?.hxml").isOK());		
 		
 	}
-	*/
 	
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
@@ -122,6 +122,7 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
+	@Ignore
 	@Test
 	public void testValidateBuildFileNameBackSlash() {
 		Assert.assertFalse(
@@ -132,6 +133,7 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
+	@Ignore
 	@Test
 	public void testValidateBuildFileNameSlash() {
 		Assert.assertFalse(
@@ -142,12 +144,12 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
-	/*
+	@Ignore
 	@Test
 	public void testValidateBuildFileNameSuccess() {
 		Assert.assertTrue(
 				HaxeElementValidator.validateBuildFileName("build.hxml").isOK());		
 	}
-	*/
+	
 
 }
