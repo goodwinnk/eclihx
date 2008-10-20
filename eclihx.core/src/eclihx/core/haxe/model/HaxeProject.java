@@ -284,6 +284,9 @@ public final class HaxeProject implements IHaxeProject {
 
 		getPathManager().setOutputFolder(folder);
 		
+		//TODO 5 Move to caching projects info and remove this directive.
+		getPathManager().store();
+		
 		return folder;
 	}
 
@@ -308,6 +311,9 @@ public final class HaxeProject implements IHaxeProject {
 		folder.create(false, true, monitor);
 		
 		getPathManager().addSourceFolder(folder);
+		
+		//TODO 5 Move to caching projects info and remove this directive.
+		getPathManager().store();
 
 		return new HaxeSourceFolder(this, folder);
 	}
