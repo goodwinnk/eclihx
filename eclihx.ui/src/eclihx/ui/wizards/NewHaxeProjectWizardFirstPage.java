@@ -1,8 +1,5 @@
 package eclihx.ui.wizards;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -15,27 +12,31 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
-import eclihx.core.haxe.internal.HaxePreferencesManager;
-import eclihx.core.util.OSUtil;
+import eclihx.core.haxe.internal.HaxeElementValidator;
+import eclihx.core.haxe.model.core.IHaxeProject;
 
 /**
  * First page of the haXe project creation wizard.
  */
-public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage {
-	// TODO 3 move string constants to separate file
+public class NewHaxeProjectWizardFirstPage 
+		extends WizardNewProjectCreationPage {
+	
+	/**
+	 * Build file name field.
+	 */
+	private Text buildFileField;
+	
+	/**
+	 * Source folder field.
+	 */
+	private Text srcFolderField;
+	
+	/**
+	 * Output folder field.
+	 */
+	private Text outputFolderField;
 
 	/**
-	 * Suffix for the build files.
-	 */
-	private static String buildExtenstionSuffix = OSUtil
-			.getFullFileExtension(HaxePreferencesManager.BUILD_FILE_EXTENSION);
-
-	// Editor fields.
-	private Text buildFileField;
-	private Text srcFolderField;
-	private Text binFolderField;
-
-	/*
 	 * Validation on modifying attributes
 	 */
 	private final Listener propertiesModifyListener = new Listener() {
@@ -50,64 +51,15 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
 	public NewHaxeProjectWizardFirstPage() {
 		super("New haXe project");
 		setTitle("Create a haXe project");
-		setDescription("Create a haXe project in the workspace or in an external location.");
+		setDescription(
+				"Create a haXe project in the workspace or in an " +
+				"external location.");
 	}
-
-	/**
-	 * Returns the value of the project build file name field with leading and
-	 * trailing spaces removed.
-	 * 
-	 * @return the value of the project build file name field
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.dialogs.WizardNewProjectCreationPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
-	private String getProjectBuildFileFieldValue() {
-		if (buildFileField == null) {
-			return "";
-		}
-
-		return buildFileField.getText().trim();
-	}
-
-	/**
-	 * Returns project build file name with the .hxml extension
-	 * 
-	 * @return project file name field
-	 */
-	public String getProjectBuildFileName() {
-		String buildFileName = getProjectBuildFileFieldValue();
-
-		// If user has added extension we don't add it once more
-		if (buildFileName.endsWith(buildExtenstionSuffix))
-			return buildFileName;
-
-		return (buildFileName + buildExtenstionSuffix);
-	}
-
-	/**
-	 * Returns source folder with leading and trailing spaces removed.
-	 * 
-	 * @return source folder name
-	 */
-	public String getSourceFolder() {
-		if (srcFolderField == null) {
-			return "";
-		}
-
-		return srcFolderField.getText().trim();
-	}
-
-	/**
-	 * Returns binary folder with leading and trailing spaces removed.
-	 * 
-	 * @return binary folder name
-	 */
-	public String getBinaryFolder() {
-		if (srcFolderField == null) {
-			return "";
-		}
-
-		return binFolderField.getText().trim();
-	}
-
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
@@ -128,11 +80,11 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
 
 		// build file entry field
 		buildFileField = new Text(group, SWT.BORDER);
-		buildFileField.setText("build");
+		buildFileField.setText(IHaxeProject.DEFAULT_BUILD_FILE_NAME);
 		buildFileField.setFont(parent.getFont());
 		buildFileField.setLayoutData(dataFillHorizontal);
 		buildFileField.addListener(SWT.Modify, propertiesModifyListener);
-
+		
 		// source folder label
 		Label srcFolderLabel = new Label(group, SWT.NONE);
 		srcFolderLabel.setText("Source Folder:");
@@ -140,67 +92,97 @@ public class NewHaxeProjectWizardFirstPage extends WizardNewProjectCreationPage 
 
 		// source folder entry field
 		srcFolderField = new Text(group, SWT.BORDER);
-		srcFolderField.setText("src");
+		srcFolderField.setText(IHaxeProject.DEFAULT_SOURCE_FOLDER_NAME);
 		srcFolderField.setFont(parent.getFont());
 		srcFolderField.setLayoutData(dataFillHorizontal);
 		srcFolderField.addListener(SWT.Modify, propertiesModifyListener);
 
-		// binary folder label
+		// Output folder label
 		Label binFolderLabel = new Label(group, SWT.NONE);
-		binFolderLabel.setText("Binary Folder:");
+		binFolderLabel.setText("Output Folder:");
 		binFolderLabel.setFont(parent.getFont());
-
-		// binary folder entry field
-		binFolderField = new Text(group, SWT.BORDER);
-		binFolderField.setText("bin");
-		binFolderField.setFont(parent.getFont());
-		binFolderField.setLayoutData(dataFillHorizontal);
-		binFolderField.addListener(SWT.Modify, propertiesModifyListener);
+	
+		// output folder entry field
+		outputFolderField = new Text(group, SWT.BORDER);
+		outputFolderField.setText(IHaxeProject.DEFAULT_OUTPUT_FOLDER_NAME);
+		outputFolderField.setFont(parent.getFont());
+		outputFolderField.setLayoutData(dataFillHorizontal);
+		outputFolderField.addListener(SWT.Modify, propertiesModifyListener);
+		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.dialogs.WizardNewProjectCreationPage#validatePage()
+	 */
 	@Override
 	protected boolean validatePage() {
-		if (!super.validatePage())
-			return false;
-
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		// Check project name is empty or not
-		String projectBuildFileFieldContents = getProjectBuildFileFieldValue();
-		if (projectBuildFileFieldContents.equals("")) {
-			setErrorMessage(null);
-			setMessage("Project build file name can't be empty");
+		
+		// Validates the project name and project location fields.
+		if (!super.validatePage()) {
 			return false;
 		}
+		
+		IStatus validateStatus;
 
-		// Validate project name
-		IStatus nameStatus = workspace.validateName(getProjectBuildFileName(),
-				IResource.PROJECT);
-		if (!nameStatus.isOK()) {
-			setErrorMessage(nameStatus.getMessage());
+		// Validates the build file name.
+		validateStatus = 
+			HaxeElementValidator.validateBuildFileName(getBuildFileName());
+		
+		if (!validateStatus.isOK()) {
+			setErrorMessage(validateStatus.getMessage());
 			return false;
 		}
-
-		// Check source folder
-		if (!getSourceFolder().equals("")) { // Source folder can be empty
-			nameStatus = workspace.validateName(getSourceFolder(),
-					IResource.FOLDER);
-			if (!nameStatus.isOK()) {
-				setErrorMessage(nameStatus.getMessage());
-				return false;
-			}
+		
+		// Validates the source folder 
+		validateStatus = 
+			HaxeElementValidator.validateHaxeSourceFolderName(
+					getSourceFolderName());
+		
+		if (!validateStatus.isOK()) {
+			setErrorMessage(validateStatus.getMessage());
+			return false;
 		}
-
-		// Check binary folder
-		if (!getBinaryFolder().equals("")) { // Binary folder can be empty
-			nameStatus = workspace.validateName(getBinaryFolder(),
-					IResource.FOLDER);
-			if (!nameStatus.isOK()) {
-				setErrorMessage(nameStatus.getMessage());
-				return false;
-			}
-		}
+		
+		// Validates the output folder 
+		validateStatus = 
+			HaxeElementValidator.validateHaxeSourceFolderName(
+					getOutputFolderName());
+		
+		if (!validateStatus.isOK()) {
+			setErrorMessage(validateStatus.getMessage());
+			return false;
+		}		
 
 		return true;
 	}
+	
+	/**
+	 * Returns the value of the project build file name field with leading and
+	 * trailing spaces removed.
+	 * 
+	 * @return the entered build file name
+	 */
+	public String getBuildFileName() {
+		return buildFileField.getText().trim();
+	}
+
+	/**
+	 * Returns source folder name with leading and trailing spaces removed.
+	 * 
+	 * @return source folder name
+	 */
+	public String getSourceFolderName() {
+		return srcFolderField.getText().trim();
+	}
+
+	/**
+	 * Returns output folder with leading and trailing spaces removed.
+	 * 
+	 * @return output folder name
+	 */
+	public String getOutputFolderName() {
+		return outputFolderField.getText().trim();
+	}
+
 }

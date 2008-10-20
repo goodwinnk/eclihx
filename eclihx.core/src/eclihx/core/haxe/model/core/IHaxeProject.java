@@ -2,6 +2,7 @@ package eclihx.core.haxe.model.core;
 
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,7 +15,22 @@ public interface IHaxeProject extends IHaxeElement {
 	/**
 	 * haXe project nature.
 	 */
-	public final static String HAXE_PROJECT_NATURE_ID = "eclihx.core.haxenature";
+	String HAXE_PROJECT_NATURE_ID = "eclihx.core.haxenature";
+	
+	/**
+	 * Default source folder name.
+	 */
+	String DEFAULT_SOURCE_FOLDER_NAME = "src";
+	
+	/**
+	 * Default source folder name.
+	 */
+	String DEFAULT_BUILD_FILE_NAME = "build.hxml";
+	
+	/**
+	 * Default source folder name.
+	 */
+	String DEFAULT_OUTPUT_FOLDER_NAME = "out";
 	
 	/**
 	 * Return the base object
@@ -48,14 +64,46 @@ public interface IHaxeProject extends IHaxeElement {
 	boolean hasBuildFile(String fileName);
 	
 	/**
-	 * Creates new build file if it is doesn't exist.
+	 * Creates new build file.
 	 * 
 	 * @param fileName the name of the build file.
 	 * @param monitor the operation monitor. <code>null</code> 
 	 *        value is allowed.
+	 * @return the created build file.
+	 * @throws CoreException if file name is not a build file name, or
+	 * 		   the error of IFile.create method.
+	 */
+	IFile createBuildFile(String fileName, IProgressMonitor monitor) 
+			throws CoreException;
+	
+	/**
+	 * Creates a new source folder.
+	 * 
+	 * @param sourceFolderName the name of the source folder.
+	 * @param monitor the operation monitor. <code>null</code> 
+	 *        value is allowed.
+	 * 
+	 * @return the created source folder. 
+	 * 
+	 * @throws CoreException if there are some errors during folder creation.
+	 */
+	IHaxeSourceFolder createSourceFolder(
+			String sourceFolderName, IProgressMonitor monitor) 
+			throws CoreException;
+	
+	/**
+	 * Creates new output folder if it is doesn't exist.
+	 *
+	 * @param outputFolderName the name of the output folder.
+	 * @param monitor the operation monitor. <code>null</code> 
+	 *        value is allowed.
+	 *        
+	 * @return the output folder.
+	 *        
 	 * @throws CoreException if there are some errors during file creation.
 	 */
-	void createBuildFile(String fileName, IProgressMonitor monitor) 
+	IFolder createOutputFolder(
+			String outputFolderName, IProgressMonitor monitor) 
 			throws CoreException;
 	
 	/**

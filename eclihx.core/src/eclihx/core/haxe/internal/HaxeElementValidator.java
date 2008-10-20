@@ -1,5 +1,7 @@
 package eclihx.core.haxe.internal;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -19,14 +21,21 @@ public final class HaxeElementValidator {
 	private final static char UNDERSCORE_CHAR = '_';
 	
 	/**
-	 * Build file extension.
+	 * OK status for all checks.
 	 */
-	private final static String BUILD_FILE_EXTENSION = "hxml";
+	private final static IStatus OK_STATUS = 
+			new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
 	
 	/**
-	 * haXe file extension.
+	 * Method simplify creation of the error status.
+	 * @param errorMessage the message which should be written to status.
 	 */
-	private final static String HAXE_FILE_EXTENSION = "hx";
+	private static IStatus createErrorStatus(String errorMessage) {
+		return new Status(
+				IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+				errorMessage);
+	}
+	
 	
 	/**
 	 * Method validates the haXe package name.
@@ -37,23 +46,18 @@ public final class HaxeElementValidator {
 	public static IStatus validatePackageName(String packageName) {
 		
 		if (packageName == null) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					"A package name must not be null.");
+			return createErrorStatus("A package name must not be null.");
 		}
 		
 		// For the length validations
 		int length = packageName.length();
 		
 		if (length == 0) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					"A package name must not be empty.");
+			return createErrorStatus("A package name must not be empty.");
 		}
 		
 		if (packageName.startsWith(".") || packageName.endsWith(".")) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+			return createErrorStatus(
 					"A package name cannot start or end with a dot.");
 		}
 		
@@ -65,8 +69,7 @@ public final class HaxeElementValidator {
 			IStatus identifierStatus = validateIdentifier(packagePart);
 			
 			if (!identifierStatus.isOK()) {
-				return new Status(
-						IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+				return createErrorStatus(
 						String.format(
 								"Error in \"%s\" identifier. %s", 
 								packagePart, identifierStatus.getMessage()));
@@ -74,13 +77,12 @@ public final class HaxeElementValidator {
 		
 			
 			if (Character.isUpperCase(packagePart.charAt(0))) {
-				return new Status(
-						IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+				return createErrorStatus(
 						"Package names must start with a lowercase letter.");
 			}
 		}
-				
-		return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+		
+		return OK_STATUS;
 	}
 	
 	/**
@@ -93,34 +95,28 @@ public final class HaxeElementValidator {
 	public static IStatus validateIdentifier(String identifierName) {
 		
 		if (identifierName == null) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					"A identifier name must not be null.");
+			return createErrorStatus("A identifier name must not be null.");
 		}
 		
 		if (identifierName.isEmpty()) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					"A identifier name must not be empty.");
+			return createErrorStatus("A identifier name must not be empty.");
 		}
 		
 		if (!(Character.isLetter(identifierName.charAt(0)) || 
 			  identifierName.charAt(0) == UNDERSCORE_CHAR)) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+			return createErrorStatus(
 					"A identifier name must start with a letter.");
 		}
 		
 		for (char ch : identifierName.toCharArray()) {
 			if (!(Character.isLetterOrDigit(ch) || ch == UNDERSCORE_CHAR)) {
-				return new Status(
-						IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+				return createErrorStatus(
 						"A identifier name must contain only letters, " +
 						"digits and underscores.");
 			}
 		}		
 		
-		return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+		return OK_STATUS;
 	}
 	
 	/**
@@ -134,13 +130,13 @@ public final class HaxeElementValidator {
 		
 		final FileValidationResult validateResult = 
 			FileNameValidator.validateFileName(
-					buildFileName, BUILD_FILE_EXTENSION);
+					buildFileName, HaxePreferencesManager.BUILD_FILE_EXTENSION);
 		
 		String errorMessage = "";
 		
 		switch (validateResult.getVerdict()) {
 			case Ok:
-				return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+				return OK_STATUS;
 			case NullFileName:
 				errorMessage = "A build file name must not be null.";
 				break;
@@ -150,7 +146,7 @@ public final class HaxeElementValidator {
 			case InvalidExtension:
 				errorMessage = String.format(
 						"A build file name must have '%s' extension.",
-						BUILD_FILE_EXTENSION);
+						HaxePreferencesManager.BUILD_FILE_EXTENSION);
 				break;
 			case InvalidWithMessage:
 				errorMessage = validateResult.getMessage();
@@ -163,7 +159,7 @@ public final class HaxeElementValidator {
 		assert(validateResult.getVerdict() != FileValidateVerdict.Ok);
 		
 		// If file name is valid
-		return new Status(IStatus.ERROR, EclihxCore.PLUGIN_ID, errorMessage);
+		return createErrorStatus(errorMessage);
 	}
 	
 	/**
@@ -177,13 +173,13 @@ public final class HaxeElementValidator {
 		
 		final FileValidationResult validateResult = 
 			FileNameValidator.validateFileName(
-					haxeFileName, HAXE_FILE_EXTENSION);
+					haxeFileName, HaxePreferencesManager.HAXE_FILE_EXTENSION);
 		
 		String errorMessage = "";
 		
 		switch (validateResult.getVerdict()) {
 			case Ok:
-				return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+				return OK_STATUS;
 			case NullFileName:
 				errorMessage = "A haXe file name must not be null.";
 				break;
@@ -193,7 +189,7 @@ public final class HaxeElementValidator {
 			case InvalidExtension:
 				errorMessage = String.format(
 						"A haXe file name must have '%s' extension.",
-						HAXE_FILE_EXTENSION);
+						HaxePreferencesManager.HAXE_FILE_EXTENSION);
 				break;
 			case InvalidWithMessage:
 				errorMessage = validateResult.getMessage();
@@ -206,7 +202,69 @@ public final class HaxeElementValidator {
 		assert(validateResult.getVerdict() != FileValidateVerdict.Ok);
 		
 		// If file name is valid
-		return new Status(IStatus.ERROR, EclihxCore.PLUGIN_ID, errorMessage);
+		return createErrorStatus(errorMessage);
+	}
+	
+	/**
+	 * Method validates the name of haXe output folder.
+	 * 
+	 * @param outputFolderName the name of the folder.
+	 * @return OK status if name is valid and error status with the error 
+	 *         message if name is invalid. 
+	 */
+	public static IStatus validateHaxeOutputFolderName(
+			String outputFolderName) {
+		
+		if (outputFolderName == null) {
+			return createErrorStatus("A output folder name must not be null.");
+		}
+		
+		if (outputFolderName.isEmpty()) {
+			return createErrorStatus("A output folder name must not be empty.");
+		}
+		
+		
+		IStatus validateStatus = ResourcesPlugin.getWorkspace().validateName(
+				outputFolderName, IResource.FOLDER);
+		
+		if (!validateStatus.isOK()) {
+			return createErrorStatus(
+					"Error in output folder name: " + 
+					validateStatus.getMessage());
+		}
+		
+		return OK_STATUS;		
+	}
+	
+	/**
+	 * Method validates the name of haXe source folder.
+	 * 
+	 * @param sourceFolderName the name of the folder.
+	 * @return OK status if name is valid and error status with the error 
+	 *         message if name is invalid. 
+	 */
+	public static IStatus validateHaxeSourceFolderName(
+			String sourceFolderName) {
+		
+		if (sourceFolderName == null) {
+			return createErrorStatus("A source folder name must not be null.");
+		}
+		
+		if (sourceFolderName.isEmpty()) {
+			return createErrorStatus("A source folder name must not be empty.");
+		}
+		
+		
+		IStatus validateStatus = ResourcesPlugin.getWorkspace().validateName(
+				sourceFolderName, IResource.FOLDER);
+		
+		if (!validateStatus.isOK()) {
+			return createErrorStatus(
+					"Error in source folder name: " + 
+					validateStatus.getMessage());
+		}
+		
+		return OK_STATUS;
 	}
 	
 }

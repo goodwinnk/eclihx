@@ -12,6 +12,8 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
@@ -43,15 +45,19 @@ public final class HaxeProject implements IHaxeProject {
 	 *        be opened.
 	 */
 	public HaxeProject(IProject project) {
+		
 		fProject = project;
 		
-		if (fProject.isOpen()) {
-			try {
-				addHaxeNature(); // Say to eclipse, that it's a haXe project
-			} catch (CoreException e) {
-				EclihxCore.getLogHelper().logError(e);
-			} 			
-		}		
+		if (!fProject.isOpen()) {
+			throw new RuntimeException("Project should be opened");
+		}
+		
+		try {
+			addHaxeNature(); // Say to eclipse, that it's a haXe project
+		} catch (CoreException e) {
+			// It should never happen.
+			EclihxCore.getLogHelper().logError(e);
+		} 			
 	}
 	
 	/**
@@ -130,17 +136,22 @@ public final class HaxeProject implements IHaxeProject {
 	 * @see eclihx.core.haxe.model.core.IHaxeProject#createBuildFile(java.lang.String)
 	 */
 	@Override
-	public void createBuildFile(String fileName, IProgressMonitor monitor) 
+	public IFile createBuildFile(String fileName, IProgressMonitor monitor) 
 			throws CoreException {
 		
-		if (HaxeElementValidator.validateBuildFileName(fileName).isOK() &&  
-			!hasBuildFile(fileName)) {
-			
-			// Creates an empty file.
-			InputStream stream = new ByteArrayInputStream(("").getBytes());
-			fProject.getFile(fileName).create(stream, true, monitor);
-			
+		if (!HaxeElementValidator.validateBuildFileName(fileName).isOK()) {
+			throw new CoreException(new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID,
+					"Build file name is invalid"));
 		}
+		
+		// Creates an empty file.
+		InputStream stream = new ByteArrayInputStream(("").getBytes());
+		IFile buildFile = fProject.getFile(fileName);
+		buildFile.create(stream, true, monitor);
+			
+		return buildFile;
+		
 	}
 	
 	/*
@@ -250,6 +261,54 @@ public final class HaxeProject implements IHaxeProject {
 	public IHaxeElement getParent() {
 		return EclihxCore.getDefault().getHaxeWorkspace();
 	}
-	
 
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#createOutputFolder(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IFolder createOutputFolder(String outputFolderName,
+			IProgressMonitor monitor) throws CoreException {
+		
+		if (!HaxeElementValidator.validateHaxeOutputFolderName(
+				outputFolderName).isOK()) {
+			
+			throw new CoreException(new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID,
+					"Invalid source folder name"));
+		}
+
+		IFolder folder = fProject.getFolder(outputFolderName);
+		
+		folder.create(false, true, monitor);
+
+		getPathManager().setOutputFolder(folder);
+		
+		return folder;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#createSourceFolder(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IHaxeSourceFolder createSourceFolder(String sourceFolderName,
+			IProgressMonitor monitor) throws CoreException {
+		
+		if (!HaxeElementValidator.validateHaxeSourceFolderName(
+				sourceFolderName).isOK()) {
+			
+			throw new CoreException(new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID,
+					"Invalid source folder name"));
+		}
+		
+		IFolder folder = fProject.getFolder(sourceFolderName);
+		
+		folder.create(false, true, monitor);
+		
+		getPathManager().addSourceFolder(folder);
+
+		return new HaxeSourceFolder(this, folder);
+	}
 }
