@@ -20,7 +20,7 @@ public class HaxeBuildFileWizard extends AbstractMonitorWizard implements INewWi
 	NewBuildFileWizardPage buildFilePage;
 	
 	/**
-	 * The workbench seleciton.
+	 * The workbench selection.
 	 */
 	IStructuredSelection selection;
 	

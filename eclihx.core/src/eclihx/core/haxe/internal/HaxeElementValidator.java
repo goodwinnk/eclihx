@@ -1,13 +1,12 @@
 package eclihx.core.haxe.internal;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.util.FileNameValidator;
+import eclihx.core.util.FileNameValidator.FileValidateVerdict;
+import eclihx.core.util.FileNameValidator.FileValidationResult;
 
 /**
  * Class validates different internal haXe entities.
@@ -23,6 +22,11 @@ public final class HaxeElementValidator {
 	 * Build file extension.
 	 */
 	private final static String BUILD_FILE_EXTENSION = "hxml";
+	
+	/**
+	 * haXe file extension.
+	 */
+	private final static String HAXE_FILE_EXTENSION = "hx";
 	
 	/**
 	 * Method validates the haXe package name.
@@ -81,6 +85,7 @@ public final class HaxeElementValidator {
 	
 	/**
 	 * Method validates the name of haXe identifier.
+	 * 
 	 * @param identifierName the haXe identifier name.
 	 * @return status of the validation. Error status has the assigned reason of
 	 *         the error.
@@ -127,48 +132,81 @@ public final class HaxeElementValidator {
 	 */
 	public static IStatus validateBuildFileName(String buildFileName) {
 		
-		if (buildFileName == null) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					"A build file name must not be null.");
+		final FileValidationResult validateResult = 
+			FileNameValidator.validateFileName(
+					buildFileName, BUILD_FILE_EXTENSION);
+		
+		String errorMessage = "";
+		
+		switch (validateResult.getVerdict()) {
+			case Ok:
+				return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+			case NullFileName:
+				errorMessage = "A build file name must not be null.";
+				break;
+			case Empty:
+				errorMessage = "A build file name must not be empty.";
+				break;
+			case InvalidExtension:
+				errorMessage = String.format(
+						"A build file name must have '%s' extension.",
+						BUILD_FILE_EXTENSION);
+				break;
+			case InvalidWithMessage:
+				errorMessage = validateResult.getMessage();
+				break;
+			case InvalidUnknown:
+				errorMessage = 
+					"A name must be a valid file name.";
 		}
 		
-		if (!Path.ROOT.isValidSegment(buildFileName)) {
-			if (buildFileName.isEmpty()) {
-				return new Status(
-						IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-						"A build file name must not be empty.");
-			} else {
-				return new Status(
-						IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-						"A build file string must be a valid file name.");
-			}
+		assert(validateResult.getVerdict() != FileValidateVerdict.Ok);
+		
+		// If file name is valid
+		return new Status(IStatus.ERROR, EclihxCore.PLUGIN_ID, errorMessage);
+	}
+	
+	/**
+	 * Method validates the name of haXe file.
+	 * 
+	 * @param haxeFileName the name of the file.
+	 * @return OK status if name is valid and error status with the error 
+	 *         message if name is invalid. 
+	 */
+	public static IStatus validateHaxeFileName(String haxeFileName) {
+		
+		final FileValidationResult validateResult = 
+			FileNameValidator.validateFileName(
+					haxeFileName, HAXE_FILE_EXTENSION);
+		
+		String errorMessage = "";
+		
+		switch (validateResult.getVerdict()) {
+			case Ok:
+				return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+			case NullFileName:
+				errorMessage = "A haXe file name must not be null.";
+				break;
+			case Empty:
+				errorMessage = "A haXe file name must not be empty.";
+				break;
+			case InvalidExtension:
+				errorMessage = String.format(
+						"A haXe file name must have '%s' extension.",
+						HAXE_FILE_EXTENSION);
+				break;
+			case InvalidWithMessage:
+				errorMessage = validateResult.getMessage();
+				break;
+			case InvalidUnknown:
+				errorMessage = 
+					"A name must be a valid file name.";
 		}
 		
-		IPath buildPath = new Path(buildFileName);
-		String fileExtension = buildPath.getFileExtension();		
+		assert(validateResult.getVerdict() != FileValidateVerdict.Ok);
 		
-		if (fileExtension == null || 
-				!buildPath.getFileExtension().equals(BUILD_FILE_EXTENSION)) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					String.format(
-							"A build file name must have '%s' extension.",
-							BUILD_FILE_EXTENSION));
-		}
-
-		
-		IStatus status = 
-				ResourcesPlugin.getWorkspace().validateName(
-						buildFileName, IResource.FILE);
-		
-		if (!status.isOK()) {
-			return new Status(
-					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					status.getMessage());
-		}
-		
-		return new Status(Status.OK, EclihxCore.PLUGIN_ID, "");
+		// If file name is valid
+		return new Status(IStatus.ERROR, EclihxCore.PLUGIN_ID, errorMessage);
 	}
 	
 }

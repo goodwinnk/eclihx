@@ -1,13 +1,19 @@
 package eclihx.core.haxe.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxeElement;
+import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 
@@ -113,4 +119,46 @@ public final class HaxeSourceFolder implements IHaxeSourceFolder {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getName()
+	 */
+	@Override
+	public String getName() {
+		return fFolder.getName();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeSourceFolder#getPackages()
+	 */
+	@Override
+	public IHaxePackage[] getPackages() {
+		try {
+			IResource[] resources = fFolder.members();
+			
+			ArrayList<IHaxePackage> haxePackages = 
+					new ArrayList<IHaxePackage>();
+			
+			// Add a default package.
+			haxePackages.add(new HaxePackage(this));
+			
+			for (IResource resource : resources) {
+				if (resource.getType() == IResource.FOLDER) {
+					IHaxePackage curPackage = new HaxePackage(
+							this, (IFolder)resource);
+					haxePackages.add(curPackage);
+					haxePackages.addAll(
+							Arrays.asList(curPackage.getChildrenPackages()));					
+				}
+			}
+			
+			return haxePackages.toArray(new IHaxePackage[0]);
+			
+		} catch (CoreException e) {
+			EclihxCore.getLogHelper().logError(e);
+		}
+		
+		return new IHaxePackage[0];
+	}
 }

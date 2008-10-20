@@ -97,5 +97,14 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 		return null;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getName()
+	 */
+	@Override
+	public String getName() {
+		return fRoot.getName();
+	}
+	
 	
 }

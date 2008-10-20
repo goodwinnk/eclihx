@@ -17,6 +17,7 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.ui.PluginImages;
@@ -27,10 +28,11 @@ import eclihx.ui.internal.ui.utils.HaxeElementFilter.ShowElement;
  * Initialize some dialogs like project selection dialog and others.
  */
 public final class StandardDialogs {
-	
+
 	/**
 	 * Get a project selector dialog.
-	 * @param shell the parent shell of the dialog. 
+	 * 
+	 * @param shell the parent shell of the dialog.
 	 * @param selectedProject the name of the originally selected project.
 	 * 
 	 * @return dialog with the haXe projects names list.
@@ -44,29 +46,30 @@ public final class StandardDialogs {
 				return PluginImages.get(PluginImages.IMG_SOURCE_FOLDER);
 			}
 		};
-		
-		ElementListSelectionDialog dialog = 
-			new ElementListSelectionDialog(shell, labelProvider);
+
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+				shell, labelProvider);
 
 		// Messages
 		dialog.setTitle("Select Haxe Project");
 		dialog.setMessage("Enter a string to search for a project:");
-		dialog.setEmptyListMessage(
-			"There are no haXe projects. You should create one first.");
+		dialog
+				.setEmptyListMessage("There are no haXe projects. You should create one first.");
 
 		// Initialize the list of elements
-		String[] projectNames = 
-			EclihxCore.getDefault().getHaxeWorkspace().getHaxeProjectsNames();
-		
+		String[] projectNames = EclihxCore.getDefault().getHaxeWorkspace()
+				.getHaxeProjectsNames();
+
 		dialog.setElements(projectNames);
 		dialog.setInitialSelections(new Object[] { selectedProject });
-		
+
 		return dialog;
 	}
-	
+
 	/**
 	 * Create a haXe build file dialog
-	 * @param shell the parent shell of the dialog. 
+	 * 
+	 * @param shell the parent shell of the dialog.
 	 * @param haxeProject project which build files should be listed.
 	 * @param buildFileSelection the name of the originally selected file.
 	 * 
@@ -81,45 +84,43 @@ public final class StandardDialogs {
 				return PluginImages.get(PluginImages.IMG_BUILD_FILE);
 			}
 		};
-		
+
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
 				shell, labelProvider);
 
 		// Messages
 		dialog.setTitle("Select Haxe Build File");
 		dialog.setMessage("Enter a string to search for a file:");
-		dialog.setEmptyListMessage(
-			"The project has no build files. " +
-			"Please, create one before to proceed.");
+		dialog.setEmptyListMessage("The project has no build files. "
+				+ "Please, create one before to proceed.");
 
 		// Initialize
-		
+
 		try {
-			
+
 			IFile[] paths = haxeProject.getBuildFiles();
-			
+
 			// FIXME 2 Move to separate method
 			List<String> stringPaths = new ArrayList<String>(paths.length);
 			for (IFile file : paths) {
 				stringPaths.add(file.getLocation().toString());
-			}			
-			
+			}
+
 			dialog.setElements(stringPaths.toArray(new String[0]));
-			dialog.setInitialSelections(
-				new Object[] { buildFileSelection });
-			
+			dialog.setInitialSelections(new Object[] { buildFileSelection });
+
 		} catch (CoreException e) {
 			EclihxUIPlugin.getLogHelper().logError(e);
-		}		
+		}
 
 		return dialog;
 	}
-	
+
 	/**
-	 * Creates standard child dialog where user can select the 
-	 * particular project.
+	 * Creates standard child dialog where user can select the particular
+	 * project.
 	 * 
-	 * This method should be used for workspace relative selection dialog. 
+	 * This method should be used for workspace relative selection dialog.
 	 * 
 	 * @param shell the parent shell of the dialog.
 	 * @return returns dialog with the list of the haXe projects in workspace.
@@ -127,80 +128,76 @@ public final class StandardDialogs {
 	public static ElementTreeSelectionDialog createHaxeProjectsDialog(
 			Shell shell) {
 
-		ElementTreeSelectionDialog dialog = 
-			new ElementTreeSelectionDialog(
-					shell, 
-					new HaxeElementsLabelProvider(), 
-					new HaxeElementsContentProvider(
-							new HaxeElementFilter(ShowElement.Project)));
-		
-		dialog.setTitle("haXe Project"); 
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
+				shell, new HaxeElementsLabelProvider(),
+				new HaxeElementsContentProvider(new HaxeElementFilter(
+						ShowElement.Project)));
+
+		dialog.setTitle("haXe Project");
 		dialog.setMessage("Choose a haXe project:");
 		dialog.setHelpAvailable(false);
-		
+
 		// Sets haXe workspace as a root of the resource tree
 		dialog.setInput(EclihxCore.getDefault().getHaxeWorkspace());
-		
+
 		return dialog;
 	}
-	
+
 	/**
-	 * Creates standard child dialog where user can select the 
-	 * particular haXe source folder.
+	 * Creates standard child dialog where user can select the particular haXe
+	 * source folder.
 	 * 
-	 * This method should be used for workspace relative selection dialog. 
+	 * This method should be used for workspace relative selection dialog.
 	 * 
 	 * @param shell the parent shell of the dialog.
 	 * @return returns dialog with the list of the haXe source folders.
 	 */
 	public static ElementTreeSelectionDialog createHaxeSourceFoldersDialog(
 			Shell shell) {
-		
-		ElementTreeSelectionDialog dialog = 
-			new ElementTreeSelectionDialog(
-					shell, 
-					new HaxeElementsLabelProvider(), 
-					new HaxeElementsContentProvider(
-							new HaxeElementFilter(ShowElement.SourceFolder)));
-		
-		dialog.setTitle("Source Folder Selection"); 
+
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
+				shell, new HaxeElementsLabelProvider(),
+				new HaxeElementsContentProvider(new HaxeElementFilter(
+						ShowElement.SourceFolder)));
+
+		dialog.setTitle("Source Folder Selection");
 		dialog.setMessage("Choose a source folder:");
 		dialog.setHelpAvailable(false);
-		
+
 		// Sets haXe workspace as a root of the resource tree
 		dialog.setInput(EclihxCore.getDefault().getHaxeWorkspace());
-		
+
 		// Source folder validator
 		// TODO 3 Move the class definition to separate place.
 		dialog.setValidator(new ISelectionStatusValidator() {
 
-			private final Status errorStatus = 
-					new Status(IStatus.ERROR, EclihxUIPlugin.PLUGIN_ID, "");
-			
-			private final Status okStatus = 
-					new Status(IStatus.OK, EclihxUIPlugin.PLUGIN_ID, "");
-			
+			private final Status errorStatus = new Status(IStatus.ERROR,
+					EclihxUIPlugin.PLUGIN_ID, "");
+
+			private final Status okStatus = new Status(IStatus.OK,
+					EclihxUIPlugin.PLUGIN_ID, "");
+
 			@Override
 			public IStatus validate(Object[] selection) {
-				if (selection.length == 1 && 
-						selection[0] instanceof IHaxeSourceFolder) {
+				if (selection.length == 1
+						&& selection[0] instanceof IHaxeSourceFolder) {
 					return okStatus;
 				}
 
 				return errorStatus;
 			}
-			
-		});		
-		
+
+		});
+
 		return dialog;
-		
+
 	}
-	
+
 	/**
-	 * Creates standard child dialog where user can select the 
-	 * particular haXe source folder.
+	 * Creates standard child dialog where user can select the particular haXe
+	 * source folder.
 	 * 
-	 * This folder shows only source folders in the specified haXe project. 
+	 * This folder shows only source folders in the specified haXe project.
 	 * 
 	 * @param shell the parent shell of the dialog.
 	 * @param project the project which source folders should be shown.
@@ -210,17 +207,53 @@ public final class StandardDialogs {
 	 */
 	public static ElementTreeSelectionDialog createHaxeSourceFoldersDialog(
 			Shell shell, IHaxeProject project) {
-		
+
 		if (project == null) {
 			throw new NullPointerException("Project parameter can't be null");
 		}
-		
-		ElementTreeSelectionDialog dialog = 
-			createHaxeSourceFoldersDialog(shell);
-		
+
+		ElementTreeSelectionDialog dialog = createHaxeSourceFoldersDialog(shell);
+
 		// Redefine root element
 		dialog.setInput(project);
+
+		return dialog;
+	}
+
+	/**
+	 * Creates standard child dialog where user can select the particular haXe
+	 * package.
+	 * 
+	 * This folder shows only source folders in the specified haXe project.
+	 * 
+	 * @param shell the parent shell of the dialog.
+	 * @param sourceFolder haXe source folder with packages.
+	 * @return the dialog with the list of the packages.
+	 */
+	public static ElementListSelectionDialog createHaxePackagesDialog(
+			Shell shell, IHaxeSourceFolder sourceFolder) {
 		
-		return dialog;		
-	}	
+		IHaxePackage[] packages;
+		
+		if (sourceFolder != null) {
+			packages = sourceFolder.getPackages();
+		} else {
+			packages = new IHaxePackage[0];
+		}
+		
+		ElementListSelectionDialog dialog = 
+			new ElementListSelectionDialog(
+					shell, 
+					new HaxeElementsLabelProvider());
+	
+		dialog.setIgnoreCase(false);
+		dialog.setTitle("haXe Package Selection"); 
+		dialog.setMessage("Select a package:"); 
+		dialog.setEmptyListMessage("There are no packages in this source folder"); 
+		dialog.setElements(packages);
+		dialog.setHelpAvailable(false);
+		
+		return dialog;
+	}
+	
 }

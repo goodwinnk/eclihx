@@ -62,6 +62,9 @@ public class PluginImages {
 			"sourcefolder_s.gif";
 	public static final String IMG_BUILD_FILE = NAME_PREFIX + 
 			"build_file_s.png";
+	public static final String IMG_PACKAGE = NAME_PREFIX + 
+			"h_package_s.gif";
+	
 	
 	
 	/*
@@ -93,6 +96,9 @@ public class PluginImages {
 	
 	public static final ImageDescriptor DESC_OBJ_BUILD_FILE =
 		createManagedFromKey(UNDEFINED, IMG_BUILD_FILE);
+	
+	public static final ImageDescriptor DESC_OBJ_PACKAGE =
+		createManagedFromKey(UNDEFINED, IMG_PACKAGE);
 	
 	public static final ImageDescriptor DESC_WIZBAN_NEWPACK = 
 			createUnManaged(WIZARDS_PREFIX, "newpack_wiz.png"); 
