@@ -4,7 +4,16 @@ package eclihx.core.haxe.internal;
  * Manager of haXe specific constants.
  */
 public class HaxePreferencesManager {
+	
+	/**
+	 * Build files extension.
+	 */
 	public static final String BUILD_FILE_EXTENSION = "hxml";
+	
+	/**
+	 * haXe file extension.
+	 */
+	public static final String HAXE_FILE_EXTENSION = "hx";
 	
 	/**
 	 * Supported flash version. 0 in invalid and it's not allowed in that list.

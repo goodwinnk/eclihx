@@ -140,20 +140,19 @@ public class FileNameValidator {
 			if (fileName.isEmpty()) {
 				return new FileValidationResult(FileValidateVerdict.Empty);
 			} else {
-				
-				IStatus status = 
-					ResourcesPlugin.getWorkspace().validateName(
-							fileName, IResource.FILE);
-			
-				if (!status.isOK()) {
-					return new FileValidationResult(
-							FileValidateVerdict.InvalidWithMessage, 
-							status.getMessage());
-				}
-				
 				return new FileValidationResult(
 						FileValidateVerdict.InvalidUnknown);
 			}
+		}
+		
+		IStatus status = 
+			ResourcesPlugin.getWorkspace().validateName(
+					fileName, IResource.FILE);
+	
+		if (!status.isOK()) {
+			return new FileValidationResult(
+					FileValidateVerdict.InvalidWithMessage, 
+					status.getMessage());
 		}
 		
 		// We should check file name extension.

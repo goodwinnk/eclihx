@@ -45,18 +45,30 @@
             id="eclihx.ui.internal.ui.preferences.HaxeCompilerPreferencePage"
             name="%hxCompilerPrefName"/>
    </extension>
+ <extension
+       point="org.eclipse.ui.perspectives">
+    <perspective
+          class="eclihx.ui.internal.ui.HaxePerspectiveFactory"
+          fixed="false"
+          icon="icons/h_perspective_s.gif"
+          id="eclihx.ui.internal.ui.HaxePerspectiveFactory"
+          name="%haxeEclihxPerspective.name"/>
+ </extension>
    
 	<extension point="org.eclipse.ui.newWizards">
 		<category 
 			id="eclihx.ui.haxe"
 			name="%newWizardCategoryName"/>
 		<wizard
+        canFinishEarly="false"
         category="eclihx.ui.haxe"
         class="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
         finalPerspective="eclihx.ui.internal.ui.HaxePerspectiveFactory"
+        hasPages="true"
         icon="icons/h_project_s.gif"
         id="eclihx.ui.internal.ui.wizards.HaxeProjectWizard"
         name="%newHaxeProject.name"
+        preferredPerspectives="eclihx.ui.internal.ui.HaxePerspectiveFactory"
         project="true">
             <description>
             	%newHaxeProject.description
@@ -96,14 +108,6 @@
      </description>
   </wizard>
 	</extension>
- <extension
-       point="org.eclipse.ui.perspectives">
-    <perspective
-          class="eclihx.ui.internal.ui.HaxePerspectiveFactory"
-          icon="icons/h_perspective_s.gif"
-          id="eclihx.ui.internal.ui.HaxePerspectiveFactory"
-          name="%haxeEclihxPerspective.name"/>
- </extension>
  <extension
        point="org.eclipse.ui.propertyPages">
     <page

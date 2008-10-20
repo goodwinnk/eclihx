@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
@@ -105,6 +107,21 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 	public String getName() {
 		return fRoot.getName();
 	}
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#createHaxeProject(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IHaxeProject createHaxeProject(
+			String projectName, IProgressMonitor monitor)
+					throws CoreException {
+		
+		IProject project = fRoot.getProject(projectName);
+		
+		project.create(monitor);
+		project.open(monitor);
+		
+		return new HaxeProject(project);
+	}	
 }
