@@ -14,6 +14,9 @@ import org.eclipse.jface.text.rules.WordPatternRule;
  */
 public final class HexNumberRule implements IRule {
 	
+	/**
+	 * Word detector for hex number words.
+	 */
 	private class HexNumberDetector implements IWordDetector {
 		
 		private final TreeSet<Character> hexChars;
@@ -55,12 +58,26 @@ public final class HexNumberRule implements IRule {
 		
 	}
 
+	/**
+	 * Word rule which is used for hex number detecting.
+	 */
 	private final WordPatternRule wordRule;
 	
+	/**
+	 * Default constructor with the token this detector should return in
+	 * the case of success parsing.
+	 * @param token the token for detector.
+	 */
 	public HexNumberRule(IToken token) {
-		this.wordRule = new WordPatternRule(new HexNumberDetector(), "0x", null, token);
+		this.wordRule = new WordPatternRule(
+				new HexNumberDetector(), "0x", null, token);
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.text.rules.IRule#evaluate(org.eclipse.jface.text.rules.ICharacterScanner)
+	 */
+	@Override
 	public IToken evaluate(ICharacterScanner scanner) {
 		return wordRule.evaluate(scanner);
 	}	
