@@ -14,25 +14,45 @@ import eclihx.core.haxe.HaxeLauncher;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 import eclihx.core.haxe.internal.parser.BuildParamParser;
+import eclihx.core.util.OSUtil;
 import eclihx.core.util.console.parser.core.ParseError;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.HaxeRunnerConfiguration;
 import eclihx.launching.IHaxeRunner;
 
+/**
+ * Class starts the haXe compiler process. 
+ */
 public class HaxeRunner implements IHaxeRunner {
 	
+	/**
+	 * Method generates new core exception
+	 * @param e exception to wrap
+	 * @return new CoreException object.
+	 */
 	private CoreException generateCoreException(Exception e) {
 		return new CoreException(
 			new Status(
-				Status.ERROR, "eclihx.core", 
-				"Invalid configuration for launch: " + e.getMessage())
+				Status.ERROR, EclihxLauncher.PLUGIN_ID, 
+				e.getMessage())
 		);
 	}
 	
-	
-	private void throwState(int severity, int code, String message) throws CoreException {
-		IStatus status = new Status(severity, EclihxLauncher.PLUGIN_ID, code, message, null); //$NON-NLS-1$
-		IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
+	/**
+	 * 
+	 * @param severity
+	 * @param code
+	 * @param message
+	 * @throws CoreException
+	 */
+	private void throwState(int severity, int code, String message) 
+			throws CoreException {
+		
+		IStatus status = new Status(
+				severity, EclihxLauncher.PLUGIN_ID, code, message, null);
+		
+		IStatusHandler handler = 
+				DebugPlugin.getDefault().getStatusHandler(status);
 	
 		if (handler == null) {
 			// if there is no handler, throw the exception
@@ -50,45 +70,58 @@ public class HaxeRunner implements IHaxeRunner {
 	}
 	
 	/**
-	 * Check if we have valid configuration for launching
+	 * Check if we have valid configuration for launching.
 	 * 
 	 * @param config
-	 * @return
 	 * @throws CoreException
 	 */
-	private void validateConfiguration(HaxeRunnerConfiguration config) throws CoreException {
-		if (config.getCompilerPath() == null || config.getCompilerPath().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, "haXe compiler wasn't defined properly.");
-		}
+	private void validateConfiguration(HaxeRunnerConfiguration config) 
+			throws CoreException {
 		
-		// TODO 9 make it work not only in windows
-		if (!config.getCompilerPath().endsWith("haxe.exe")) { 
-			throwState(IStatus.ERROR, IStatus.OK, "There should choose haxe.exe in compiler.");
+		IStatus status = OSUtil.validateCompilerPath(config.getCompilerPath());
+		if (!status.isOK()) {
+			throwState(IStatus.ERROR, IStatus.ERROR, status.getMessage());
 		}
 	
-		if (config.getOutputDirectory() == null || config.getOutputDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, "Output directory isn't defined.");
+		// TODO 6 Get the validation.
+		if (config.getOutputDirectory() == null || 
+				config.getOutputDirectory().isEmpty()) {
+			throwState(IStatus.ERROR, IStatus.OK, 
+					"Output directory isn't defined.");
 		}
 		
-		if (config.getSourceDirectory() == null || config.getSourceDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, "Source directory isn't defined.");
+		if (config.getSourceDirectory() == null || 
+				config.getSourceDirectory().isEmpty()) {
+			throwState(IStatus.ERROR, IStatus.OK, 
+					"Source directory isn't defined.");
 		}		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.launching.IHaxeRunner#run(eclihx.launching.HaxeRunnerConfiguration, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
 	public void run(HaxeRunnerConfiguration configuration, 
 					ILaunch launch, 
 					IProgressMonitor monitor) throws CoreException {
 		
+		// Validates haXe configuration.
 		validateConfiguration(configuration);
 		
-		// output directory
-        File outputDirectory = new File(configuration.getOutputDirectory());
-        
-        BuildParamParser parser = new BuildParamParser();
-                
-        HaxeConfiguration haxeConfig;
 		try {
-			haxeConfig = parser.parseFile(configuration.getBuildFile()).getMainConfiguration();
+
+			// output directory
+	        File outputDirectory = new File(configuration.getOutputDirectory());
+	        
+	        BuildParamParser parser = new BuildParamParser();
+	                
+	        HaxeConfiguration haxeConfig;
+			
+			haxeConfig = 
+					parser.parseFile(
+						configuration.getBuildFile()).getMainConfiguration();
+			
 			haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
 			
 			new HaxeLauncher().run(

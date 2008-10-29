@@ -13,23 +13,20 @@ import eclihx.launching.EclihxLauncher;
 import eclihx.launching.HaxeRunnerConfiguration;
 import eclihx.launching.IHaxeRunner;
 
-/*import flash.tools.debugger.Bootstrap;
-//import flash.tools.debugger.Session;
-import flash.tools.debugger.SessionManager;
-import flash.tools.debugger.VersionException;*/
-
 /**
  * Should connect to flash and allow to debug...
- * This class won't be very beautiful for some time - I'm not sure how it should be written
+ * This class won't be very beautiful for some time.
+ * TODO 5 refactor this class!!!
  */
 public class FlashDebugRunner implements IHaxeRunner {
 
-	// TODO 5 refactor this class!!!
-
 	// FIXME 3 Copied from HaxeRunner
-	private void throwState(int severity, int code, String message) throws CoreException {
-		IStatus status = new Status(severity, EclihxLauncher.PLUGIN_ID, code, message, null); //$NON-NLS-1$
-		IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
+	private void throwState(int severity, int code, String message) 
+			throws CoreException {
+		IStatus status = new Status(
+				severity, EclihxLauncher.PLUGIN_ID, code, message, null);
+		IStatusHandler handler = 
+				DebugPlugin.getDefault().getStatusHandler(status);
 	
 		if (handler == null) {
 			// if there is no handler, throw the exception
@@ -51,26 +48,33 @@ public class FlashDebugRunner implements IHaxeRunner {
 	 * Check if we have valid configuration for launching
 	 * 
 	 * @param config
-	 * @return
 	 * @throws CoreException
 	 */
 	// FIXME 3 Copied from HaxeRunner
-	private void validateConfiguration(HaxeRunnerConfiguration config) throws CoreException {
-		if (config.getCompilerPath() == null || config.getCompilerPath().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, "haXe compiler wasn't defined properly.");
+	private void validateConfiguration(
+			HaxeRunnerConfiguration config) throws CoreException {
+		if (config.getCompilerPath() == null || 
+				config.getCompilerPath().isEmpty()) {
+			throwState(IStatus.ERROR, IStatus.OK, 
+					"haXe compiler wasn't defined properly.");
 		}
 		
 		// TODO 9 make it work not only in windows
 		if (!config.getCompilerPath().endsWith("haxe.exe")) { 
-			throwState(IStatus.ERROR, IStatus.OK, "There should choose haxe.exe in compiler.");
+			throwState(IStatus.ERROR, IStatus.OK, 
+					"There should choose haxe.exe in compiler.");
 		}
 	
-		if (config.getOutputDirectory() == null || config.getOutputDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, "Output directory isn't defined.");
+		if (config.getOutputDirectory() == null || 
+				config.getOutputDirectory().isEmpty()) {
+			throwState(IStatus.ERROR, IStatus.OK, 
+					"Output directory isn't defined.");
 		}
 		
-		if (config.getSourceDirectory() == null || config.getSourceDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, "Source directory isn't defined.");
+		if (config.getSourceDirectory() == null || 
+				config.getSourceDirectory().isEmpty()) {
+			throwState(IStatus.ERROR, IStatus.OK, 
+					"Source directory isn't defined.");
 		}		
 	}
 	
@@ -80,7 +84,8 @@ public class FlashDebugRunner implements IHaxeRunner {
 		validateConfiguration(configuration);
 		
 		// My attempt
-		(new FlashRunner()).run(launch, configuration.getBuildFile(), configuration.getOutputDirectory());
+		(new FlashRunner()).run(launch, configuration.getBuildFile(), 
+				configuration.getOutputDirectory());
 
 		/*
 		int requestPort = -1;
@@ -97,19 +102,20 @@ public class FlashDebugRunner implements IHaxeRunner {
 		//commandList.add("" + requestPort);
 		//commandList.add("" + eventPort);
 					
-		//String[] commandLine = (String[]) commandList.toArray(new String[commandList.size()]);
+		//String[] commandLine = 
+		//		(String[]) commandList.toArray(new String[commandList.size()]);
 		
 		//String[] commandLine = new String[]{""};
 		
 		
 		
 		//Process process = DebugPlugin.exec(commandLine, null);
-		//IProcess p = DebugPlugin.newProcess(launch, process, "label" /*path*/);
+		//IProcess p = 
+		//		DebugPlugin.newProcess(launch, process, "label" /*path*/);
 		
 		
-		//IDebugTarget target = new FlashDebugTarget(/*launch, p, requestPort, eventPort*/);
+		//IDebugTarget target = 
+		//		new FlashDebugTarget(/*launch, p, requestPort, eventPort*/);
 		//launch.addDebugTarget(target);			
-
-		// TODO Auto-generated method stub
 	}
 }

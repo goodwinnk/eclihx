@@ -1,5 +1,10 @@
 package eclihx.core.util;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
+import eclihx.core.EclihxCore;
+
 /**
  * Class for storing operation system specific options.
  */
@@ -46,5 +51,34 @@ public final class OSUtil {
 	static public String getCompilerExtensionFilter() {
 		// TODO 8 Support other operation systems
 		return "haxe.exe";
+	}
+	
+	/**
+	 * Method validates the compiler path.
+	 * @param path the path to validate
+	 * @return status of the check.
+	 */
+	static public IStatus validateCompilerPath(String path) {
+		
+		if (path == null) {
+			return new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+					"Compiler path can't be null");
+		}
+		
+		if (path.isEmpty()) {
+			return new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+					"Compiler path can't be empty");
+		}
+		
+		// TODO 9 make it work not only in windows
+		if (!path.endsWith(getCompilerExtensionFilter())) { 
+			return new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+					"Invalid extension for the choosen compiler.");
+		}
+		
+		return new Status(IStatus.OK, EclihxCore.PLUGIN_ID, "");		
 	}
 }

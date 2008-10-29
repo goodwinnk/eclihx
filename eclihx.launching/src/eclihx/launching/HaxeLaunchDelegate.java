@@ -15,17 +15,32 @@ import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import eclihx.launching.flash.FlashDebugRunner;
 import eclihx.launching.haxe.HaxeRunner;
 
-
+/**
+ * Start point for haXe project launching. 
+ * see the information about 
+ * org.eclipse.debug.core.launchConfigurationTypes extension point.
+ */
 public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 	
-	private IHaxeRunner chooseHaxeRunner(String mode) {
+	/**
+	 * Method chooses runner for current mode and configuration.
+	 * @param mode
+	 * @return
+	 */
+	private IHaxeRunner chooseHaxeRunner(
+			String mode, HaxeRunnerConfiguration configuration) {
+		
 		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
+		
+			// TODO 8 Check that this is a flash runner
 			return new FlashDebugRunner();
+			
 		} else if (ILaunchManager.RUN_MODE.equals(mode)) {
+			
 			return new HaxeRunner();
+			
 		}
 		
-		assert(false);
 		return null;
 	}
 	
@@ -38,33 +53,44 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
         }
 	}
 
-	public synchronized void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public synchronized void launch(
+			ILaunchConfiguration configuration, 
+			String mode, 
+			ILaunch launch, 
+			IProgressMonitor monitor) throws CoreException {
 		
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
 		
-		monitor.beginTask("Launching...", 3);
+		monitor.beginTask("Launching...", 1);
 		
 		try {
 			
-			IHaxeRunner runner = chooseHaxeRunner(mode);
-			HaxeRunnerConfiguration runnerConfiguration = new HaxeRunnerConfiguration();
+			HaxeRunnerConfiguration haxeRunnerConfiguration = 
+				new HaxeRunnerConfiguration();
 			
-			runnerConfiguration.load(configuration);
+			haxeRunnerConfiguration.load(configuration);
 			
-			runner.run(runnerConfiguration, launch, monitor);
+			IHaxeRunner runner = chooseHaxeRunner(
+					mode, haxeRunnerConfiguration);			
 			
-			//TODO 6 Remember why it is important here? 
-			sendFinishNotification(configuration.getAttribute(IHaxeLaunchConfigurationConstants.PROJECT_NAME, (String) null));
+			runner.run(haxeRunnerConfiguration, launch, monitor);
+			
+			sendFinishNotification(configuration.getAttribute(
+					IHaxeLaunchConfigurationConstants.PROJECT_NAME, 
+					(String) null));
           
         } catch (CoreException e) {
-            //EclihxLogger.logError(e);
-            throw e;
-        } catch (Throwable e) {
-        	//EclihxLogger.logError(e);
-        }
-        finally {
+        
+        	throw e;
+        
+        } finally {
             monitor.done();        	
         }
 	}
