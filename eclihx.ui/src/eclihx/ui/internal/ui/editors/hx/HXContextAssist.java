@@ -34,8 +34,10 @@ public class HXContextAssist implements IContentAssistProcessor {
 		
 		// Get current file
 		IEditorPart editor =  
-			EclihxUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+			EclihxUIPlugin.getDefault().getWorkbench().
+				getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		
+		// Saving the file
 		editor.doSave(null);
 		
 		IEditorInput input = editor.getEditorInput();
@@ -62,6 +64,7 @@ public class HXContextAssist implements IContentAssistProcessor {
 		String fileName = file.getName();
 		String extensionName = file.getFileExtension();
 		String className = fileName.substring(0, fileName.lastIndexOf('.'));
+		
 		
 		ArrayList<ContentInfo> tips =
 			HaxeContentAssistManager.getTips(

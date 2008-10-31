@@ -5,7 +5,7 @@ import eclihx.core.haxe.model.core.IHaxeElement;
 /**
  * Common behavior for all haXe elements.
  */
-abstract class HaxeElement implements IHaxeElement{
+abstract class HaxeElement implements IHaxeElement {
 
 	/**
 	 * The parent element of this one.

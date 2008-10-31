@@ -209,6 +209,4 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 		return name.equals(DEFAULT_PACKAGE_NAME);
 	}
 
-	
-	
 }

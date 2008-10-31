@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 
 import eclihx.core.EclihxCore;
@@ -13,9 +12,32 @@ import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 import eclihx.core.util.OSUtil;
 import eclihx.core.util.ProcessUtil;
 
-// TODO 9 Finish 
+/**
+ * Class launches the haXe process with the given configuration.
+ */
 public class HaxeLauncher {
-	public void run(
+	
+	/**
+	 * Errors of the execution.
+	 */
+	private String errorsString = "";
+
+	/**
+	 * Output string of the execution.
+	 */
+	private String outputString = "";
+	
+	/**
+	 * Runs the give configuration.
+	 * 
+	 * @param configuration the configuration to run.
+	 * @param launch launch object
+	 * @param compilerPath the compiler path.
+	 * @param outputDirectory output directory.
+	 * @throws CoreException exception 
+	 * 		   if there are some errors during execution.
+	 */
+	public synchronized void run(
 		HaxeConfiguration configuration, 
 		ILaunch launch,
 		String compilerPath,
@@ -28,25 +50,41 @@ public class HaxeLauncher {
 				OSUtil.quoteCompoundPath(compilerPath) + " " + 
 				configuration.printConfiguration();
 	
-			Process systemProcess = DebugPlugin.exec(
-				DebugPlugin.parseArguments(commandLine), outputDirectory);
-			
-			//DebugPlugin.newProcess(launch, systemProcess, "HaxeProcess");
-			
 			StringBuilder errors = new StringBuilder();
 			StringBuilder output = new StringBuilder();
 						
 			ProcessUtil.executeProcess(
 					commandLine, outputDirectory, errors, output);
 			
-			EclihxCore.getLogHelper().logError(errors.toString());
-			EclihxCore.getLogHelper().logInfo(errors.toString());
+			errorsString = errors.toString();
+			outputString = output.toString();
+			
+			//EclihxCore.getLogHelper().logError(errors.toString());
+			//EclihxCore.getLogHelper().logInfo(errors.toString());
 			
 		} catch (InvalidConfigurationException e) {
 			throw new CoreException(
 				new Status(
-					Status.ERROR, "eclihx.core", 
+					Status.ERROR, EclihxCore.PLUGIN_ID, 
 					"Invalid configuration for launch: " + e.getMessage()));
 		}
 	}
+	
+	
+	/**
+	 * Get the errors of the execution.
+	 * @return the errors
+	 */
+	public synchronized String getErrorString() {
+		return errorsString;
+	}
+
+	/**
+	 * Get the output of the execution.
+	 * @return the output
+	 */
+	public synchronized String getOutputString() {
+		return outputString;
+	}
+
 }

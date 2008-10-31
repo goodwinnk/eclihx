@@ -27,7 +27,7 @@ public interface IHaxePackage extends IHaxeElement {
 	 * @return the haXe source folder this package is situated in.
 	 */
 	IHaxeSourceFolder getSourceFolder();
-
+	
 	/**
 	 * Returns all children packages at all depth.
 	 * 

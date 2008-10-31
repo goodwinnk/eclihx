@@ -78,7 +78,7 @@ public class FlashDebugRunner implements IHaxeRunner {
 		}		
 	}
 	
-	public void run(HaxeRunnerConfiguration configuration, ILaunch launch,
+	public String run(HaxeRunnerConfiguration configuration, ILaunch launch,
 			IProgressMonitor monitor) throws CoreException {
 
 		validateConfiguration(configuration);
@@ -87,6 +87,8 @@ public class FlashDebugRunner implements IHaxeRunner {
 		(new FlashRunner()).run(launch, configuration.getBuildFile(), 
 				configuration.getOutputDirectory());
 
+		return "Flash runner. This feature isn't ready!";
+		
 		/*
 		int requestPort = -1;
 		int eventPort = -1;
