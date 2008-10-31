@@ -15,15 +15,18 @@ import eclihx.core.EclihxCore;
 
 /**
  * This class contains utility method for processes.
- * @author Emmanuel Dieul
  */
 public class ProcessUtil {
 
-    /** the size of the read buffers. */
+    /** 
+     * The size of the read buffers. 
+     */
     private static final int BUFFER_SIZE = 256;
     
     
-    /** made private for utility classes. */
+    /** 
+     * Class isn't supposed to be instantiated. 
+     * */
     private ProcessUtil() { }
     
     

@@ -15,27 +15,27 @@
 
 package eclihx.ui.internal.ui.editors.hx;
 
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 
+import org.eclipse.jface.text.source.ISharedTextColors;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
-
-import org.eclipse.jface.text.source.ISharedTextColors;
 
 
 
 public class ColorManager implements ISharedTextColors {
 	
 	protected HashMap<String, RGB> fKeyTable= new HashMap<String, RGB>(10);
-	protected HashMap<Display, HashMap<RGB, Color>> fDisplayTable= new HashMap<Display, HashMap<RGB, Color>>(2);
+	protected HashMap<Display, HashMap<RGB, Color>> fDisplayTable = 
+			new HashMap<Display, HashMap<RGB, Color>>(2);
 
 	/**
 	 * Flag which tells if the colors are automatically disposed when
 	 * the current display gets disposed.
 	 */
-	private boolean fAutoDisposeOnDisplayDispose;
+	private final boolean fAutoDisposeOnDisplayDispose;
 
 
 	/**
@@ -117,7 +117,7 @@ public class ColorManager implements ISharedTextColors {
 		if (key == null)
 			return null;
 
-		RGB rgb= (RGB) fKeyTable.get(key);
+		RGB rgb= fKeyTable.get(key);
 		return getColor(rgb);
 	}
 

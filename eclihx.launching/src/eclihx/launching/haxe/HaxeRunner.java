@@ -102,7 +102,7 @@ public class HaxeRunner implements IHaxeRunner {
 	 * @see eclihx.launching.IHaxeRunner#run(eclihx.launching.HaxeRunnerConfiguration, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void run(HaxeRunnerConfiguration configuration, 
+	public String run(HaxeRunnerConfiguration configuration, 
 					ILaunch launch, 
 					IProgressMonitor monitor) throws CoreException {
 		
@@ -124,9 +124,19 @@ public class HaxeRunner implements IHaxeRunner {
 			
 			haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
 			
-			new HaxeLauncher().run(
-			  	haxeConfig, launch, 
-			   	configuration.getCompilerPath(), outputDirectory);
+			final HaxeLauncher launcher = new HaxeLauncher();
+			
+			launcher.run(haxeConfig, launch, configuration.getCompilerPath(), 
+							outputDirectory);
+			
+			String errorsString = launcher.getErrorString();
+			String outputString = launcher.getOutputString();
+			
+			if (!errorsString.isEmpty()) {
+				return errorsString;
+			} else {
+				return "Building complete... \n" + outputString;
+			}
 			
 		} catch (InvalidConfigurationException e) {
 			throw generateCoreException(e);

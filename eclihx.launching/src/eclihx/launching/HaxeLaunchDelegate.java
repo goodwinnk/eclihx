@@ -23,6 +23,40 @@ import eclihx.launching.haxe.HaxeRunner;
 public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 	
 	/**
+	 * Finish launching information for user callback. 
+	 */
+	public class FinishLaunchInfo {
+		private final String projectName;
+		private final String output;
+		
+		/**
+		 * Get the name of the project that was launched.
+		 * @return the name of the project that was launched. 
+		 */
+		public String getProjectName() {
+			return projectName;
+		}
+		/**
+		 * Get the output string.
+		 * @return the output string which should be showed to user.
+		 */
+		public String getOutput() {
+			return output;
+		}
+		
+		/**
+		 * Default constructor.
+		 * @param output the string of the output.
+		 * @param projectName the name of the project was launched.
+		 */
+		public FinishLaunchInfo(String output, String projectName) {
+			super();
+			this.output = output;
+			this.projectName = projectName;
+		}		
+	}
+	
+	/**
 	 * Method chooses runner for current mode and configuration.
 	 * @param mode
 	 * @return
@@ -44,13 +78,25 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 		return null;
 	}
 	
-	private void sendFinishNotification(String projectName) throws CoreException {
-        IStatus status = new Status(IStatus.ERROR, EclihxLauncher.PLUGIN_ID, 112, "", null); //$NON-NLS-1$
-        IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
+	/**
+	 * Method sends finish notification to UI about the finishing of launching. 
+	 * @param projectName the name of project.
+	 * @param output the output string.
+	 * @throws CoreException
+	 */
+	private void sendFinishNotification(String projectName, String output) 
+			throws CoreException {
+        
+		IStatus status = new Status(
+        		IStatus.ERROR, EclihxLauncher.PLUGIN_ID, 112, "", null); 
+        IStatusHandler handler = 
+        		DebugPlugin.getDefault().getStatusHandler(status);
 
         if (handler != null) {
-        	handler.handleStatus(status, projectName);
+        	handler.handleStatus(
+        			status, new FinishLaunchInfo(output, projectName));
         }
+        
 	}
 
 	/*
@@ -80,11 +126,12 @@ public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
 			IHaxeRunner runner = chooseHaxeRunner(
 					mode, haxeRunnerConfiguration);			
 			
-			runner.run(haxeRunnerConfiguration, launch, monitor);
+			String output = 
+					runner.run(haxeRunnerConfiguration, launch, monitor);
 			
 			sendFinishNotification(configuration.getAttribute(
 					IHaxeLaunchConfigurationConstants.PROJECT_NAME, 
-					(String) null));
+					(String) null), output);
           
         } catch (CoreException e) {
         

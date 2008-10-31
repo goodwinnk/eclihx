@@ -215,7 +215,7 @@
  <extension
        point="org.eclipse.debug.core.statusHandlers">
     <statusHandler
-          class="eclihx.ui.launch.handlers.FinishStatusHandler"
+          class="eclihx.ui.launch.handlers.FinishLaunchHandler"
           code="112"
           id="eclihx.ui.launch.handlers.FinishStatusHandler"
           plugin="eclihx.launching">
