@@ -81,4 +81,13 @@ public final class OSUtil {
 		
 		return new Status(IStatus.OK, EclihxCore.PLUGIN_ID, "");		
 	}
+
+	/**
+	 * Replaces slashes to backslashes in the string.
+	 * @param path the path for replacement.
+	 * @return new string with replaced slashes.
+	 */
+	public static String repalceToHaxeOutputSlashes(String path) {
+		return path.replaceAll("\\\\", "/");
+	}
 }

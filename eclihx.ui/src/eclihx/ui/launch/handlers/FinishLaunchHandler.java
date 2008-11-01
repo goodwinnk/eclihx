@@ -5,8 +5,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.IStatusHandler;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -15,13 +15,20 @@ import org.eclipse.ui.console.MessageConsoleStream;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.util.OSUtil;
 import eclihx.launching.HaxeLaunchDelegate.FinishLaunchInfo;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
- * Handlers the end of launch operation. 
+ * Handlers the end of launch operation.
  */
 public final class FinishLaunchHandler implements IStatusHandler {
-	
+
+	/**
+	 * Find the appreciate console.
+	 * @param name the name of the console
+	 * @return the console object.
+	 */
 	private MessageConsole findConsole(String name) {
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
 		IConsoleManager conMan = plugin.getConsoleManager();
@@ -35,38 +42,90 @@ public final class FinishLaunchHandler implements IStatusHandler {
 		return myConsole;
 	}
 	
-	private void printOutputToConsole(String output) throws PartInitException {
+	/**
+	 * Makes paths in the output string relative to the project.
+	 * @param output the output string.
+	 * @param haxeProject the project.
+	 * @return new string with paths relative to project.
+	 */
+	private String makeRelativePaths(String output, IHaxeProject haxeProject) {
 		
-		 MessageConsole myConsole = findConsole("EclihxLaunchConsole");
-		 MessageConsoleStream out = myConsole.newMessageStream();
-		 out.println(output);
-		 
+		final String projectPath = OSUtil.repalceToHaxeOutputSlashes(
+				haxeProject.getProjectBase().getLocation().toString());
+		
+		final int pathLength = projectPath.length();
+		final String projectReplaceString = haxeProject.getName();
+		
+		final StringBuilder outputString = new StringBuilder(output);
+		
+		int tempIndex = -1;
+		while((tempIndex = outputString.indexOf(projectPath)) != -1) {
+			outputString.replace(
+					tempIndex, tempIndex + pathLength, projectReplaceString);
+		}
+		
+		return outputString.toString();
 	}
 
+	/**
+	 * Method prints the output of the launching to console.
+	 * @param output string to show on the console view.
+	 * @param haxeProject the project this launch was performed for.
+	 */
+	private void printOutputToConsole(String output, IHaxeProject haxeProject) {
 
-	private void refreshOutputFolder(String projectName) throws CoreException {
-		IHaxeProject haxeProject = 
-			EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(
-					projectName);          
+		MessageConsole myConsole = findConsole("EclihxLaunchConsole");
+		MessageConsoleStream out = myConsole.newMessageStream();
 		
-	    IFolder outputFolder = haxeProject.getPathManager().getOutputFolder();
-	    
-	    outputFolder.refreshLocal(
-	    		IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		out.println(makeRelativePaths(output, haxeProject));
 	}
-	
+
+	/**
+	 * Method refreshes the output folder of the given project.
+	 * @param haxeProject the project for refreshing.
+	 * @throws CoreException
+	 */
+	private void refreshOutputFolder(IHaxeProject haxeProject) 
+			throws CoreException {
+		
+		IFolder outputFolder = haxeProject.getPathManager().getOutputFolder();
+
+		outputFolder.refreshLocal(IResource.DEPTH_INFINITE,
+				new NullProgressMonitor());
+		
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.core.IStatusHandler#handleStatus(org.eclipse.core.runtime.IStatus, java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.IStatusHandler#handleStatus(org.eclipse.core.runtime
+	 * .IStatus, java.lang.Object)
 	 */
 	@Override
-	public Object handleStatus(IStatus status, Object source) throws CoreException {
-		FinishLaunchInfo finishInfo = (FinishLaunchInfo)source;
+	public Object handleStatus(IStatus status, Object source)
+			throws CoreException {
+		FinishLaunchInfo finishInfo = (FinishLaunchInfo) source;
+
+		IHaxeProject haxeProject = EclihxCore.getDefault().getHaxeWorkspace()
+				.getHaxeProject(finishInfo.getProjectName());
 		
-		refreshOutputFolder(finishInfo.getProjectName());
+		if (haxeProject != null) {
 		
-		printOutputToConsole(finishInfo.getOutput());
+			refreshOutputFolder(haxeProject);
+			printOutputToConsole(finishInfo.getOutput(), haxeProject);
 		
+		} else {
+			
+			EclihxUIPlugin.getLogHelper().logError(
+				new CoreException(new Status(
+						IStatus.ERROR, 
+						EclihxUIPlugin.PLUGIN_ID, 
+						"FinishLaunchHandler is called for invalid haXe project"
+						)));
+						
+		}	
+
 		return null;
 	}
 }
