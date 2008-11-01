@@ -7,8 +7,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.IStatusHandler;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
@@ -71,13 +75,34 @@ public final class FinishLaunchHandler implements IStatusHandler {
 	 * Method prints the output of the launching to console.
 	 * @param output string to show on the console view.
 	 * @param haxeProject the project this launch was performed for.
+	 * @throws PartInitException 
 	 */
-	private void printOutputToConsole(String output, IHaxeProject haxeProject) {
+	private void printOutputToConsole(String output, IHaxeProject haxeProject) 
+			throws PartInitException {
 
 		MessageConsole myConsole = findConsole("EclihxLaunchConsole");
-		MessageConsoleStream out = myConsole.newMessageStream();
 		
+		myConsole.clearConsole();
+		MessageConsoleStream out = myConsole.newMessageStream();
 		out.println(makeRelativePaths(output, haxeProject));
+		
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().
+						getActivePage().showView(IConsoleConstants.ID_CONSOLE_VIEW);
+				} catch (PartInitException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		});
+ 
+		
+		
 	}
 
 	/**

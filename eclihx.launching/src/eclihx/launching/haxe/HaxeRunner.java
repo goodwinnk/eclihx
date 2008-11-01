@@ -82,6 +82,12 @@ public class HaxeRunner implements IHaxeRunner {
 		if (!status.isOK()) {
 			throwState(IStatus.ERROR, IStatus.ERROR, status.getMessage());
 		}
+		
+		if (!(new File(config.getCompilerPath()).exists())) {
+			throwState(IStatus.ERROR, IStatus.ERROR, 
+					String.format("There are no compiler at '%s.'", 
+								config.getCompilerPath()));
+		}
 	
 		// TODO 6 Get the validation.
 		if (config.getOutputDirectory() == null || 
@@ -135,7 +141,7 @@ public class HaxeRunner implements IHaxeRunner {
 			if (!errorsString.isEmpty()) {
 				return errorsString;
 			} else {
-				return "Building complete... \n" + outputString;
+				return "Building complete.\n" + outputString;
 			}
 			
 		} catch (InvalidConfigurationException e) {
