@@ -94,8 +94,7 @@ public final class FinishLaunchHandler implements IStatusHandler {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().
 						getActivePage().showView(IConsoleConstants.ID_CONSOLE_VIEW);
 				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					EclihxUIPlugin.getLogHelper().logError(e);
 				}
 			}
 			
