@@ -1,11 +1,14 @@
 package eclihx.ui.internal.ui.utils;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.ui.PluginImages;
 
@@ -16,6 +19,18 @@ import eclihx.ui.PluginImages;
  */
 public class HaxeElementsLabelProvider extends LabelProvider {
 
+	/**
+	 * Standard label provider for showing non-specific haXe elements.
+	 */
+	private final WorkbenchLabelProvider workcbenchProvider;
+	
+	/**
+	 * Default constructor. 
+	 */
+	public HaxeElementsLabelProvider() {
+		workcbenchProvider = new WorkbenchLabelProvider();
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
@@ -24,6 +39,10 @@ public class HaxeElementsLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof IHaxeElement) {
 			return ((IHaxeElement)element).getName();
+		}
+		
+		if (element instanceof IResource) {
+			return workcbenchProvider.getText(element);
 		}
 
 		return super.getText(element);
@@ -37,12 +56,33 @@ public class HaxeElementsLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		if (element instanceof IHaxeProject) {
 			return PluginImages.get(PluginImages.IMG_PROJECT);
-		} else if (element instanceof IHaxeSourceFolder) {
+		} 
+		if (element instanceof IHaxeSourceFolder) {
 			return PluginImages.get(PluginImages.IMG_SOURCE_FOLDER);
-		} else if (element instanceof IHaxePackage) {
+		} 
+		if (element instanceof IHaxePackage) {
 			return PluginImages.get(PluginImages.IMG_PACKAGE);
 		}
 		
+		if (element instanceof IHaxeSourceFile) {
+			return workcbenchProvider.getImage(
+					((IHaxeSourceFile)element).getBaseFile());
+		}			
+			
+		if (element instanceof IResource) {
+			return workcbenchProvider.getImage(element);
+		}	
+		
 		return super.getImage(element);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
+	 */
+	@Override
+	public void dispose() {
+		workcbenchProvider.dispose();
+		super.dispose();
 	}
 }

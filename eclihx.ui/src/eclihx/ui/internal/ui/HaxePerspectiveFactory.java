@@ -6,7 +6,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.console.IConsoleConstants;
 
-import eclihx.ui.internal.ui.views.PackageExplorerView;
+import eclihx.ui.internal.ui.views.HaxeExplorerView;
 
 /**
  * Class for building haXe perspective
@@ -24,7 +24,7 @@ public class HaxePerspectiveFactory implements IPerspectiveFactory {
 		// Top left
 		IFolderLayout topLeft = layout.createFolder(
 				"topLeft", IPageLayout.LEFT, (float) 0.25, editorArea);
-		topLeft.addView(PackageExplorerView.PACKAGE_EXPLORER_ID);
+		topLeft.addView(HaxeExplorerView.HAXE_EXPLORER_ID);
 		topLeft.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
 		// Bottom right
@@ -37,7 +37,7 @@ public class HaxePerspectiveFactory implements IPerspectiveFactory {
 		layout.addActionSet(IDebugUIConstants.LAUNCH_ACTION_SET);
 		
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-		layout.addShowViewShortcut(PackageExplorerView.PACKAGE_EXPLORER_ID);
+		layout.addShowViewShortcut(HaxeExplorerView.HAXE_EXPLORER_ID);
 				
 		layout.addNewWizardShortcut(
 				"eclihx.ui.internal.ui.wizards.HaxeProjectWizard");

@@ -1,7 +1,5 @@
 package eclihx.ui.wizards;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -16,9 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
-import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
-import eclihx.core.haxe.model.HaxeProject;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.utils.StandardDialogs;
@@ -136,19 +132,9 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 					Object selectedElement = structedSelection
 							.getFirstElement();
 
-					if (selectedElement instanceof IResource) {
-
-						IProject project = ((IResource) selectedElement)
-								.getProject();
-
-						if (HaxeProject.isHaxeProject(project)) {
-							
-							updateHaxeProject(
-									EclihxCore.getDefault().getHaxeWorkspace().
-										getHaxeProject(project.getName()));
-									
-						}
-					}
+					updateHaxeProject(
+							SelectionUtils.getHaxeProjectFromSelection(
+									selectedElement));
 				}
 			}
 		}

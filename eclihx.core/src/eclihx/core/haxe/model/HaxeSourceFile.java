@@ -3,9 +3,10 @@ package eclihx.core.haxe.model;
 import java.security.InvalidParameterException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 
-import eclihx.core.haxe.model.core.IHaxeElement;
+import eclihx.core.haxe.internal.HaxeElementValidator;
+import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 
 /**
@@ -16,25 +17,40 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	/**
 	 * Resource object for this haXe file.
 	 */
-	private final IFile file;
+	private final IFile fFile;
 	
 	/**
-	 * 
-	 * @param file
+	 * Package of this file.
 	 */
-	public HaxeSourceFile(IFile file) {
+	private final IHaxePackage fPackage;
+	
+	/**
+	 * Construct the haXe source file object on the base of the IFile resource.
+	 * Resource should have a valid haXe file name.
+	 * 
+	 * @param file the original resource file.
+	 * @param haxePackage haXe package where this file is situated.
+	 */
+	public HaxeSourceFile(IFile file, IHaxePackage haxePackage) {
 		super(null);
 		
-		IProject project = file.getProject();
-		if (!HaxeProject.isHaxeProject(project)) {
+		if (!HaxeElementValidator.validateHaxeFileName(file.getName()).isOK()) {
+			throw new InvalidParameterException(
+				"File has invlid name.");
+		}
+		
+		if (!HaxeProject.isHaxeProject(file.getProject())) {
 			throw new InvalidParameterException(
 					"Given file should be in the haXe project");
 		}
 		
+		if (!file.getParent().equals(haxePackage.getBaseFolder())) {
+			throw new InvalidParameterException(
+					"Given file doesn't lay in the given package.");
+		}
 		
-		
-		this.file = file;
-		
+		this.fPackage = haxePackage;
+		this.fFile = file;
 	}
 
 	/*
@@ -43,13 +59,34 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	 */
 	@Override
 	public String getName() {
-		return file.getName();
+		return fFile.getName();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeSourceFile#getBase()
+	 */
 	@Override
-	public IHaxeElement getParent() {
-		// TODO Auto-generated method stub
-		return null;
+	public IFile getBaseFile() {
+		return fFile;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getBaseResource()
+	 */
+	@Override
+	public IResource getBaseResource() {
+		return getBaseFile();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeSourceFile#getPackage()
+	 */
+	@Override
+	public IHaxePackage getPackage() {
+		return fPackage;
 	}
 	
 }

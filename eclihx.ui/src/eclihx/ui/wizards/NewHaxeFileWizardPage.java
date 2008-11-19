@@ -1,7 +1,5 @@
 package eclihx.ui.wizards;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -17,11 +15,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
-import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
-import eclihx.core.haxe.model.HaxeProject;
 import eclihx.core.haxe.model.core.IHaxePackage;
-import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.utils.StandardDialogs;
@@ -209,8 +204,6 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 		sourceFolderTextField.setText("");
 		packageTextField.setText("");
 		
-		// TODO 6 Move selection analysis to separate methods
-		
 		// Examine selection.
 		if (!(selection == null || selection.isEmpty())) {
 			
@@ -224,29 +217,19 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 					Object selectedElement = 
 						structedSelection.getFirstElement();
 					
-					if (selectedElement instanceof IResource) {
-						
-						IProject project = 
-								((IResource)selectedElement).getProject();
-						
-						if (HaxeProject.isHaxeProject(project)) {
-							IHaxeProject haxeProject = 
-								EclihxCore.getDefault().getHaxeWorkspace()
-									.getHaxeProject(project.getName());
+					updateSourceFolderField(
+							SelectionUtils.getHaxeSourceFolderFromSelection(
+									selectedElement));
 							
-							IHaxeSourceFolder[] folders = 
-									haxeProject.getSourceFolders();
-							
-							updateSourceFolderField(
-									folders.length == 0 ? null : folders[0] );							
-						}
-						
-						// TODO 7 Set initial package
-					}
+					updatePackageField(
+							SelectionUtils.getHaxePackageFromSelection(
+									selectedElement));
 				}	
 			}			
 		}
 	}
+
+	
 
 	/**
 	 * Checks the changed dialog and validate the new state.
@@ -262,7 +245,7 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 				return;
 			}
 			
-			if (!sourceFolder.getBase().isAccessible()) {
+			if (!sourceFolder.getBaseFolder().isAccessible()) {
 				updateStatus("Source folder doesn't exist.");
 				
 				EclihxUIPlugin.getLogHelper().logError(
@@ -279,7 +262,7 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 				return;
 			}
 			
-			if (!haxePackage.getBase().isAccessible()) {
+			if (!haxePackage.getBaseFolder().isAccessible()) {
 				updateStatus("Folder of the package doesn't exist.");
 				
 				EclihxUIPlugin.getLogHelper().logError(
@@ -323,7 +306,7 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 		if (sourceFolder != null) {
 			sourceFolderTextField.setText(String.format("%s/%s", 
 					sourceFolder.getHaxeProject().getName(),
-					sourceFolder.getBase().getProjectRelativePath().toString()));
+					sourceFolder.getBaseFolder().getProjectRelativePath().toString()));
 			
 			packageSelectButton.setEnabled(true);
 			

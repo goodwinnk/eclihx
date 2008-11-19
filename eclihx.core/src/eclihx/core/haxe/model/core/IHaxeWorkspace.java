@@ -1,5 +1,6 @@
 package eclihx.core.haxe.model.core;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -29,6 +30,15 @@ public interface IHaxeWorkspace extends IHaxeElement {
 	IHaxeProject getHaxeProject(String projectName);
 	
 	/**
+	 * Gets haXe project by IProject object.
+	 * @param project the project object.
+	 * 
+	 * @return the reference to haXe project or null if 
+	 *         such project doesn't exist.
+	 */
+	IHaxeProject getHaxeProject(IProject project);
+	
+	/**
 	 * Creates the haXe project.
 	 * @param projectName the name of the project to create.
 	 * @param monitor the operation monitor. <code>null</code> 
@@ -47,5 +57,7 @@ public interface IHaxeWorkspace extends IHaxeElement {
 	 * @return An array of haXe projects.
 	 */
 	IHaxeProject[] getHaxeProjects();
+
+	
 
 }
