@@ -3,18 +3,18 @@ package eclihx.core.haxe.model;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeWorkspace;
 
 /**
  * Class extends original IWorskpaceRoot object with the haXe functionality.
  */
-public class HaxeWorkspace implements IHaxeWorkspace{
+public class HaxeWorkspace extends HaxeElement implements IHaxeWorkspace {
 
 	private final IWorkspaceRoot fRoot;
 
@@ -24,7 +24,8 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 	 * @param root original workspace root.
 	 */
 	public HaxeWorkspace(IWorkspaceRoot root) {
-		fRoot = root;
+		super(null);
+		this.fRoot = root;
 	}
 
 	/* (non-Javadoc)
@@ -61,14 +62,22 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#getHaxeProject(java.lang.String)
 	 */
 	public IHaxeProject getHaxeProject(String name){
-		
 		IProject project= fRoot.getProject(name);
-		if (project.exists()) {
+		return getHaxeProject(project);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#getHaxeProject(org.eclipse.core.resources.IProject)
+	 */
+	@Override
+	public IHaxeProject getHaxeProject(IProject project) {
+		if (project.exists() && HaxeProject.isHaxeProject(project)) {
 			return (new HaxeProject(project));
 		}
 		
 		return null;
-	}
+	}	
 
 	/*
 	 * (non-Javadoc)
@@ -91,12 +100,11 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 
 	/*
 	 * (non-Javadoc)
-	 * @see eclihx.core.haxe.model.core.IHaxeElement#getParent()
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getBaseResource()
 	 */
 	@Override
-	public IHaxeElement getParent() {
-		// HaxeWorkspace doesn't have a parent.
-		return null;
+	public IResource getBaseResource() {
+		return fRoot;
 	}
 	
 	/*
@@ -123,5 +131,7 @@ public class HaxeWorkspace implements IHaxeWorkspace{
 		project.open(monitor);
 		
 		return new HaxeProject(project);
-	}	
+	}
+
+
 }

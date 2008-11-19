@@ -6,6 +6,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -15,6 +16,7 @@ import org.eclipse.core.runtime.Path;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxePackage;
+import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 
 /**
@@ -44,7 +46,7 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	public HaxePackage(IHaxeSourceFolder parent) {
 		super(parent);
 		
-		fFolder = parent.getBase();
+		fFolder = parent.getBaseFolder();
 		fSourceFolder = parent;
 		name = DEFAULT_PACKAGE_NAME;
 	}
@@ -64,7 +66,7 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	public HaxePackage(IHaxeSourceFolder parent, IFolder folder) {
 		super(parent);
 		
-		if (!folder.getParent().equals(parent.getBase())) {
+		if (!folder.getParent().equals(parent.getBaseFolder())) {
 			throw new InvalidParameterException(
 					"Folder parameter should be direct sub-folder of the " +
 					"source folder in parent parameter.");
@@ -89,7 +91,7 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	public HaxePackage(IHaxePackage parent, IFolder folder) {
 		super(parent);
 		
-		if (!folder.getParent().equals(parent.getBase())) {
+		if (!folder.getParent().equals(parent.getBaseFolder())) {
 			throw new InvalidParameterException(
 					"Folder parameter should be direct sub-folder of the " +
 					"folder of parent package.");
@@ -106,7 +108,7 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	 * @see eclihx.core.haxe.model.core.IHaxePackage#getBase()
 	 */
 	@Override
-	public IFolder getBase() {
+	public IFolder getBaseFolder() {
 		return fFolder;
 	}
 	
@@ -116,6 +118,15 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	 */
 	public IHaxeSourceFolder getSourceFolder() {
 		return fSourceFolder;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getBaseResource()
+	 */
+	@Override
+	public IResource getBaseResource() {
+		return getBaseFolder();
 	}
 
 	/*
@@ -194,19 +205,89 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	 * Method creates a template haXe file header.
 	 */
 	protected String createHaxeFileHeader() {
-		if (!isDefaultPackage()) {
+		if (!isDefault()) {
 			return String.format("package %s;", getName());
 		}
 		
 		return "";
 	}
 	
-	/**
-	 * Checks if the package is default.
-	 * @return <code>true</code> for default package.
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxePackage#isDefault()
 	 */
-	protected boolean isDefaultPackage() {
+	@Override
+	public boolean isDefault() {
 		return name.equals(DEFAULT_PACKAGE_NAME);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeSourceFolder#getHaxeSourceFiles()
+	 */
+	@Override
+	public IHaxeSourceFile[] getHaxeSourceFiles() {
+		try {
+			
+			ArrayList<IHaxeSourceFile> haxeSourceFiles = 
+				new ArrayList<IHaxeSourceFile>();
+			
+			for (IResource resource : fFolder.members()) {
+				if (resource.getType() == IResource.FILE) {
+					if (HaxeElementValidator.validateHaxeFileName(
+							resource.getName()).isOK()) {
+						haxeSourceFiles.add(
+								new HaxeSourceFile((IFile)resource, this));
+					}					
+				}
+			}
+			
+			return haxeSourceFiles.toArray(new IHaxeSourceFile[0]);
+			
+		} catch (CoreException e) {
+			EclihxCore.getLogHelper().logError(e);
+		}
+		
+		return new IHaxeSourceFile[0];
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxePackage#getSourceFiles()
+	 */
+	@Override
+	public IFile[] getSourceFiles() {
+		ArrayList<IFile> files = new ArrayList<IFile>();
+		
+		for (IHaxeSourceFile sourceFile : getHaxeSourceFiles()) {
+			files.add(sourceFile.getBaseFile());
+		}
+		
+		return files.toArray(new IFile[0]);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxePackage#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		
+		try {
+			for (IResource resource : fFolder.members()) {
+				if (resource.getType() == IResource.FILE) {
+					if (HaxeElementValidator.validateHaxeFileName(
+							resource.getName()).isOK()) {
+						return false;
+					}					
+				}
+			}
+		} catch (CoreException e) {
+			EclihxCore.getLogHelper().logError(e);
+		}
+		
+		return true;
+	}
+
 
 }

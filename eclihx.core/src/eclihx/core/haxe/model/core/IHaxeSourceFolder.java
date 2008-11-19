@@ -19,7 +19,7 @@ public interface IHaxeSourceFolder extends IHaxeElement {
 	 * Return the base object
 	 * @return the base IFolder object.
 	 */
-	IFolder getBase();
+	IFolder getBaseFolder();
 	
 	/**
 	 * Method checks if this source folder already has the package.
@@ -37,12 +37,12 @@ public interface IHaxeSourceFolder extends IHaxeElement {
 	 * 
 	 * @throws CoreException if there are some errors during folders creation.
 	 */
-	public void createPackage(
-			String packageName, IProgressMonitor monitor) throws CoreException;
+	void createPackage(String packageName, IProgressMonitor monitor) 
+			throws CoreException;
 	
 	/**
 	 * Get the array of the all haXe packages in the folder.
 	 * @return the array with the packages.
 	 */
-	public IHaxePackage[] getPackages();
+	IHaxePackage[] getPackages();
 }

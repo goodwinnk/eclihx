@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
-import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.core.haxe.model.core.IProjectPathManager;
@@ -25,7 +24,7 @@ import eclihx.core.haxe.model.core.IProjectPathManager;
 /**
  * Extend eclipse project with haXe functionality.
  */
-public final class HaxeProject implements IHaxeProject {
+public final class HaxeProject extends HaxeElement implements IHaxeProject {
 
 	/**
 	 * Original project
@@ -45,6 +44,8 @@ public final class HaxeProject implements IHaxeProject {
 	 *        be opened.
 	 */
 	public HaxeProject(IProject project) {
+		
+		super(EclihxCore.getDefault().getHaxeWorkspace());
 		
 		fProject = project;
 		
@@ -145,7 +146,7 @@ public final class HaxeProject implements IHaxeProject {
 					"Build file name is invalid"));
 		}
 		
-		// Creates an empty file.
+		
 		InputStream stream = new ByteArrayInputStream(("").getBytes());
 		IFile buildFile = fProject.getFile(fileName);
 		buildFile.create(stream, true, monitor);
@@ -178,8 +179,18 @@ public final class HaxeProject implements IHaxeProject {
 	/* (non-Javadoc)
 	 * @see eclihx.core.haxe.model.core.IHaxeProject#getProjectBase()
 	 */
+	@Override
 	public IProject getProjectBase() {
 		return fProject;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getBaseResource()
+	 */
+	@Override
+	public IResource getBaseResource() {
+		return getProjectBase();
 	}
 	
 	
@@ -255,15 +266,6 @@ public final class HaxeProject implements IHaxeProject {
 
 	/*
 	 * (non-Javadoc)
-	 * @see eclihx.core.haxe.model.core.IHaxeElement#getParent()
-	 */
-	@Override
-	public IHaxeElement getParent() {
-		return EclihxCore.getDefault().getHaxeWorkspace();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see eclihx.core.haxe.model.core.IHaxeProject#createOutputFolder(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -317,4 +319,5 @@ public final class HaxeProject implements IHaxeProject {
 
 		return new HaxeSourceFolder(this, folder);
 	}
+
 }

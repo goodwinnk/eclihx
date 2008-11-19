@@ -1,5 +1,6 @@
 package eclihx.core.haxe.model.core;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,7 +20,7 @@ public interface IHaxePackage extends IHaxeElement {
 	 * 
 	 * @return the base IFolder object.
 	 */
-	IFolder getBase();
+	IFolder getBaseFolder();
 
 	/**
 	 * Get source folder.
@@ -55,5 +56,32 @@ public interface IHaxePackage extends IHaxeElement {
 	 */
 	public void createHaxeFile(String haxeFileName, IProgressMonitor monitor)
 			throws CoreException;
+	
+	/**
+	 * Get the source files in this package.
+	 * 
+	 * @return an array of haXe source files.
+	 */
+	IHaxeSourceFile[] getHaxeSourceFiles();
+	
+	/**
+	 * Get the source files in this package in IFile format
+	 * 
+	 * @return an array of source files.
+	 */
+	IFile[] getSourceFiles();
+	
+	/**
+	 * Checks if the package is default.
+	 * @return <code>true</code> for default package.
+	 */
+	boolean isDefault();
+	
+	/**
+	 * Check if the package has child source files.
+	 * 
+	 * @return <code>true</code> if package is empty. 
+	 */
+	boolean isEmpty();
 
 }

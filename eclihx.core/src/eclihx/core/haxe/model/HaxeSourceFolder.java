@@ -1,5 +1,6 @@
 package eclihx.core.haxe.model;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,7 +13,6 @@ import org.eclipse.core.runtime.Path;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
-import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
@@ -20,7 +20,8 @@ import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 /**
  * haXe source folder class. This is the basic wrapper for the IFolder.
  */
-public final class HaxeSourceFolder implements IHaxeSourceFolder {
+public final class HaxeSourceFolder extends HaxeElement
+		implements IHaxeSourceFolder {
 
 	/**
 	 * Base folder object.
@@ -38,6 +39,14 @@ public final class HaxeSourceFolder implements IHaxeSourceFolder {
 	 * @param folder the base IFolder object.
 	 */
 	public HaxeSourceFolder(IHaxeProject project, IFolder folder) {
+		super(project);
+		
+		if (!folder.getProject().equals(project.getProjectBase())) {
+			throw new InvalidParameterException(
+					"Folder parameter should be direct sub-folder of the " +
+					"given project.");
+		}				
+		
 		fFolder = folder;
 		fHaxeProject = project;
 	}
@@ -47,8 +56,17 @@ public final class HaxeSourceFolder implements IHaxeSourceFolder {
 	 * @see eclihx.core.haxe.model.core.IHaxeSourceFolder#getBase()
 	 */
 	@Override
-	public IFolder getBase() {
+	public IFolder getBaseFolder() {
 		return fFolder;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeElement#getBaseResource()
+	 */
+	@Override
+	public IResource getBaseResource() {
+		return getBaseFolder();
 	}
 
 	/*
@@ -57,15 +75,6 @@ public final class HaxeSourceFolder implements IHaxeSourceFolder {
 	 */
 	@Override
 	public IHaxeProject getHaxeProject() {
-		return fHaxeProject;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see eclihx.core.haxe.model.core.IHaxeElement#getParent()
-	 */
-	@Override
-	public IHaxeElement getParent() {
 		return fHaxeProject;
 	}
 
@@ -135,13 +144,13 @@ public final class HaxeSourceFolder implements IHaxeSourceFolder {
 	@Override
 	public IHaxePackage[] getPackages() {
 		try {
-			IResource[] resources = fFolder.members();
-			
 			ArrayList<IHaxePackage> haxePackages = 
-					new ArrayList<IHaxePackage>();
+				new ArrayList<IHaxePackage>();
 			
 			// Add a default package.
 			haxePackages.add(new HaxePackage(this));
+			
+			IResource[] resources = fFolder.members();
 			
 			for (IResource resource : resources) {
 				if (resource.getType() == IResource.FOLDER) {
@@ -161,4 +170,5 @@ public final class HaxeSourceFolder implements IHaxeSourceFolder {
 		
 		return new IHaxePackage[0];
 	}
+
 }
