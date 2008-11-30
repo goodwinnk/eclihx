@@ -1,6 +1,7 @@
 package eclihx.core.haxe.model.core;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -13,6 +14,14 @@ public interface IHaxeWorkspace extends IHaxeElement {
 	 * Closes the workspace and saves haXe projects in workspace 
 	 */
 	void close();
+	
+	/**
+	 * Gets the haXe element wrapper for resource.
+	 * @param resource the resource which is suspected to be haXe element.
+	 * @return IHaxeElement if resource is a haXe resource and 
+	 * <code>null</code> in other case.
+	 */
+	IHaxeElement getHaxeElement(IResource resource);
 	
 	/**
 	 * Get the array with the all haXe project names.

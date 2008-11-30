@@ -12,7 +12,9 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.DeleteResourceAction;
 
+import eclihx.core.haxe.model.core.IHaxeOutputFolder;
 import eclihx.core.haxe.model.core.IHaxePackage;
+import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
@@ -68,6 +70,12 @@ public class DeleteHaxeElementAction
 						((IHaxePackage)element).isDefault()) {
 					// Disable for default packages.
 					return false;					
+				}
+				
+				// TODO 7 Make delete action work correctly for these elements.
+				if (element instanceof IHaxeSourceFolder || 
+						element instanceof IHaxeOutputFolder) {
+					return false;
 				}
 					
 				if (element instanceof IAdaptable) { 

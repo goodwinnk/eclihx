@@ -220,9 +220,6 @@
    </extension>
    <extension
          point="org.eclipse.ui.navigator.viewer">
-      <viewer
-            viewerId="eclihx.ui.internal.ui.views.PackageExplorerView">
-      </viewer>
       <viewerContentBinding
             viewerId="eclihx.ui.internal.ui.views.PackageExplorerView">
          <includes>
@@ -278,6 +275,9 @@
 				
             </or>
          </possibleChildren>
+         <commonSorter
+               class="eclihx.ui.internal.navigator.HaxeNavigatorSorter">
+         </commonSorter>
 
       </navigatorContent>
       <commonFilter
@@ -309,6 +309,17 @@
                      type="org.eclipse.core.resources.IResource">
                </adapt>
             </or>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="eclihx.ui.internal.navigator.actions.HaxeOpenNavigatorActionProvider"
+            id="eclihx.ui.internal.navigator.actions.HaxeOpenNavigatorActionProvider"
+            overrides="org.eclipse.ui.navigator.resources.actions.OpenActions"
+            priority="higher">
+         <enablement>
+            <instanceof
+                  value="eclihx.core.haxe.model.core.IHaxeSourceFile">
+            </instanceof>
          </enablement>
       </actionProvider>
       <commonWizard

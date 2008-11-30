@@ -67,7 +67,7 @@ public class EditActionGroup extends ActionGroup {
 				specialSelectionProvider == null ? site.getSelectionProvider() : 
 						specialSelectionProvider;
 		
-		fDeleteAction= new DeleteHaxeElementAction(site);
+		fDeleteAction = new DeleteHaxeElementAction(site);
 		fDeleteAction.setActionDefinitionId(
 				IWorkbenchActionDefinitionIds.DELETE);
 		

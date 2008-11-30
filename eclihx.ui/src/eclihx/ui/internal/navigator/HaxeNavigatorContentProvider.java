@@ -22,10 +22,13 @@ public class HaxeNavigatorContentProvider extends HaxeElementsContentProvider {
 	 */
 	@Override
 	public Object[] getChildren(Object parentElement) {
+		
+		// If it's a root - return all projects.
 		if (parentElement instanceof IWorkspaceRoot) {
 			IWorkspaceRoot root = (IWorkspaceRoot) parentElement;
 			return root.getProjects();
-		} 
+		}
+		
 		if (parentElement instanceof IProject) {
 			IProject project= (IProject) parentElement;
 			if (project.isAccessible()) {
@@ -46,6 +49,7 @@ public class HaxeNavigatorContentProvider extends HaxeElementsContentProvider {
 				
 			}
 		}
+		
 		return super.getChildren(parentElement);
 	}
 
