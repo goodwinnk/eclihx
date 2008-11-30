@@ -270,6 +270,32 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 				
 				return;
 			}
+			
+			// Check that we has valid package for the current source folder.
+			if (!haxePackage.getSourceFolder().equals(sourceFolder)) {
+				
+				// User has changed the project after setting up the package.
+				boolean notifyUser = true;
+				
+				// If new project has the package with the same name we can
+				// deal with this situation silently.
+				for(IHaxePackage iterHaxePackage : sourceFolder.getPackages()) {
+					if (iterHaxePackage.getName().equals(
+							haxePackage.getName())) {
+						haxePackage = iterHaxePackage;
+						notifyUser = false;
+					}
+				}
+				
+				if (notifyUser) {
+					updateStatus(
+						String.format(
+							"Selected project doesn't contain package '%s'.", 
+							haxePackage.getName()));
+					return;
+				}
+			}
+			
 		}
 		
 		{
