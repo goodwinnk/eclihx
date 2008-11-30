@@ -2,13 +2,20 @@ package eclihx.core.haxe.model;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import eclihx.core.EclihxCore;
+import eclihx.core.haxe.internal.HaxeElementValidator;
+import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.core.haxe.model.core.IHaxeWorkspace;
 
 /**
@@ -131,6 +138,74 @@ public class HaxeWorkspace extends HaxeElement implements IHaxeWorkspace {
 		project.open(monitor);
 		
 		return new HaxeProject(project);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeWorkspace#getHaxeElement(org.eclipse.core.resources.IResource)
+	 */
+	@Override
+	public IHaxeElement getHaxeElement(IResource resource) {
+		
+		if (resource == null) {
+			return null;
+		}
+		
+		if (resource instanceof IWorkspaceRoot) {
+			return EclihxCore.getDefault().getHaxeWorkspace();
+		}			
+		
+		IHaxeProject haxeProject = getHaxeProject(resource.getProject());
+		
+		if (haxeProject != null) {
+			
+			IPath projectRelative = resource.getProjectRelativePath();
+			
+			if (projectRelative.segmentCount() == 0) {
+				// This is project itself
+				return haxeProject;
+			}
+			
+			// Is resource a build file?
+			if (projectRelative.segmentCount() == 1 &&
+					resource.getType() == IResource.FILE &&
+					HaxeElementValidator.validateBuildFileName(
+							resource.getName()).isOK()) {
+				
+				return new HaxeBuildFile(haxeProject, (IFile) resource);
+			}
+			
+			// Is resource a output folder?
+			if (projectRelative.segmentCount() == 1 &&
+					haxeProject.getOutputFolder().getBaseFolder() == resource) {
+				return haxeProject.getOutputFolder();
+			}
+			
+			// Check if we should go to source folder.
+			if (projectRelative.segmentCount() >= 1) {
+				
+				IFolder baseSourceFolder = 
+						haxeProject.getProjectBase().getFolder(
+								projectRelative.uptoSegment(1));
+				
+				IHaxeSourceFolder sourceFolder = 
+						haxeProject.getSourceFolder(baseSourceFolder);
+				
+				if (projectRelative.segmentCount() == 1) {
+					return sourceFolder;
+				}
+				
+				if (resource.getType() == IResource.FOLDER) {
+					return sourceFolder.getPackage((IFolder)resource);
+				}
+				
+				if (resource.getType() == IResource.FILE) {
+					return sourceFolder.getSourceFile((IFile)resource);
+				}
+			}
+		}
+		
+		return null;
 	}
 
 

@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
@@ -15,6 +17,7 @@ import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 
 /**
@@ -169,6 +172,61 @@ public final class HaxeSourceFolder extends HaxeElement
 		}
 		
 		return new IHaxePackage[0];
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeSourceFolder#getPackage(org.eclipse.core.resources.IFolder)
+	 */
+	@Override
+	public IHaxePackage getPackage(IFolder folder) {
+
+		// Special case for default package
+		if (this.fFolder.equals(folder)) {
+			return new HaxePackage(this);
+		}
+		
+		// Find the relative path to the source folder
+		int matchingSegments = 
+				folder.getFullPath().matchingFirstSegments(
+						fFolder.getFullPath());
+		
+		IPath relativePath = 
+			folder.getFullPath().removeFirstSegments(matchingSegments);
+		
+		if (!relativePath.isEmpty()) {
+			
+			String packageName = 
+					relativePath.toString().replaceAll("\\.", "\\\\");
+			
+			IHaxePackage[] packages = getPackages();
+			
+			for (IHaxePackage haxePackage : packages) {
+				if (haxePackage.getName().equals(packageName)) {
+					return haxePackage;
+				}					
+			}
+		}		
+		
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeSourceFolder#getSourceFile(org.eclipse.core.resources.IFile)
+	 */
+	@Override
+	public IHaxeSourceFile getSourceFile(IFile file) {
+		if (HaxeElementValidator.validateHaxeFileName(file.getName()).isOK()) {
+			
+			IHaxePackage haxePackage = getPackage((IFolder)file.getParent());							
+			
+			if (haxePackage != null) {
+				return new HaxeSourceFile(file, haxePackage);
+			}
+			
+		}
+		return null;
 	}
 
 }

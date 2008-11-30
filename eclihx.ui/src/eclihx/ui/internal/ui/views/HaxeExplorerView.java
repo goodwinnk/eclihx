@@ -10,6 +10,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.navigator.CommonNavigator;
 
+import eclihx.core.EclihxCore;
+import eclihx.core.haxe.model.core.IHaxeElement;
+import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IHaxeWorkspace;
+import eclihx.ui.internal.navigator.HaxeNavigatorComparer;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
@@ -19,7 +24,8 @@ public class HaxeExplorerView extends CommonNavigator implements
 		IResourceChangeListener {
 
 	/** The explorer view id. */
-	public static final String HAXE_EXPLORER_ID = "eclihx.ui.internal.ui.views.PackageExplorerView";
+	public static final String HAXE_EXPLORER_ID = 
+			"eclihx.ui.internal.ui.views.PackageExplorerView";
 
 	/*
 	 * (non-Javadoc)
@@ -31,6 +37,9 @@ public class HaxeExplorerView extends CommonNavigator implements
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
+		
+		getCommonViewer().setComparer(HaxeNavigatorComparer.INSTANCE);
+		
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
@@ -43,6 +52,7 @@ public class HaxeExplorerView extends CommonNavigator implements
 	public void dispose() {
 		super.dispose();
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+		getCommonViewer().setComparer(HaxeNavigatorComparer.INSTANCE);
 	}
 
 	/*
@@ -62,16 +72,40 @@ public class HaxeExplorerView extends CommonNavigator implements
 					@Override
 					public boolean visit(final IResourceDelta delta)
 							throws CoreException {
+
 						if (delta.getResource() != null) {
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
-									getCommonViewer().refresh(delta.getResource());
-									getCommonViewer().expandToLevel(
-											delta.getResource(), 0);
+									
+									final IHaxeWorkspace haxeWorkspace = 
+										EclihxCore.getDefault().getHaxeWorkspace();
+								
+									final IHaxeElement haxeElement = 
+										haxeWorkspace.getHaxeElement(
+												delta.getResource());
+									
+									if (haxeElement != null && 
+										!(haxeElement instanceof IHaxeProject || 
+										  haxeElement instanceof IHaxeWorkspace)) {
+										getCommonViewer().refresh(
+												haxeElement);
+										getCommonViewer().expandToLevel(
+												haxeElement, 0);										
+									} else {
+										getCommonViewer().refresh(
+												delta.getResource());
+										getCommonViewer().expandToLevel(
+												delta.getResource(), 0);
+									}
+									
+									
 								}
 							});
+							
+							return true;
 						}
-						return true;
+						
+						return false;
 					}
 					
 				});

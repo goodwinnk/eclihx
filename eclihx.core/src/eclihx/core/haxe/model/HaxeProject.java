@@ -17,6 +17,8 @@ import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
+import eclihx.core.haxe.model.core.IHaxeBuildFile;
+import eclihx.core.haxe.model.core.IHaxeOutputFolder;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.core.haxe.model.core.IProjectPathManager;
@@ -159,10 +161,27 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 	 * (non-Javadoc)
 	 * @see eclihx.core.haxe.model.core.IHaxeProject#getBuildFiles()
 	 */
+	@Override
 	public IFile[] getBuildFiles() throws CoreException {
 		return getBuildFiles(fProject).toArray(new IFile[0]);
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#getBuildFilesElements()
+	 */
+	@Override
+	public IHaxeBuildFile[] getBuildFilesElements() throws CoreException {
+		ArrayList<IHaxeBuildFile> wrappedFiles = 
+				new ArrayList<IHaxeBuildFile>();
+		ArrayList<IFile> buildFiles = getBuildFiles(fProject);
+		
+		for (IFile file : buildFiles) {
+			wrappedFiles.add(new HaxeBuildFile(this, file));
+		}
+		
+		return wrappedFiles.toArray(new IHaxeBuildFile[0]);
+	}
 	
 	/* (non-Javadoc)
 	 * @see eclihx.core.haxe.model.core.IHaxeProject#getPathManager()
@@ -252,6 +271,10 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 		return fProject.getName();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#getSourceFolders()
+	 */
 	@Override
 	public IHaxeSourceFolder[] getSourceFolders() {
 		ArrayList<IHaxeSourceFolder> sourceFolders = 
@@ -262,6 +285,30 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 		}
 		
 		return sourceFolders.toArray(new IHaxeSourceFolder[0]);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#getSourceFolder(org.eclipse.core.resources.IFolder)
+	 */
+	@Override
+	public IHaxeSourceFolder getSourceFolder(IFolder folder) {
+		for(IFolder sourceFolder : getPathManager().getSourceFolders()) {
+			if (sourceFolder.equals(folder)) {
+				return new HaxeSourceFolder(this, sourceFolder);
+			}			
+		}
+		
+		return null;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#getOutputFolder()
+	 */
+	@Override
+	public IHaxeOutputFolder getOutputFolder() {
+		return new HaxeOutputFolder(this, getPathManager().getOutputFolder());
 	}
 
 	/*
@@ -319,5 +366,4 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 
 		return new HaxeSourceFolder(this, folder);
 	}
-
 }

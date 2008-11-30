@@ -1,5 +1,6 @@
 package eclihx.core.haxe.model.core;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,4 +46,20 @@ public interface IHaxeSourceFolder extends IHaxeElement {
 	 * @return the array with the packages.
 	 */
 	IHaxePackage[] getPackages();
+	
+	/**
+	 * Get the package wrapped with this folder.
+	 * @param folder the folder resource.
+	 * @return the package element or <code>null</code> if there are 
+	 * no such package. 
+	 */
+	IHaxePackage getPackage(IFolder folder);
+	
+	/**
+	 * Get the wrapped source file.
+	 * @param file the given file resource.
+	 * @return the element or <code>null</code> if there are 
+	 * no such source file. 
+	 */
+	IHaxeSourceFile getSourceFile(IFile file);
 }

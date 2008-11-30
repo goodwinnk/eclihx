@@ -32,7 +32,7 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	 * @param haxePackage haXe package where this file is situated.
 	 */
 	public HaxeSourceFile(IFile file, IHaxePackage haxePackage) {
-		super(null);
+		super(haxePackage);
 		
 		if (!HaxeElementValidator.validateHaxeFileName(file.getName()).isOK()) {
 			throw new InvalidParameterException(

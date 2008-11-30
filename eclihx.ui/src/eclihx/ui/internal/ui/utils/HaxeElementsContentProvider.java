@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 
 import eclihx.core.haxe.model.core.IHaxeElement;
+import eclihx.core.haxe.model.core.IHaxeOutputFolder;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
@@ -98,7 +99,7 @@ public class HaxeElementsContentProvider implements ITreeContentProvider {
 			
 			// Append output folder of the project.
 			if (elementsFilter.showOutputFolder()) {
-				children.add(haxeProject.getPathManager().getOutputFolder());
+				children.add(haxeProject.getOutputFolder());
 			}			
 			
 			return children.toArray();					
@@ -114,16 +115,16 @@ public class HaxeElementsContentProvider implements ITreeContentProvider {
 			
 			if (elementsFilter.showSourceFiles()) {
 				children.addAll(
-						Arrays.asList(haxePackage.getSourceFiles()));
+						Arrays.asList(haxePackage.getHaxeSourceFiles()));
 			}
 			
 			return children.toArray();
 		}
 		
-		if (parentElement instanceof IHaxeSourceFolder) {
+		if (parentElement instanceof IHaxeOutputFolder) {
 			if (elementsFilter.showOutputChildren()) {
-				workbenchContentProvider.getChildren(
-						((IHaxeSourceFolder)parentElement).getBaseFolder());
+				return workbenchContentProvider.getChildren(
+						((IHaxeOutputFolder)parentElement).getBaseFolder());
 			}
 		}
 		
@@ -142,9 +143,9 @@ public class HaxeElementsContentProvider implements ITreeContentProvider {
 	public Object getParent(Object element) {
 		if (element instanceof IHaxeElement) {
 			return ((IHaxeElement)element).getParent();
-		}
+		} 
 		
-		return null;
+		return workbenchContentProvider.getParent(element);
 	}
 
 	/*
@@ -163,6 +164,8 @@ public class HaxeElementsContentProvider implements ITreeContentProvider {
 				(element instanceof IHaxePackage && 
 						elementsFilter.showPackageChildren() &&
 						!((IHaxePackage)element).isEmpty()) ||
+				(element instanceof IHaxeOutputFolder &&
+						elementsFilter.showOutputChildren()) ||
 				(element instanceof IHaxeSourceFolder &&
 						elementsFilter.showOutputChildren()) ||
 				(element instanceof IResource &&

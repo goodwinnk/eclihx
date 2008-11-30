@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 import eclihx.core.haxe.model.core.IHaxeElement;
+import eclihx.core.haxe.model.core.IHaxeOutputFolder;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
@@ -57,18 +58,26 @@ public class HaxeElementsLabelProvider extends LabelProvider {
 		if (element instanceof IHaxeProject) {
 			return PluginImages.get(PluginImages.IMG_PROJECT);
 		} 
+		
 		if (element instanceof IHaxeSourceFolder) {
 			return PluginImages.get(PluginImages.IMG_SOURCE_FOLDER);
 		} 
+		
 		if (element instanceof IHaxePackage) {
 			return PluginImages.get(PluginImages.IMG_PACKAGE);
 		}
 		
+		if (element instanceof IHaxeOutputFolder) {
+			// TODO 4 add new image for the output folder
+			return workcbenchProvider.getImage(
+					((IHaxeOutputFolder)element).getBaseFolder());
+		}
+		
 		if (element instanceof IHaxeSourceFile) {
 			return workcbenchProvider.getImage(
-					((IHaxeSourceFile)element).getBaseFile());
-		}			
-			
+					((IHaxeSourceFile)element).getBaseResource());
+		}		
+		
 		if (element instanceof IResource) {
 			return workcbenchProvider.getImage(element);
 		}	

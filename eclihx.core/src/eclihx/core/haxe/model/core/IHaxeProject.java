@@ -43,8 +43,20 @@ public interface IHaxeProject extends IHaxeElement {
 	 * like Source, Binary, Library
 	 *  
 	 * @return Project path manager
+	 * 
+	 * @deprecated
 	 */
+	@Deprecated
 	IProjectPathManager getPathManager();
+	
+	
+	/**
+	 * Get the project output folder.
+	 * @return The output folder of the project.
+	 * 
+	 */
+	IHaxeOutputFolder getOutputFolder();
+	
 	
 	/**
 	 * Gets list of build files paths
@@ -52,6 +64,13 @@ public interface IHaxeProject extends IHaxeElement {
 	 * @throws CoreException 
 	 */
 	IFile[] getBuildFiles() throws CoreException;
+	
+	/**
+	 * Get the list of wrapped haXe build files.
+	 * @return an array of build files wrappers.
+	 * @throws CoreException
+	 */
+	IHaxeBuildFile[] getBuildFilesElements() throws CoreException;
 	
 	/**
 	 * Examines the project for build file existence.
@@ -111,6 +130,14 @@ public interface IHaxeProject extends IHaxeElement {
 	 * @return an array of the source folders.
 	 */
 	IHaxeSourceFolder[] getSourceFolders();
+	
+	/**
+	 * Get the source folder by the wrapped resource.
+	 * @param folder the original resource.
+	 * @return the haXe source folder or <code>null<> if there are no source
+	 * folder with this resource.
+	 */
+	IHaxeSourceFolder getSourceFolder(IFolder folder);	
 	
 	/**
 	 * Checks if project is opened.
