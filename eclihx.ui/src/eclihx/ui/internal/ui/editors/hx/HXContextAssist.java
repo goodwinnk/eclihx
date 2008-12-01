@@ -2,8 +2,6 @@ package eclihx.ui.internal.ui.editors.hx;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContextInformation;
@@ -18,12 +16,37 @@ import org.eclipse.ui.IFileEditorInput;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.ContentInfo;
 import eclihx.core.haxe.internal.HaxeContentAssistManager;
-import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.core.IHaxeElement;
+import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.ui.PluginImages;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
+/**
+ * Content assist for the haXe code.
+ */
 public class HXContextAssist implements IContentAssistProcessor {
 
+	/**
+	 * Gets the {@link IHaxeSourceFile} from the input. If input has another
+	 * source this method will return null.
+	 * @param input the editor input.
+	 * @return {@link IHaxeSourceFile} object or <code>null</code>.
+	 */
+	private IHaxeSourceFile getHaxeSourceFile(IEditorInput input) {
+		if(input instanceof IFileEditorInput){
+			IHaxeElement haxeElement = EclihxCore.getDefault().
+					getHaxeWorkspace().getHaxeElement(
+							((IFileEditorInput)input).getFile());
+			
+			if (haxeElement instanceof IHaxeSourceFile) {
+				return (IHaxeSourceFile)haxeElement;
+			}
+			
+		}
+		
+		return null;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
@@ -40,39 +63,13 @@ public class HXContextAssist implements IContentAssistProcessor {
 		// Saving the file
 		editor.doSave(null);
 		
-		IEditorInput input = editor.getEditorInput();
-		IFile file = null;
-		if(input instanceof IFileEditorInput){
-			file = ((IFileEditorInput)input).getFile();
-		}
-		
-		if(file==null)
-		   return null;
-		
-		IProject project = file.getProject();
-		
-		String fileFullName = file.getLocation().toOSString();
-		
-		IHaxeProject haxeProject = 
-			EclihxCore.getDefault().getHaxeWorkspace().
-			getHaxeProject(project.getName());
-		
-		if (haxeProject == null) {
+		IHaxeSourceFile haxeFile = getHaxeSourceFile(editor.getEditorInput());
+		if(haxeFile == null) {
 			return null;
 		}
-		
-		String fileName = file.getName();
-		String extensionName = file.getFileExtension();
-		String className = fileName.substring(0, fileName.lastIndexOf('.'));
-		
-		
+		   
 		ArrayList<ContentInfo> tips =
-			HaxeContentAssistManager.getTips(
-				className, 
-				fileFullName,
-				offset,
-				new java.io.File(haxeProject.getPathManager().getOutputFolder().getLocation().toOSString()),
-				haxeProject.getPathManager().getSourceFolders().get(0).getLocation().toOSString());
+			HaxeContentAssistManager.getTips(haxeFile, offset);
 		
 		final ArrayList<ICompletionProposal> result = 
 			new ArrayList<ICompletionProposal>();

@@ -12,6 +12,8 @@ import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
+import eclihx.core.haxe.model.core.IHaxeSourceFile;
+import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.core.util.OSUtil;
 import eclihx.core.util.ProcessUtil;
 
@@ -24,26 +26,37 @@ public class HaxeContentAssistManager {
 	/**
 	 * Get the tips for the defined position in file and 
 	 * selected configuration.
-	 * @param mainClass Startup class for the tip
-	 * @param fileName file name where tip should be got. 
+	 * @param haxeFile the haXe file for getting tip. 
 	 * @param position offset in file where tip should be got.
-	 * @param outputDirectory project output directory. 
-	 * @param sourceDirectory project source directory.
 	 * @return set of tips. 
 	 */
 	static public ArrayList<ContentInfo> getTips(
-			String mainClass, 
-			String fileName, 
-			int position,
-			File outputDirectory,
-			String sourceDirectory) {
+			IHaxeSourceFile haxeFile, 
+			int position) {
 
 		HaxeConfiguration configuration = new HaxeConfiguration();
 		
-		configuration.setStartupClass(mainClass);
+		configuration.addClassName(haxeFile.getDefaultClassName());
 		configuration.setExplicitNoOutput();
-		configuration.enableTips(fileName, position);
-		configuration.addSourceDirectory(sourceDirectory);
+		configuration.enableTips(
+				haxeFile.getBaseFile().getLocation().toOSString(), 
+				position);
+		
+		IHaxeSourceFolder[] sourceFolders = 
+				haxeFile.getHaxeProject().getSourceFolders();
+		
+		if (sourceFolders.length == 0) {
+			EclihxCore.getLogHelper().logError(
+					String.format(
+							"Tips: There're no source folders in '%s' project",
+							haxeFile.getHaxeProject().getName()));
+			return new ArrayList<ContentInfo>();
+		}
+		
+		for (IHaxeSourceFolder sourceFolder : sourceFolders) {
+			configuration.addSourceDirectory(
+					sourceFolder.getBaseFolder().getLocation().toOSString());
+		}
 		
 		//new HaxeLauncher().run(configuration, launch, compilerPath, outputPath)
 		
@@ -56,6 +69,11 @@ public class HaxeContentAssistManager {
 			final String haxePath = 
 				EclihxCore.getDefault().getPluginPreferences().getString(
 					CorePreferenceInitializer.HAXE_COMPILER_PATH); 
+			
+			File outputDirectory = new File(
+					haxeFile.getHaxeProject().
+							getOutputFolder().getBaseFolder().
+									getLocation().toOSString());
 			
 			ProcessUtil.executeProcess(
 				OSUtil.quoteCompoundPath(haxePath) 
