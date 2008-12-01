@@ -317,9 +317,14 @@
             overrides="org.eclipse.ui.navigator.resources.actions.OpenActions"
             priority="higher">
          <enablement>
-            <instanceof
-                  value="eclihx.core.haxe.model.core.IHaxeSourceFile">
-            </instanceof>
+            <or>
+               <instanceof
+                     value="eclihx.core.haxe.model.core.IHaxeSourceFile">
+               </instanceof>
+               <instanceof
+                     value="eclihx.core.haxe.model.core.IHaxeBuildFile">
+               </instanceof>
+            </or>
          </enablement>
       </actionProvider>
       <commonWizard

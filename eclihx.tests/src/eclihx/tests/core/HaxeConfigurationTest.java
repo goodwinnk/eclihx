@@ -44,6 +44,24 @@ public class HaxeConfigurationTest {
 	}
 	
 	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * @throws InvalidConfigurationException If configuration is invalid.
+	 */
+	@Test
+	public void PrintConfigurationTips() 
+		throws InvalidConfigurationException {
+		
+		configuration.enableTips("Test.hx", 15);
+		configuration.addClassName("Test");
+		configuration.addSourceDirectory("..\\src");
+		
+		Assert.assertEquals(
+			"-cp ..\\src --display Test.hx@15 --no-output Test ",
+			configuration.printConfiguration());
+	
+	}
+	
+	/**
 	 * Checks printing of the source directories.
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
 	 * @throws InvalidConfigurationException If configuration is invalid.

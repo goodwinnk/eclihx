@@ -5,6 +5,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
+import eclihx.core.haxe.model.core.IHaxeBuildFile;
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeOutputFolder;
 import eclihx.core.haxe.model.core.IHaxePackage;
@@ -76,7 +77,12 @@ public class HaxeElementsLabelProvider extends LabelProvider {
 		if (element instanceof IHaxeSourceFile) {
 			return workcbenchProvider.getImage(
 					((IHaxeSourceFile)element).getBaseResource());
-		}		
+		}
+		
+		if (element instanceof IHaxeBuildFile) {
+			return workcbenchProvider.getImage(
+					((IHaxeBuildFile)element).getBaseResource());
+		}
 		
 		if (element instanceof IResource) {
 			return workcbenchProvider.getImage(element);

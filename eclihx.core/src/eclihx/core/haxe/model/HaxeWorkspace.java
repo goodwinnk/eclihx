@@ -191,16 +191,18 @@ public class HaxeWorkspace extends HaxeElement implements IHaxeWorkspace {
 				IHaxeSourceFolder sourceFolder = 
 						haxeProject.getSourceFolder(baseSourceFolder);
 				
-				if (projectRelative.segmentCount() == 1) {
-					return sourceFolder;
-				}
-				
-				if (resource.getType() == IResource.FOLDER) {
-					return sourceFolder.getPackage((IFolder)resource);
-				}
-				
-				if (resource.getType() == IResource.FILE) {
-					return sourceFolder.getSourceFile((IFile)resource);
+				if (sourceFolder != null) {
+					if (projectRelative.segmentCount() == 1) {
+						return sourceFolder;
+					}
+					
+					if (resource.getType() == IResource.FOLDER) {
+						return sourceFolder.getPackage((IFolder)resource);
+					}
+					
+					if (resource.getType() == IResource.FILE) {
+						return sourceFolder.getSourceFile((IFile)resource);
+					}
 				}
 			}
 		}

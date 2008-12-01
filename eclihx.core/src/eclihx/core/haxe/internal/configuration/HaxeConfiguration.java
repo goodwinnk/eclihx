@@ -72,12 +72,19 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	private final ASConfiguration asConfig = new ASConfiguration();
 	private final NekoConfiguration nekoConfig = new NekoConfiguration();
 	private final JSConfiguration jsConfig = new JSConfiguration();
-
+	
 	// Common haXe configuration options.
+	
+	/**
+	 * List of class names for haxe.exe [options] <class names...>
+	 */
+	private final LinkedList<String> classesNames = new LinkedList<String>();
+	
 	/**
 	 * Source directory configuration (-cp).
 	 */
-	private final LinkedList<String> sourceDirectories = new LinkedList<String>();
+	private final LinkedList<String> sourceDirectories = 
+			new LinkedList<String>();
 
 	/**
 	 * Name of the startup class (-main).
@@ -389,6 +396,22 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		// TODO 6 Add check for validness and uniqueness
 		this.compilationFlags.add(compilationFlag);
 	}
+	
+	/**
+	 * Adds new class name to configuration.
+	 * @param className the name to add.
+	 */
+	public void addClassName(String className) {
+		classesNames.add(className);
+	}
+	
+	/**
+	 * Get the collection of class names.
+	 * @return the collection of class names.
+	 */
+	public Collection<String> getClassNames() {
+		return classesNames;
+	}
 
 	/**
 	 * Adds new source directory to configuration.
@@ -398,7 +421,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	public void addSourceDirectory(String directory) {
 		sourceDirectories.add(directory);
 	}
-
+	
 	/**
 	 * Returns collection of source directories.
 	 * 
@@ -590,10 +613,12 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		StringBuilder outputBuilder = new StringBuilder();
 
 		// Startup class
-		outputBuilder
-				.append(GenerateParameter(
-						HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
-						startupClass));
+		if (startupClass != null) {
+			outputBuilder
+					.append(GenerateParameter(
+							HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
+							startupClass));
+		}
 
 		// Stored libraries
 		for (String library : libraries) {
@@ -710,11 +735,17 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 					HaxePreferencesManager.PARAM_PREFIX_REMAP_PACKAGE,
 					directive));
 		}
-
 		
 		// Platforms
 		if (isPlatformExplicitlySet) {
 			outputBuilder.append(getTargetConfiguration().printConfiguration());
+		}
+		
+		// Print classes names.
+		// IMPORTANT! They should be printed after all other parameters.
+		for (String name : classesNames) {
+			outputBuilder.append(name);
+			outputBuilder.append(" "); // Separator
 		}
 
 		return outputBuilder.toString();

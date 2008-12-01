@@ -85,7 +85,7 @@ public class HaxeElementsContentProvider implements ITreeContentProvider {
 			if (elementsFilter.showBuildFiles()) {
 				try {
 					children.addAll(
-							Arrays.asList(haxeProject.getBuildFiles()));
+							Arrays.asList(haxeProject.getBuildFilesElements()));
 				} catch (CoreException e) {
 					EclihxUIPlugin.getLogHelper().logError(e);
 				}
