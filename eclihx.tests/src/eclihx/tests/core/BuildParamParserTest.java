@@ -56,6 +56,19 @@ public class BuildParamParserTest {
 			"\\Resources\\testComments.hxml";
 		parser.parseFile(path);
 	}
+	
+	/**
+	 * Test file with next separator.
+	 * @throws ParseError
+	 */
+	@Test
+	public void testParseFileWithNext() 
+		throws ParseError {
+		
+		String path = System.getProperty("user.dir") + 
+			"\\Resources\\withNext.hxml";
+		parser.parseFile(path);
+	}
 
 	/**
 	 * Tests debug configuration 

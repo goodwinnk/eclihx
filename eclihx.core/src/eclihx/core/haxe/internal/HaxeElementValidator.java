@@ -171,6 +171,8 @@ public final class HaxeElementValidator {
 	 */
 	public static IStatus validateHaxeFileName(String haxeFileName) {
 		
+		//FIXME 4 Is it allowed to make files with the first number char.
+		
 		final FileValidationResult validateResult = 
 			FileNameValidator.validateFileName(
 					haxeFileName, HaxePreferencesManager.HAXE_FILE_EXTENSION);

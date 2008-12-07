@@ -5,8 +5,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 
 /**
- *  
- * 
+ * Path manager. Stores platform-dependent paths of the project.
  */
 public interface IProjectPathManager {
 	/**
@@ -21,8 +20,8 @@ public interface IProjectPathManager {
 	IFolder getOutputFolder();
 	
 	/**
-	 * Sets project output location
-	 * @param path
+	 * Sets project output location.
+	 * @param folder an output folder.
 	 */
 	void setOutputFolder(IFolder folder);
 	

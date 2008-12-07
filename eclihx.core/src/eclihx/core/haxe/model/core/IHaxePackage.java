@@ -51,11 +51,12 @@ public interface IHaxePackage extends IHaxeElement {
 	 * 
 	 * @param haxeFileName the name of the file to create.
 	 * @param monitor the operation monitor. <code>null</code> value is allowed.
+	 * @return newly created haXe source file.
 	 * 
 	 * @throws CoreException if there are some errors during file creation.
 	 */
-	public void createHaxeFile(String haxeFileName, IProgressMonitor monitor)
-			throws CoreException;
+	public IHaxeSourceFile createHaxeFile(
+			String haxeFileName, IProgressMonitor monitor) throws CoreException;
 	
 	/**
 	 * Get the source files in this package.

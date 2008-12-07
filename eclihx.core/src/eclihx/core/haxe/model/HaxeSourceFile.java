@@ -27,6 +27,37 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	private final IHaxePackage fPackage;
 
 	/**
+	 * Return default class name for the file with the given name.
+	 * 
+	 * @param fileName the name of the file.
+	 * 
+	 * @return String with the name.
+	 * @throws RuntimeException if file has invalid extension.
+	 */
+	public static String getClassName(String fileName) {
+
+		if (!fileName.endsWith(HaxePreferencesManager.HAXE_FILE_EXTENSION)) {
+			// TODO 4 Find better exception for this situation.
+			throw new RuntimeException(
+					"Class name for source file should always exist");
+		}
+
+		int lastNameIndex = fileName.length()
+				- HaxePreferencesManager.HAXE_FILE_EXTENSION.length() - 1;
+
+		String classSubstring = fileName.substring(0, lastNameIndex);
+
+		if (classSubstring.isEmpty()) {
+			throw new RuntimeException("Class name can't be empty");
+		}
+
+		// Upper case first letter
+		return Character.toUpperCase(classSubstring.charAt(0))
+				+ classSubstring.substring(1, classSubstring.length());
+
+	}
+
+	/**
 	 * Construct the haXe source file object on the base of the IFile resource.
 	 * Resource should have a valid haXe file name.
 	 * 
@@ -103,21 +134,14 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	public IHaxeProject getHaxeProject() {
 		return fPackage.getSourceFolder().getHaxeProject();
 	}
-	
+
 	/**
-	 * Get the default haXe class name for this file but without
-	 * package prefix.
+	 * Get the default haXe class name for this file but without package prefix.
 	 * 
 	 * @return the string with the class name.
 	 */
 	private String getClassName() {
-		String name = getName();
-		
-		int lastNameIndex = 
-			name.length() - 
-				HaxePreferencesManager.HAXE_FILE_EXTENSION.length() - 1;
-		
-		return name.substring(0, lastNameIndex);
+		return getClassName(getName());
 	}
 
 	/*
@@ -132,7 +156,7 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 		if (!fPackage.isDefault()) {
 			packagePrefix = fPackage.getName() + ".";
 		}
-		
+
 		return packagePrefix + getClassName();
 	}
 

@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import eclihx.core.haxe.model.core.IHaxeBuildFile;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.ui.wizards.NewBuildFileWizardPage;
 
@@ -23,6 +24,11 @@ public class HaxeBuildFileWizard extends AbstractMonitorWizard implements INewWi
 	 * The workbench selection.
 	 */
 	IStructuredSelection selection;
+
+	/**
+	 * Workbench.
+	 */
+	//private IWorkbench fWorkbench;
 	
 	/**
 	 * Default constructor.
@@ -46,7 +52,16 @@ public class HaxeBuildFileWizard extends AbstractMonitorWizard implements INewWi
 		monitor.beginTask("Creating build file " + buildFileName, 1);
 		
 		try {
-			haxeProject.createBuildFile(buildFileName, monitor);
+			IHaxeBuildFile buildFile = 
+					haxeProject.createBuildFile(buildFileName, monitor);
+			
+			if (buildFile != null) {
+				//BasicNewResourceWizard.selectAndReveal(
+				//		buildFile.getBaseResource(), 
+				//		fWorkbench.getActiveWorkbenchWindow());
+				
+				openFile(buildFile.getBaseFile());				
+			}			
 		} catch (CoreException e) {
 			showErrorBox(e.getMessage());
 		}
@@ -61,7 +76,6 @@ public class HaxeBuildFileWizard extends AbstractMonitorWizard implements INewWi
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
-		
 	}
 
 	/* (non-Javadoc)
