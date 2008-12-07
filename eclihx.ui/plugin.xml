@@ -395,4 +395,11 @@
          <enablement></enablement>
       </commonWizard>
    </extension>
+     <extension
+           point="org.eclipse.core.runtime.products">
+        <product
+              application="eclihx.ui"
+              name="EclihX">
+        </product>
+     </extension>
 </plugin>
