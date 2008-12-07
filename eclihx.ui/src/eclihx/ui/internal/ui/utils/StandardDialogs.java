@@ -43,7 +43,7 @@ public final class StandardDialogs {
 		ILabelProvider labelProvider = new LabelProvider() {
 			@Override
 			public Image getImage(Object element) {
-				return PluginImages.get(PluginImages.IMG_SOURCE_FOLDER);
+				return PluginImages.get(PluginImages.IMG_PROJECT);
 			}
 		};
 
