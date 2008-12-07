@@ -2,11 +2,16 @@ package eclihx.ui.internal.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
+import org.eclipse.ui.ide.IDE;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
@@ -127,4 +132,37 @@ public abstract class AbstractMonitorWizard extends Wizard {
 			}
 		});
 	}
+	
+	/**
+	 * Opens file. Use this method to show user just created resource.
+	 * 
+	 * @param file the resource to open.
+	 * 
+	 * TODO 4 Think for a better place for this method.
+	 */
+	protected void openFile(final IFile file) {
+		final IWorkbenchPage activePage = 
+				EclihxUIPlugin.getDefault().getWorkbench().
+						getActiveWorkbenchWindow().getActivePage();
+		
+		if (file == null) {
+			return;
+		}
+		
+		if (activePage != null) {
+			final Display display= getShell().getDisplay();
+			if (display != null) {
+				display.asyncExec(new Runnable() {
+					public void run() {
+						try {
+							IDE.openEditor(activePage, file, true);
+						} catch (PartInitException e) {
+							EclihxUIPlugin.getLogHelper().logError(e);
+						}
+					}
+				});
+			}
+		}
+	}
+	
 }

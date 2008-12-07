@@ -47,7 +47,7 @@ public class Parser {
 			Parameter param = parametersStore.get(currentPrefix);
 			
 			if (param != null) {
-				// We found parameter. Let index pass prefix
+				// We found parameter. Let's index pass prefix
 				++i;
 			} else {
 				// We didn't find the parameter. Try an empty prefix

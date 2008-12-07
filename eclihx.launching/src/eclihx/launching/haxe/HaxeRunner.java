@@ -12,7 +12,7 @@ import org.eclipse.debug.core.IStatusHandler;
 
 import eclihx.core.haxe.HaxeLauncher;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
-import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
+import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.parser.BuildParamParser;
 import eclihx.core.util.OSUtil;
 import eclihx.core.util.console.parser.core.ParseError;
@@ -122,30 +122,36 @@ public class HaxeRunner implements IHaxeRunner {
 	        
 	        BuildParamParser parser = new BuildParamParser();
 	                
-	        HaxeConfiguration haxeConfig;
+	        //HaxeConfiguration haxeConfig;
 			
-			haxeConfig = 
-					parser.parseFile(
-						configuration.getBuildFile()).getMainConfiguration();
+			//haxeConfig = 
+			//		parser.parseFile(
+			//			configuration.getBuildFile()).getMainConfiguration();
+	        HaxeConfigurationList executionList = 
+	        		parser.parseFile(configuration.getBuildFile());
+	        
+	        String fullOutput = "";
+	        
+	        for (HaxeConfiguration haxeConfig : executionList) {
+	        	haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
+				
+				final HaxeLauncher launcher = new HaxeLauncher();
+				
+				launcher.run(haxeConfig, launch, configuration.getCompilerPath(), 
+								outputDirectory);
+				
+				String errorsString = launcher.getErrorString();
+				String outputString = launcher.getOutputString();
+				
+				fullOutput += outputString;
+				
+				if (!errorsString.isEmpty()) {
+					return errorsString;
+				}
+	        }
 			
-			haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
+			return "Building complete.\n" + fullOutput;
 			
-			final HaxeLauncher launcher = new HaxeLauncher();
-			
-			launcher.run(haxeConfig, launch, configuration.getCompilerPath(), 
-							outputDirectory);
-			
-			String errorsString = launcher.getErrorString();
-			String outputString = launcher.getOutputString();
-			
-			if (!errorsString.isEmpty()) {
-				return errorsString;
-			} else {
-				return "Building complete.\n" + outputString;
-			}
-			
-		} catch (InvalidConfigurationException e) {
-			throw generateCoreException(e);
 		} catch (ParseError e) {
 			throw generateCoreException(e);
 		}

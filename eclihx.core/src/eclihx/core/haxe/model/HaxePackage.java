@@ -11,7 +11,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
@@ -188,28 +190,42 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	 * @see eclihx.core.haxe.model.core.IHaxePackage#createHaxeFile(java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void createHaxeFile(String haxeFileName, IProgressMonitor monitor)
+	public IHaxeSourceFile createHaxeFile(String haxeFileName, IProgressMonitor monitor)
 			throws CoreException {
 		
-		if (HaxeElementValidator.validateHaxeFileName(haxeFileName).isOK() &&  
-				!hasHaxeFile(haxeFileName)) {
-				
-				InputStream stream = new ByteArrayInputStream(
-						createHaxeFileHeader().getBytes());
-				
-				fFolder.getFile(haxeFileName).create(stream, true, monitor);
-			}
+		if (!HaxeElementValidator.validateHaxeFileName(haxeFileName).isOK()) {
+			throw new CoreException(new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID,
+					"Invalid source file name."));
+		}
+		
+		// TODO 3 Make default file content provider. License, class and so on.
+		InputStream stream = new ByteArrayInputStream(
+				createHaxeDefaultContent(haxeFileName).getBytes());
+		
+		IFile sourceFile = fFolder.getFile(haxeFileName);
+		sourceFile.create(stream, true, monitor);
+		
+		return new HaxeSourceFile(sourceFile, this);
+		
 	}
 	
 	/**
-	 * Method creates a template haXe file header.
+	 * Method creates a default content for file.
 	 */
-	protected String createHaxeFileHeader() {
+	protected String createHaxeDefaultContent(String fileName) {
+		
+		String content = "";
+		
 		if (!isDefault()) {
-			return String.format("package %s;", getName());
+			content += String.format("package %s;\n\n", getName());
 		}
 		
-		return "";
+		content += String.format(
+				"class %s {\n\n}",  
+				HaxeSourceFile.getClassName(fileName));
+		
+		return content;
 	}
 	
 	/*

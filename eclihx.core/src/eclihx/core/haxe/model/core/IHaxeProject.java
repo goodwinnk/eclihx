@@ -92,7 +92,7 @@ public interface IHaxeProject extends IHaxeElement {
 	 * @throws CoreException if file name is not a build file name, or
 	 * 		   the error of IFile.create method.
 	 */
-	IFile createBuildFile(String fileName, IProgressMonitor monitor) 
+	IHaxeBuildFile createBuildFile(String fileName, IProgressMonitor monitor) 
 			throws CoreException;
 	
 	/**
@@ -138,6 +138,7 @@ public interface IHaxeProject extends IHaxeElement {
 	 * folder with this resource.
 	 */
 	IHaxeSourceFolder getSourceFolder(IFolder folder);	
+	
 	
 	/**
 	 * Checks if project is opened.

@@ -7,6 +7,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
 import eclihx.core.haxe.model.core.IHaxePackage;
+import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.ui.wizards.NewHaxeFileWizardPage;
 
 /**
@@ -46,7 +47,18 @@ public class HaxeFileWizard extends AbstractMonitorWizard implements INewWizard 
 		monitor.beginTask("Creating haXe file " + haxeFileName, 1);
 		
 		try {
-			haxePackage.createHaxeFile(haxeFileName, monitor);
+						
+			IHaxeSourceFile sourceFile =
+				haxePackage.createHaxeFile(haxeFileName, monitor);
+		
+			if (sourceFile != null) {
+				//BasicNewResourceWizard.selectAndReveal(
+				//		buildFile.getBaseResource(), 
+				//		fWorkbench.getActiveWorkbenchWindow());
+				
+				openFile(sourceFile.getBaseFile());				
+			}
+		
 		} catch (CoreException e) {
 			showErrorBox(e.getMessage());
 		}

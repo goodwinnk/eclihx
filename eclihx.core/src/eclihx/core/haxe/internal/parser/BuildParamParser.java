@@ -115,6 +115,8 @@ public final class BuildParamParser {
 		public void save(String value) throws ParseError {
 			
 			if (parsingFile) {
+				
+				//TODO 8 Show a place of error!
 
 				// If we're already parsing file we shouldn't accept this parameter
 				throw new ParseError("Invalid parameter in the hxml-file");
@@ -126,8 +128,10 @@ public final class BuildParamParser {
 						String.format("Invalid option: %s", value));
 					
 				} else if (value.endsWith("hxml")) {
+					
 					confintueConfig = true;
 					parseFile(value);
+					
 				} else {
 					
 					mainParam.check();
@@ -538,7 +542,8 @@ public final class BuildParamParser {
 		HaxeConfigurationList configList = new HaxeConfigurationList();
 	
 		for (String configStr : configStrs) {			
-			configList.add(parseConfiguration(configStr.replaceAll("\\s+", " ").split(" ")));			
+			configList.add(parseConfiguration(
+					configStr.replaceAll("\\s+", " ").trim().split(" ")));			
 		}
 		
 		return configList;
