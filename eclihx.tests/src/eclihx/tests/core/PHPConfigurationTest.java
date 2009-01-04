@@ -15,11 +15,18 @@ public class PHPConfigurationTest {
 	
 	private PHPConfiguration config;
 
+	/**
+	 * Setting up the test environment.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		config = new PHPConfiguration();
 	}
 
+	/**
+	 * Test for {@ling PHPConfiguration#printConfiguration()}
+	 * @throws InvalidConfigurationException invalid configuration test.
+	 */
 	@Test
 	public void testPrintConfiguration() throws InvalidConfigurationException {
 		config.setFrontFile("test.php");
@@ -30,6 +37,11 @@ public class PHPConfigurationTest {
 			config.printConfiguration());
 	}
 	
+	
+	/**
+	 * Test for {@link PHPConfiguration#printConfiguration()}
+	 * @throws InvalidConfigurationException invalid configuration test.
+	 */
 	@Test
 	public void testPrintConfigurationCompounds() throws InvalidConfigurationException {
 		config.setFrontFile("\\test.php");

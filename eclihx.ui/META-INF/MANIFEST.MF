@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclihx Plug-in UI
+Bundle-Name: EclihX Plug-in UI
 Bundle-SymbolicName: eclihx.ui; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: eclihx.ui.internal.ui.EclihxUIPlugin
@@ -24,14 +24,9 @@ Import-Package: org.eclipse.ui.dialogs,
  org.eclipse.ui.wizards.newresource
 Export-Package: eclihx,
  eclihx.ui,
- eclihx.ui.internal;x-internal:=true,
- eclihx.ui.internal.ui;x-internal:=true,
- eclihx.ui.internal.ui.editors;x-internal:=true,
- eclihx.ui.internal.ui.editors.hx;x-internal:=true,
- eclihx.ui.internal.ui.preferences;x-internal:=true,
- eclihx.ui.internal.ui.properties;x-internal:=true,
- eclihx.ui.internal.ui.views;x-internal:=true,
- eclihx.ui.internal.ui.wizards;x-internal:=true,
+ eclihx.ui.internal.ui,
+ eclihx.ui.internal.ui.views,
+ eclihx.ui.internal.ui.wizards;x-friends:="eclihx.tests",
  eclihx.ui.launch,
  eclihx.ui.launch.handlers,
  eclihx.ui.launch.tabs,

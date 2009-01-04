@@ -39,7 +39,6 @@ public class CodeFormatterTest {
 				        "  }\n" +
 				        "}\n";
 		
-		Assert.assertEquals(outStr, str);
-		
+		Assert.assertEquals(outStr, str);		
 	}	
 }

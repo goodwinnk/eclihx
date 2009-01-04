@@ -105,7 +105,8 @@ public class HaxeElementValidatorTest {
 	@Test
 	public void testValidateBuildFileNameInvalidChars() {
 		Assert.assertFalse(
-				HaxeElementValidator.validateBuildFileName("text?.hxml").isOK());		
+				HaxeElementValidator.validateBuildFileName(
+						"text?.hxml").isOK());		
 		
 	}
 	
@@ -126,7 +127,8 @@ public class HaxeElementValidatorTest {
 	@Test
 	public void testValidateBuildFileNameBackSlash() {
 		Assert.assertFalse(
-				HaxeElementValidator.validateBuildFileName("hi\\ha.hxml").isOK());		
+				HaxeElementValidator.validateBuildFileName(
+						"hi\\ha.hxml").isOK());		
 		
 	}
 	
@@ -137,7 +139,8 @@ public class HaxeElementValidatorTest {
 	@Test
 	public void testValidateBuildFileNameSlash() {
 		Assert.assertFalse(
-				HaxeElementValidator.validateBuildFileName("hi/ha.hxml").isOK());		
+				HaxeElementValidator.validateBuildFileName(
+						"hi/ha.hxml").isOK());		
 		
 	}
 	
@@ -148,7 +151,8 @@ public class HaxeElementValidatorTest {
 	@Test
 	public void testValidateBuildFileNameSuccess() {
 		Assert.assertTrue(
-				HaxeElementValidator.validateBuildFileName("build.hxml").isOK());		
+				HaxeElementValidator.validateBuildFileName(
+						"build.hxml").isOK());		
 	}
 	
 

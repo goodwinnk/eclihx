@@ -13,6 +13,12 @@ import eclihx.ui.internal.ui.views.HaxeExplorerView;
  */
 public class HaxePerspectiveFactory implements IPerspectiveFactory {
 
+	/**
+	 * ID of the haXe perspective.
+	 */
+	public final static String HAXE_PERSPECTIVE_ID = 
+			"eclihx.ui.internal.ui.HaxePerspectiveFactory";
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)

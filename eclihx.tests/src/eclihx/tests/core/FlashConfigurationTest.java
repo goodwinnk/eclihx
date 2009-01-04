@@ -7,6 +7,12 @@ import org.junit.Test;
 import eclihx.core.haxe.internal.configuration.FlashConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 
+/**
+ * Test for flash configuration class.
+ * {@link FlashConfiguration}
+ * @author GoodwinNK
+ *
+ */
 public class FlashConfigurationTest {
 	
 	/**
@@ -14,12 +20,17 @@ public class FlashConfigurationTest {
 	 */
 	private FlashConfiguration flashConfiguration;
 	
-	
+	/**
+	 * Initialize flash configuration.
+	 */
 	@Before
 	public void setUp() {
 		flashConfiguration = new FlashConfiguration();
 	}
 	
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
 	@Test
 	public void testPrintConfigurationSimple() {
 		flashConfiguration.setHeader("testHeader");
@@ -36,6 +47,9 @@ public class FlashConfigurationTest {
 		}
 	}
 	
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
 	@Test
 	public void testPrintConfigurationQuoted() {
 		
@@ -52,7 +66,10 @@ public class FlashConfigurationTest {
 		}
 	}
 	
-	@Test()
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
+	@Test
 	public void testPrintConfigurationFlash9() {
 		flashConfiguration.setOutputFile("out.swf");
 		flashConfiguration.setVersion(9);
@@ -67,6 +84,9 @@ public class FlashConfigurationTest {
 		}
 	}
 
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
 	@Test
 	public void testValidateFailVersion() {
 		flashConfiguration.setHeader("header");
@@ -77,6 +97,9 @@ public class FlashConfigurationTest {
 		Assert.assertFalse(flashConfiguration.validate());
 	}
 	
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
 	@Test
 	public void testValidateFailOutputFile() {
 
@@ -85,6 +108,9 @@ public class FlashConfigurationTest {
 		Assert.assertFalse(flashConfiguration.validate());
 	}
 	
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
 	@Test
 	public void testValidateSuccess() {
 		
