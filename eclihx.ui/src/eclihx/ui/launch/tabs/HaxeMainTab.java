@@ -212,13 +212,13 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 
-		// Add working directory group
-		Group workingDirectoryGroup = new Group(top, SWT.NONE);
-		workingDirectoryGroup.setText("Working Directory");
-		workingDirectoryGroup.setLayout(layout);
-		workingDirectoryGroup.setLayoutData(horizontantalGrid);
+		// Add source directory
+		Group sourceDirectoryGroup = new Group(top, SWT.NONE);
+		sourceDirectoryGroup.setText("Source Directory");
+		sourceDirectoryGroup.setLayout(layout);
+		sourceDirectoryGroup.setLayoutData(horizontantalGrid);
 
-		sourceDirectoryText = new Text(workingDirectoryGroup, SWT.BORDER);
+		sourceDirectoryText = new Text(sourceDirectoryGroup, SWT.BORDER);
 		sourceDirectoryText.setLayoutData(horizontantalGrid);
 		sourceDirectoryText.setEditable(false);
 		sourceDirectoryText.setText("");

@@ -19,31 +19,33 @@ public class ASConfigurationTest {
 	private ASConfiguration config; 
 
 	/**
-	 * @throws java.lang.Exception
+	 * Creating action script configuration.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		config = new ASConfiguration();
 	}
 
 	/**
-	 * Test method for {@link eclihx.core.haxe.internal.configuration.ASConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
+	 * {@link eclihx.core.haxe.internal.configuration.ASConfiguration#printConfiguration()}.
+	 * @throws InvalidConfigurationException in the case of invalid configuration.
 	 */
 	@Test
-	public void testPrintConfiguration() 
+	public void testOutputDirectoryPrintConfiguration() 
 			throws InvalidConfigurationException {
+		
 		config.setOutputDirectory("Hi");
 		Assert.assertEquals("-as3 Hi ", config.printConfiguration());
 	}
 	
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.ASConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationException in the case of invalid configuration.
 	 */
 	@Test
 	public void testPrintConfigurationCompoundDirectory() 
 			throws InvalidConfigurationException {
+		
 		config.setOutputDirectory("Hi hello");
 		Assert.assertEquals("-as3 \"Hi hello\" ", config.printConfiguration());
 	}

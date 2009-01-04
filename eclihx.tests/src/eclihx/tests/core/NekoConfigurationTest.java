@@ -10,23 +10,22 @@ import eclihx.core.haxe.internal.configuration.NekoConfiguration;
 
 /**
  * Test for {@link eclihx.core.haxe.internal.configuration.NekoConfiguration}
- *
  */
 public class NekoConfigurationTest {
 	
-	NekoConfiguration config;
+	private NekoConfiguration config;
 
 	/**
-	 * @throws java.lang.Exception
+	 * Setting up the test environment.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setupTest() {
 		config = new NekoConfiguration();
 	}
 
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.NekoConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationException invalid configuration case. 
 	 */
 	@Test
 	public void testPrintConfiguration() throws InvalidConfigurationException {
@@ -40,7 +39,7 @@ public class NekoConfigurationTest {
 	
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.configuration.NekoConfiguration#printConfiguration()}.
-	 * @throws InvalidConfigurationException 
+	 * @throws InvalidConfigurationException invalid configuration case.
 	 */
 	@Test
 	public void testPrintConfigurationCompoudFile() throws InvalidConfigurationException {
