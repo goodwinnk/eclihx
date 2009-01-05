@@ -28,7 +28,7 @@ public class ASConfiguration extends AbstractConfiguration {
 	
 	/**
 	 * Set the output ActionScript directory.
-	 * @param directory of the output ActionScript source files.
+	 * @param outputDirectory of the output ActionScript source files.
 	 */
 	public void setOutputDirectory(String outputDirectory) {
 		this.outputDirectory = outputDirectory;
