@@ -190,7 +190,7 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 	 */
 	public IProjectPathManager getPathManager() {
 		if (fPathManager == null) {
-			fPathManager = ProjectPathManager.create(fProject);
+			fPathManager = ProjectPathManager.create(this);
 			return fPathManager;
 		}
 		
