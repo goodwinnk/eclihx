@@ -48,8 +48,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	 * Set output file. This method does no semantic checks of the path
 	 * correctness. Use <code>validate</code> method.
 	 * 
-	 * @param outputFile 
-	 * 			the outFile to set. Can't be null. 
+	 * @param outputFile the outFile to set. Can't be null. 
 	 */
 	public void setOutputFile(String outputFile) {
 		if (outputFile == null) {
@@ -71,8 +70,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	/**
 	 * Sets the version of output flash file. This method does no semantic 
 	 * checks of the path correctness - use <code>validate</code> method.  
-	 * @param version
-	 *            the version to set
+	 * @param version the version to set
 	 */
 	public void setVersion(int version) {
 		this.version = version;
@@ -88,8 +86,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 
 	/**
 	 * Set the header for swf file.
-	 * @param header
-	 *            the header to set
+	 * @param header the header to set
 	 */
 	public void setHeader(String header) {
 		// TODO 3 add checks here
@@ -98,8 +95,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	
 	/**
 	 * Method adds swf library to configuration.
-	 * @param libraryName
-	 * 			The name of the library to add.
+	 * @param libraryName The name of the library to add.
 	 */
 	public void addLibrary(String libraryName) {
 		swfLibraries.add(libraryName);
