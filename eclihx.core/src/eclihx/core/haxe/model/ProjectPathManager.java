@@ -39,7 +39,7 @@ public class ProjectPathManager implements IProjectPathManager {
 	/**
 	 * A list with source folders.
 	 */
-	private List<IFolder> sourceFolders;
+	private List<IFolder> sourceFolders = new LinkedList<IFolder>();
 	
 	/**
 	 * Folders with libraries.
