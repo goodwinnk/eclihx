@@ -7,6 +7,8 @@ import org.osgi.framework.BundleContext;
 import eclihx.core.haxe.model.HaxeWorkspace;
 import eclihx.core.haxe.model.core.IHaxeWorkspace;
 
+import javax.swing.*;
+
 /**
  * The activator class controls the plug-in life cycle.
  */
@@ -48,6 +50,7 @@ public class EclihxCore extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		checkCompiler();
 
 		haxeWorkspace = new HaxeWorkspace(ResourcesPlugin.getWorkspace()
 				.getRoot());		
@@ -101,4 +104,17 @@ public class EclihxCore extends Plugin {
 		
 		return logger;
 	}
+	
+	/**
+	 * Check the Compiler field.
+	 */
+	public void checkCompiler() {
+		if (EclihxCore.getDefault().getPluginPreferences().getString(
+				CorePreferenceInitializer.HAXE_COMPILER_PATH)=="") {
+			 JOptionPane.showMessageDialog(null, "Please define path to compiler."+
+					 "For this go to Window --> Preferences --> haXe --> Compiler",
+					 "Missing compiler path", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 }
