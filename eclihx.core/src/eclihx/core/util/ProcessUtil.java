@@ -225,6 +225,7 @@ public class ProcessUtil {
 						String line = processErrorReader.readLine();
 						
 						if (line != null) {
+							line += "\n";
 							errorString.append(line);
 						} else {
 							break;
@@ -249,6 +250,7 @@ public class ProcessUtil {
 						String line = processOutputReader.readLine();
 						
 						if (line != null) {
+							line += "\n";
 							outputString.append(line);
 						} else {
 							break;
