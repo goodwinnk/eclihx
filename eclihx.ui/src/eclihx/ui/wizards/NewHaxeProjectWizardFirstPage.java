@@ -1,6 +1,7 @@
 package eclihx.ui.wizards;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -12,6 +13,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
+import eclihx.core.*;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxeProject;
 
@@ -54,6 +56,7 @@ public class NewHaxeProjectWizardFirstPage
 		setDescription(
 				"Create a haXe project in the workspace or in an " +
 				"external location.");
+		checkCompiler();
 	}
 	
 	/*
@@ -183,6 +186,18 @@ public class NewHaxeProjectWizardFirstPage
 	 */
 	public String getOutputFolderName() {
 		return outputFolderField.getText().trim();
+	}
+	
+	/**
+	 * Check the Compiler field.
+	 */
+	public void checkCompiler() {
+		if (EclihxCore.getDefault().getPluginPreferences().getString(
+				CorePreferenceInitializer.HAXE_COMPILER_PATH).isEmpty()) {
+			MessageDialog.openWarning(getShell(), "Missing Compiler Path",
+					"Please define path to compiler. " +
+		    		"For this go to Window --> Preferences --> haXe --> Compiler");
+		}
 	}
 
 }
