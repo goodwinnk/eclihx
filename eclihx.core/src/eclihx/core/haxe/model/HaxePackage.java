@@ -220,6 +220,7 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 		if (!isDefault()) {
 			content += String.format("package %s;\n\n", getName());
 		}
+		else content += String.format("package ;\n\n");
 		
 		content += String.format(
 				"class %s {\n\n}",  

@@ -117,7 +117,7 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 	protected void initialize() {
 
 		// Reset fields.
-		buildFileField.setText("");
+		buildFileField.setText(".hxml");
 		updateHaxeProject(null);		
 
 		// Examine selection.
