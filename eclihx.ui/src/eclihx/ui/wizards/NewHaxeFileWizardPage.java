@@ -201,7 +201,7 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 	protected void initialize() {
 		
 		// Reset fields.
-		haxeNameField.setText(".hx")
+		haxeNameField.setText(".hx");
 		sourceFolderTextField.setText("");
 		packageTextField.setText("");
 		
