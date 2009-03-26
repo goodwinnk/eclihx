@@ -1,5 +1,6 @@
 package eclihx.ui.internal.ui.preferences;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,26 +14,36 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import eclihx.core.haxe.model.HaxePackage;
+import eclihx.ui.PreferenceConstants;
+import eclihx.ui.internal.ui.EclihxUIPlugin;
 
+/**
+ * Preference page for setting up package properties.
+ */
 public class HaxePackagePreferencePage  extends PreferencePage 
 		implements IWorkbenchPreferencePage {
 	
 	private Button defPackCheck;
-	private boolean isDefPackCheck = HaxePackage.isDefPack();	
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 */	
+	@Override
+	public void init(IWorkbench workbench) {
+		HaxePackage.setDefPack(PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	
 	@Override
-	public void init(IWorkbench workbench) {		
-	}
-	
 	protected Control createContents(Composite parent) {
 
 		Composite top = new Composite(parent, SWT.LEFT);
-
+		
 		// Sets the layout data for the top composite's 
 		// place in its parent's layout.
 		top.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -42,30 +53,27 @@ public class HaxePackagePreferencePage  extends PreferencePage
 		top.setLayout(new GridLayout());
 				
 		defPackCheck = new Button(top, SWT.CHECK);
-		defPackCheck.setText("\"package ;\" string for default package");
-		defPackCheck.setSelection(isDefPackCheck);
+		defPackCheck.setText(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE);
+		initializeValues();
 		defPackCheck.addSelectionListener(
 				new SelectionAdapter() {
 					@Override
-					public void widgetSelected(SelectionEvent e) {
-						changeDefPackCheckValue(defPackCheck.getSelection());
-					}
+					public void widgetSelected(SelectionEvent e) {}
 				});
 		
 		return top;
 	}
 
-	public void changeDefPackCheckValue(boolean newDefPackCheck) {
+	/*public void changeDefPackCheckValue(boolean newDefPackCheck) {
 		isDefPackCheck = newDefPackCheck;
-	}
+	}*/
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
 	@Override
-	protected void performDefaults() {
-		HaxePackage.setDefPack(true);
-		defPackCheck.setSelection(HaxePackage.isDefPack());
+	protected void performDefaults() {		
+	    defPackCheck.setSelection(getPreferenceStore().getDefaultBoolean(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
 		
 		super.performDefaults();
 	}
@@ -75,10 +83,25 @@ public class HaxePackagePreferencePage  extends PreferencePage
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	@Override
-	public boolean performOk() {
-		
-		HaxePackage.setDefPack(isDefPackCheck);
+	public boolean performOk() {		
+		IPreferenceStore store = getPreferenceStore();
+		store.setValue(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, defPackCheck.getSelection());
+		HaxePackage.setDefPack(PreferenceConstants.getPreferenceStore().getBoolean(
+			PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
 		
 		return super.performOk();
+	}	
+		
+	private void initializeValues() {
+		IPreferenceStore store = getPreferenceStore();
+		defPackCheck.setSelection(store.getBoolean(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));		
+	}	
+		
+	/**
+	 * Gets EclihX UI plug-in preference store
+	 */
+	@Override
+	public IPreferenceStore getPreferenceStore() {		
+		return EclihxUIPlugin.getDefault().getPreferenceStore();
 	}
 }

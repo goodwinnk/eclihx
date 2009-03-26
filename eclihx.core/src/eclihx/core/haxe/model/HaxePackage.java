@@ -21,6 +21,7 @@ import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 
+
 /**
  * First implementation of the haXe package element.
  */
@@ -44,12 +45,12 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	/**
 	 * "package ;" string for default package case flag
 	 */
-	private static boolean isDefPack = true;
+	private static boolean isDefPack;
 	
-	public static boolean isDefPack() {
-		return isDefPack;
-	}
-
+	/**
+	 * isDefPack setter
+	 * @param isDefPack "package ;" string for default package case flag
+	 */
 	public static void setDefPack(boolean isDefPack) {
 		HaxePackage.isDefPack = isDefPack;
 	}

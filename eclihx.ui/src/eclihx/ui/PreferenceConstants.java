@@ -110,6 +110,13 @@ public final class PreferenceConstants {
 	
 //==============================================//
 	
+//====== haXe Package Properties Settings ======//	
+	public final static String HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE = 
+		"\"package ;\" string for default package";
+	
+	
+//==============================================//
+	
 	/**
 	 * Initialize given preference store with the default values.
 	 * @param store the preference store to be initialized
@@ -185,6 +192,8 @@ public final class PreferenceConstants {
 			store, HX_EDITOR_DEFAULT_COLOR, new RGB(0, 0, 0));
 		store.setDefault(HX_EDITOR_DEFAULT_BOLD, false);
 		store.setDefault(HX_EDITOR_DEFAULT_ITALIC, false);
+		
+		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, true);		
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {
