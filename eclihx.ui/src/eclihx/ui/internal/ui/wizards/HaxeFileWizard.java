@@ -42,7 +42,7 @@ public class HaxeFileWizard extends AbstractMonitorWizard implements INewWizard 
 	protected void doFinish(IProgressMonitor monitor) {
 		
 		final IHaxePackage haxePackage = haxeFilePage.getHaxePackage();
-		final String haxeFileName = haxeFilePage.getFileName();
+		final String haxeFileName = haxeFilePage.getFileName() + ".hx";
 		
 		monitor.beginTask("Creating haXe file " + haxeFileName, 1);
 		
