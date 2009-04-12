@@ -117,7 +117,7 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 	protected void initialize() {
 
 		// Reset fields.
-		buildFileField.setText(".hxml");
+		buildFileField.setText("");
 		updateHaxeProject(null);		
 
 		// Examine selection.
@@ -193,7 +193,11 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 		IStatus fileValidateStatus = HaxeElementValidator.
 				validateBuildFileName(buildFileName); 
 		
-		if (!fileValidateStatus.isOK()) {
+		FileValidationResult validateResult = 
+			FileNameValidator.validateFileName(
+					buildFileName, HaxePreferencesManager.BUILD_FILE_EXTENSION);
+		
+		if (!fileValidateStatus.isOK() && (validateResult.getVerdict().toString() != "InvalidExtension")) {
 			updateStatus(fileValidateStatus.getMessage());
 			return;
 		}

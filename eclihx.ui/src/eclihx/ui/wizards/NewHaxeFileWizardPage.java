@@ -201,7 +201,7 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 	protected void initialize() {
 		
 		// Reset fields.
-		haxeNameField.setText(".hx");
+		haxeNameField.setText("");
 		sourceFolderTextField.setText("");
 		packageTextField.setText("");
 		
@@ -306,7 +306,11 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 			IStatus validateStatus = 
 					HaxeElementValidator.validateHaxeFileName(haxeFileName);
 			
-			if (!validateStatus.isOK()) {
+			FileValidationResult validateResult = 
+				FileNameValidator.validateFileName(
+						haxeFileName, HaxePreferencesManager.BUILD_FILE_EXTENSION);
+			
+			if (!validateStatus.isOK() && (validateResult.getVerdict().toString() != "InvalidExtension")) {
 				updateStatus(validateStatus.getMessage());
 				return;
 			}
