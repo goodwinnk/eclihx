@@ -188,15 +188,15 @@ public class NewHaxeProjectWizardFirstPage
 		return outputFolderField.getText().trim();
 	}
 	
-	/**
+ 	/**
 	 * Check the Compiler field.
 	 */
 	public void checkCompiler() {
 		if (EclihxCore.getDefault().getPluginPreferences().getString(
 				CorePreferenceInitializer.HAXE_COMPILER_PATH).isEmpty()) {
 			MessageDialog.openWarning(getShell(), "Missing Compiler Path",
-					"Please define path to compiler. " +
-		    		"For this go to Window --> Preferences --> haXe --> Compiler");
+					"Please, define haXe compiler first " +
+		    			"(Preferences->EclihX->Compiler).");
 		}
 	}
 
