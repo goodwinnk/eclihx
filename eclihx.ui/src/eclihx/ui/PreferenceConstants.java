@@ -110,11 +110,19 @@ public final class PreferenceConstants {
 	
 //==============================================//
 	
-//====== haXe Package Properties Settings ======//	
 	public final static String HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE = 
 		"\"package ;\" string for default package";
 	
-	
+	public final static String HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE = 
+		"Should curly brackets be moved to new line";
+	public final static String HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS = 
+		"Use tabs for indentation";	
+	public final static String HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE = 
+		"Allow only one operator on the line";
+	public final static String HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES = 
+		"Make indent on empty lines";		
+	public final static String HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH = 
+		"Number of spaces in indentation";		
 //==============================================//
 	
 	/**
@@ -194,6 +202,11 @@ public final class PreferenceConstants {
 		store.setDefault(HX_EDITOR_DEFAULT_ITALIC, false);
 		
 		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, true);		
+		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE, false);
+		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS, false);
+		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, true);
+		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, false);
+		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {

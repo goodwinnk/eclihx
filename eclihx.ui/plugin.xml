@@ -59,6 +59,18 @@
             class="eclihx.ui.internal.ui.preferences.HaxePackagePreferencePage"
             id="eclihx.ui.internal.ui.preferences.HaxePackagePreferencePage"
             name="%hxPackagePrefName"/>
+   <page
+         category="org.eclipse.jdt.ui.preferences.HaxeBasePreferencePage"
+         class="eclihx.ui.internal.ui.preferences.HaxeColorPreferencePage"
+         id="eclihx.ui.internal.ui.preferences.HaxeColorPreferencePage"
+         name="Color">
+   </page>
+   <page
+         category="org.eclipse.jdt.ui.preferences.HaxeBasePreferencePage"
+         class="eclihx.ui.internal.ui.preferences.HaxeFormatOptionsPreferencePage"
+         id="eclihx.ui.internal.ui.preferences.HaxeFormatOptionsPreferencePage"
+         name="Format Options">
+   </page>
    </extension>
  <extension
        point="org.eclipse.ui.perspectives">

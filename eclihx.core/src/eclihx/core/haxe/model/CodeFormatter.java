@@ -20,28 +20,68 @@ public final class CodeFormatter {
 		/**
 		 * Move curly bracket to new line.
 		 */
-		public boolean bracketNewLines = false;
+		public static boolean bracketNewLines = false;
 		
 		/**
 		 * Use tabs for indentation.
 		 */
-		public boolean insertTabs = false;
+		public static boolean insertTabs = false;
 		
 		/**
 		 * Number of spaces in indentation.
 		 */
-		public int intendWidth = 4;
+		public static int intendWidth = 4;
 		
 		/**
 		 * Allows only one operator on the line.
 		 * Will make forced new line after the <code>;</code> char.
 		 */
-		public boolean oneOperatorOnLine = true;
+		public static boolean oneOperatorOnLine = true;
 
 		/**
 		 * Make indent on empty lines.
 		 */
-		public boolean indentOnEmptyLines = false;
+		public static boolean indentOnEmptyLines = false;
+	}
+	
+	/**
+	 * bracketNewLines setter
+	 * @param bracketNewLines Should curly bracket be moved to new lines case flag
+	 */
+	public static void setBracketNewLines(boolean bracketNewLines) {
+		FormatOptions.bracketNewLines = bracketNewLines;
+	}	
+
+	/**
+	 * insertTabs setter
+	 * @param insertTabs Use tabs for indentation case flag
+	 */
+	public static void setInsertTabs(boolean insertTabs) {
+		FormatOptions.insertTabs = insertTabs;
+	}
+	
+	/**
+	 * indentOnEmptyLines setter
+	 * @param indentOnEmptyLines Allow only one operator on the line case flag
+	 */
+	public static void setIndentOnEmptyLines(boolean indentOnEmptyLines) {
+		FormatOptions.indentOnEmptyLines = indentOnEmptyLines;
+	}	
+
+	/**
+	 *  oneOperatorOnLine setter
+	 * @param oneOperatorOnLine Make indent on empty lines case flag
+	 */
+	public static void setOneOperatorOnLine(boolean oneOperatorOnLine) {
+		FormatOptions.oneOperatorOnLine = oneOperatorOnLine;
+	}	
+
+	/**
+	 *  intendWidth setter
+	 * @param intendWidth Number of spaces in indentation combo choose
+	 */
+	public static void setIndendWidth(int intendWidth) {
+		FormatOptions.intendWidth = intendWidth;
 	}
 	
 	/**
