@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 
+import eclihx.core.haxe.model.CodeFormatter;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
@@ -207,6 +208,16 @@ public final class PreferenceConstants {
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, true);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
+		CodeFormatter.setBracketNewLines(PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
+		CodeFormatter.setInsertTabs(PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
+		CodeFormatter.setOneOperatorOnLine(PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));
+		CodeFormatter.setIndentOnEmptyLines(PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));		
+		CodeFormatter.setIndendWidth(PreferenceConstants.getPreferenceStore().getInt(
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));			
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {
