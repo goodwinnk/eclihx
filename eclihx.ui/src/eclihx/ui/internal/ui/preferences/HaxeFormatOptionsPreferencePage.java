@@ -55,10 +55,8 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		parent.setLayout(new GridLayout(1,false));
-		Composite top = new Composite(parent, SWT.UP);
-		Composite middle = new Composite(parent, SWT.UP);
+		Composite top = new Composite(parent, SWT.LEFT);
+		Composite middle = new Composite(parent, SWT.LEFT);
 		// Sets the layout data for the top composite's 
 		// place in its parent's layout.
 		top.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -66,8 +64,6 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 		// Sets the layout for the top composite's 
 		// children to populate.
 		top.setLayout(new GridLayout());
-		middle.setLayout(new GridLayout(2,false));		
-		
 		bracketNewLineCheck = new Button(top, SWT.CHECK);
 		bracketNewLineCheck.setText(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE);
 		insertTabsCheck = new Button(top, SWT.CHECK);
@@ -76,6 +72,8 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 		oneOperatorOnLineCheck.setText(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE);
 		indentOnEmptyLinesCheck = new Button(top, SWT.CHECK);
 		indentOnEmptyLinesCheck.setText(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES);
+		middle.setLayout(new GridLayout(2,false));
+
 		indentWidthTextField = new Text(middle, SWT.SINGLE);
 		indentWidthTextField.setTextLimit(1);
 		(new Label(middle,SWT.CHECK)).setText(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH);
@@ -102,7 +100,7 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 					public void widgetSelected(SelectionEvent e) {}
 				});
 		
-		return top;
+		return middle;
 	}
 
 	/*

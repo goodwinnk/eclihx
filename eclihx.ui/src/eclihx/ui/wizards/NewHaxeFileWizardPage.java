@@ -16,8 +16,11 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 import eclihx.core.haxe.internal.HaxeElementValidator;
+import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
+import eclihx.core.util.FileNameValidator;
+import eclihx.core.util.FileNameValidator.FileValidationResult;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.utils.StandardDialogs;
 
