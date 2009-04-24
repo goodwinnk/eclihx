@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import eclihx.core.haxe.model.CodeFormatter;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.ui.internal.ui.preferences.HaxeFormatOptionsPreferencePage;
 
 /**
  * Preference IDs and default values for EclihX-UI plug-in
@@ -112,18 +113,8 @@ public final class PreferenceConstants {
 //==============================================//
 	
 	public final static String HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE = 
-		"\"package ;\" string for default package";
-	
-	public final static String HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE = 
-		"Should curly brackets be moved to new line";
-	public final static String HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS = 
-		"Use tabs for indentation";	
-	public final static String HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE = 
-		"Allow only one operator on the line";
-	public final static String HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES = 
-		"Make indent on empty lines";		
-	public final static String HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH = 
-		"Number of spaces in indentation";		
+		"\"package ;\" string for default package";	
+
 //==============================================//
 	
 	/**
@@ -202,22 +193,22 @@ public final class PreferenceConstants {
 		store.setDefault(HX_EDITOR_DEFAULT_BOLD, false);
 		store.setDefault(HX_EDITOR_DEFAULT_ITALIC, false);
 		
-		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, true);		
-		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE, false);
-		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS, false);
-		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, true);
-		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, false);
-		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
-		CodeFormatter.setBracketNewLines(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
-		CodeFormatter.setInsertTabs(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
-		CodeFormatter.setOneOperatorOnLine(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));
-		CodeFormatter.setIndentOnEmptyLines(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));		
-		CodeFormatter.setIndendWidth(PreferenceConstants.getPreferenceStore().getInt(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));			
+		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, true);
+		store.setDefault(HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE, false);
+		store.setDefault(HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS, false);
+		store.setDefault(HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, true);
+		store.setDefault(HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, false);
+		store.setDefault(HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
+		CodeFormatter.setBracketNewLines(getPreferenceStore().getBoolean(
+				HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
+		CodeFormatter.setInsertTabs(getPreferenceStore().getBoolean(
+				HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
+		CodeFormatter.setOneOperatorOnLine(getPreferenceStore().getBoolean(
+				HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));
+		CodeFormatter.setIndentOnEmptyLines(getPreferenceStore().getBoolean(
+				HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));		
+		CodeFormatter.setIndendWidth(getPreferenceStore().getInt(
+				HaxeFormatOptionsPreferencePage.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));				
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {
