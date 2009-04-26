@@ -47,7 +47,7 @@ public class HaxeBuildFileWizard extends AbstractMonitorWizard implements INewWi
 	protected void doFinish(IProgressMonitor monitor) {
 		
 		final IHaxeProject haxeProject = buildFilePage.getHaxeProject();
-		final String buildFileName = buildFilePage.getBuildFileName() + ".hxml";
+		final String buildFileName = buildFilePage.getBuildFileName();
 		
 		monitor.beginTask("Creating build file " + buildFileName, 1);
 		
