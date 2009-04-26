@@ -15,10 +15,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 import eclihx.core.haxe.internal.HaxeElementValidator;
-import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.model.core.IHaxeProject;
-import eclihx.core.util.FileNameValidator;
-import eclihx.core.util.FileNameValidator.FileValidationResult;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.utils.StandardDialogs;
 import eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard;
@@ -191,16 +188,12 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 			return;
 		}
 		
-		String buildFileName = buildFileField.getText();
+		String buildFileName = getBuildFileName();
 		
 		IStatus fileValidateStatus = HaxeElementValidator.
 				validateBuildFileName(buildFileName); 
-		
-		FileValidationResult validateResult = 
-			FileNameValidator.validateFileName(
-					buildFileName, HaxePreferencesManager.BUILD_FILE_EXTENSION);
-		
-		if (!fileValidateStatus.isOK() && (validateResult.getVerdict().toString() != "InvalidExtension")) {
+				
+		if (!fileValidateStatus.isOK()) {
 			updateStatus(fileValidateStatus.getMessage());
 			return;
 		}
@@ -226,7 +219,7 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 	 * @return the selected build file name.
 	 */
 	public String getBuildFileName() {
-		return buildFileField.getText();
+		return buildFileField.getText().endsWith(".hxml") ? buildFileField.getText() : buildFileField.getText() + ".hxml";
 	}	
 	
 }
