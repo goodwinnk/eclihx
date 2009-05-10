@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import eclihx.core.haxe.model.HaxePackage;
+import eclihx.core.haxe.model.HaxeFileContent;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
@@ -31,8 +31,8 @@ public class HaxePackagePreferencePage  extends PreferencePage
 	 */	
 	@Override
 	public void init(IWorkbench workbench) {
-		HaxePackage.setDefPack(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
+		HaxeFileContent.getInstance().isDefPack = PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE);
 	}
 	
 	/*
@@ -86,8 +86,8 @@ public class HaxePackagePreferencePage  extends PreferencePage
 	public boolean performOk() {		
 		IPreferenceStore store = getPreferenceStore();
 		store.setValue(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, defPackCheck.getSelection());
-		HaxePackage.setDefPack(PreferenceConstants.getPreferenceStore().getBoolean(
-			PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
+		HaxeFileContent.getInstance().isDefPack = PreferenceConstants.getPreferenceStore().getBoolean(
+			PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE);
 		
 		return super.performOk();
 	}	

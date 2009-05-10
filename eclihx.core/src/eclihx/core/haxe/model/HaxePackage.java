@@ -41,20 +41,7 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	 * The name of the package.
 	 */
 	private final String name;
-
-	/**
-	 * "package ;" string for default package case flag
-	 */
-	private static boolean isDefPack;
 	
-	/**
-	 * isDefPack setter
-	 * @param isDefPack "package ;" string for default package case flag
-	 */
-	public static void setDefPack(boolean isDefPack) {
-		HaxePackage.isDefPack = isDefPack;
-	}
-
 	/**
 	 * Constructs default package in the selected source folder.
 	 * @param parent source folder where this package is situated.
@@ -234,12 +221,8 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 		if (!isDefault()) {
 			content += String.format("package %s;\n\n", getName());
 		}
-		else if(isDefPack) content += String.format("package ;\n\n");
 		
-		content += String.format(
-				"class %s {\n\n}",  
-				HaxeSourceFile.getClassName(fileName));
-		
+		content += HaxeFileContent.getInstance().createHaxeContent(content, fileName);		
 		return content;
 	}
 	
