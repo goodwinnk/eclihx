@@ -202,7 +202,7 @@ public final class PreferenceConstants {
 		store.setDefault(HX_EDITOR_DEFAULT_BOLD, false);
 		store.setDefault(HX_EDITOR_DEFAULT_ITALIC, false);
 		
-		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, true);
+		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, true);
