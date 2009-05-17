@@ -10,7 +10,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.IStatusHandler;
-import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
+import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 
 import eclihx.launching.flash.FlashDebugRunner;
 import eclihx.launching.haxe.HaxeRunner;
@@ -20,7 +20,7 @@ import eclihx.launching.haxe.HaxeRunner;
  * see the information about 
  * org.eclipse.debug.core.launchConfigurationTypes extension point.
  */
-public class HaxeLaunchDelegate implements ILaunchConfigurationDelegate{
+public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	
 	/**
 	 * Finish launching information for user callback. 
