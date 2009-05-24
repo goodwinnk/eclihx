@@ -30,6 +30,54 @@ public final class EclihxLogger implements IPluginLogger {
 	}
 	
 	/**
+	 * For getting the code location of the error we will need to move several
+	 * methods up on stack. The value of offset depends of number of utility
+	 * methods called for logging.
+	 */
+	private final int STACK_OFFSET = 4;
+	
+	/**
+	 * Line of the error.
+	 * @return the line of the error.
+	 */
+    private int getLineNumber() {
+        return Thread.currentThread().getStackTrace()[STACK_OFFSET].getLineNumber();
+	}
+
+    /**
+     * Name of the file with the error.
+     * @return the name of the file with the error.
+     */
+	private String getFileName() {
+        return Thread.currentThread().getStackTrace()[STACK_OFFSET].getFileName();
+	}
+
+	/**
+     * Name of the class where the error occurred.
+     * @return the name the class.
+     */
+	private String getClassName() {
+		return Thread.currentThread().getStackTrace()[STACK_OFFSET].getClassName();
+	}
+
+	/**
+	 * Method name where logging was called.
+	 * @return the method name where logging was called.
+	 */
+	private String getMethodName() {
+		return Thread.currentThread().getStackTrace()[STACK_OFFSET].getMethodName();
+	}
+
+	/**
+	 * Get position of the logging where error or message was logged.
+	 * @return position in source code of logging activity.
+	 */
+    private String getPosition() {
+        return getFileName() + " " + getClassName() + "#" + getMethodName() + 
+        		":" + getLineNumber();
+    }
+	
+	/**
 	 * Log message with info status.
 	 * @param message message to log.
 	 */
@@ -59,7 +107,7 @@ public final class EclihxLogger implements IPluginLogger {
 	 * @param message message to log.
 	 */
 	public void logError(String message) {
-		logError(message, null);
+		logError(getPosition() + ' ' + message, null);
 	}
 
 	/**
