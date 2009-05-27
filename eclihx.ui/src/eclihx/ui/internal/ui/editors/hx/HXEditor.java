@@ -29,9 +29,11 @@ public class HXEditor extends TextEditor {
 		colorManager = new ColorManager();
 		setSourceViewerConfiguration(new HXSourceViewerConfiguration(
 				colorManager));
-
+		
 		setEditorContextMenuId("#HaxeEditorContext");
 	}
+	
+	
 	
 	/*
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#initializeKeyBindingScopes()
@@ -44,10 +46,7 @@ public class HXEditor extends TextEditor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.AbstractTextEditor#affectsTextPresentation(
-	 * org.eclipse.jface.util.PropertyChangeEvent)
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#affectsTextPresentation(org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	@Override
 	protected boolean affectsTextPresentation(PropertyChangeEvent event) {
@@ -63,7 +62,6 @@ public class HXEditor extends TextEditor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.editors.text.TextEditor#dispose()
 	 */
 	@Override

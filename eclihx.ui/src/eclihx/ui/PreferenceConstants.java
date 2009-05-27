@@ -108,8 +108,14 @@ public final class PreferenceConstants {
 	public final static String HX_EDITOR_DEFAULT_ITALIC = 
 		"hx_editor_default_italic";
 	
+	/**
+	 * A named preferences that controls if problem view should always be
+	 * activated in the case of haXe build errors.
+	 */
+	public final static String HAXE_ALWAYS_OPEN_PROBLEM_VIEW_ON_ERRORS =
+			"eclihx.ui.haxe_always_open_problem_view_on_errors";
 	
-//==============================================//
+	//==============================================//
 	
 	public final static String HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE = 
 		"\"package ;\" string for default package";	
@@ -124,7 +130,8 @@ public final class PreferenceConstants {
 		"hx_format_option_properties_indent_on_empty_lines";		
 	public final static String HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH = 
 		"hx_format_option_properties_indent_width";		
-//==============================================//
+
+	//==============================================//
 	
 	/**
 	 * Initialize given preference store with the default values.
@@ -208,6 +215,7 @@ public final class PreferenceConstants {
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, true);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
+		
 		CodeFormatter.setBracketNewLines(PreferenceConstants.getPreferenceStore().getBoolean(
 				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
 		CodeFormatter.setInsertTabs(PreferenceConstants.getPreferenceStore().getBoolean(
@@ -217,7 +225,9 @@ public final class PreferenceConstants {
 		CodeFormatter.setIndentOnEmptyLines(PreferenceConstants.getPreferenceStore().getBoolean(
 				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));		
 		CodeFormatter.setIndendWidth(PreferenceConstants.getPreferenceStore().getInt(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));				
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));
+		
+		store.setDefault(HAXE_ALWAYS_OPEN_PROBLEM_VIEW_ON_ERRORS, false);
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {

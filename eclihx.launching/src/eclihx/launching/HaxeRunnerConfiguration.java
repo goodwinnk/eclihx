@@ -33,7 +33,7 @@ public class HaxeRunnerConfiguration {
 	public void load(ILaunchConfiguration configuration) throws CoreException {
 
 		setCompilerPath(
-				configuration.getAttribute(
+				configuration.getAttribute( 
 						IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, 
 						""));
         
