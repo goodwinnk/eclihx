@@ -28,6 +28,7 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	public class FinishLaunchInfo {
 		private final String projectName;
 		private final String output;
+		private final String buildFileName;
 		
 		/**
 		 * Get the name of the project that was launched.
@@ -45,15 +46,26 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 		}
 		
 		/**
+		 * Get file with the build configuration.
+		 * @return build file
+		 */
+		public String getBuildFile() {
+			return buildFileName;
+		}	
+		
+		/**
 		 * Default constructor.
 		 * @param output the string of the output.
 		 * @param projectName the name of the project was launched.
 		 */
-		public FinishLaunchInfo(String output, String projectName) {
+		public FinishLaunchInfo(String output, String projectName, 
+				String buildFileName) {
+			
 			super();
 			this.output = output;
 			this.projectName = projectName;
-		}		
+			this.buildFileName = buildFileName;
+		}
 	}
 	
 	/**
@@ -82,9 +94,10 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	 * Method sends finish notification to UI about the finishing of launching. 
 	 * @param projectName the name of project.
 	 * @param output the output string.
+	 * @param string build file path. 
 	 * @throws CoreException
 	 */
-	private void sendFinishNotification(String projectName, String output) 
+	private void sendFinishNotification(String projectName, String output, String buildFile) 
 			throws CoreException {
         
 		IStatus status = new Status(
@@ -94,7 +107,7 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 
         if (handler != null) {
         	handler.handleStatus(
-        			status, new FinishLaunchInfo(output, projectName));
+        			status, new FinishLaunchInfo(output, projectName, buildFile));
         }
         
 	}
@@ -129,9 +142,12 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 			String output = 
 					runner.run(haxeRunnerConfiguration, launch, monitor);
 			
-			sendFinishNotification(configuration.getAttribute(
-					IHaxeLaunchConfigurationConstants.PROJECT_NAME, 
-					(String) null), output);
+			String projectName = configuration.getAttribute(
+					IHaxeLaunchConfigurationConstants.PROJECT_NAME, (String) null);
+			String buildFilePath = configuration.getAttribute(
+					IHaxeLaunchConfigurationConstants.BUILD_FILE, (String) null); 
+			
+			sendFinishNotification(projectName, output, buildFilePath);
           
         } catch (CoreException e) {
         

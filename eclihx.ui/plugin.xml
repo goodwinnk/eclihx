@@ -419,4 +419,11 @@
               name="EclihX">
         </product>
      </extension>
+     <extension
+           point="org.eclipse.core.filebuffers.annotationModelCreation">
+        <factory
+              class="org.eclipse.ui.texteditor.ResourceMarkerAnnotationModelFactory"
+              extensions="*">
+        </factory>
+     </extension>
 </plugin>

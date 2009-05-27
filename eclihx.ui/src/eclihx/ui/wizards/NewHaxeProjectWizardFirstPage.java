@@ -194,6 +194,7 @@ public class NewHaxeProjectWizardFirstPage
 	public void checkCompiler() {
 		if (EclihxCore.getDefault().getPluginPreferences().getString(
 				CorePreferenceInitializer.HAXE_COMPILER_PATH).isEmpty()) {
+			
 			MessageDialog.openWarning(getShell(), "Missing Compiler Path",
 					"Please, define haXe compiler first " +
 		    			"(Preferences->EclihX->Compiler).");

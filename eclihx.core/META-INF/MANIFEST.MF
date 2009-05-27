@@ -19,6 +19,7 @@ Export-Package: eclihx.core,
  eclihx.core.util,
  eclihx.core.util.console.parser,
  eclihx.core.util.console.parser.core,
- eclihx.core.util.console.parser.core.params
+ eclihx.core.util.console.parser.core.params,
+ eclihx.core.util.language
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
