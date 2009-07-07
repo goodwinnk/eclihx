@@ -19,7 +19,16 @@ import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
 import eclihx.ui.internal.ui.editors.SingleTokenScanner;
 
+/**
+ * This class bundles the configuration space of a source viewer. Instances of 
+ * this class are passed to the configure method of ISourceViewer. Each method 
+ * in this class get as argument the source viewer for which it should provide a 
+ * particular configuration setting such as a presentation reconciler. Based on 
+ * its specific knowledge about the returned object, the configuration might 
+ * share such objects or compute them according to some rules.
+ */
 public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
+	
 	private HXDoubleClickStrategy doubleClickStrategy;
 	//private ColorManager colorManager;
 	
@@ -46,7 +55,7 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	 */
 	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		ContentAssistant assistant= new ContentAssistant();
+		ContentAssistant assistant = new ContentAssistant();
 		
 		assistant.enableAutoActivation(true);
 		assistant.setAutoActivationDelay(300);

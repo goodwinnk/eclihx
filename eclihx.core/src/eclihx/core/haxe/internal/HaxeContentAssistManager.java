@@ -30,20 +30,15 @@ public class HaxeContentAssistManager {
 	 * @param position offset in file where tip should be got.
 	 * @return set of tips. 
 	 */
-	static public ArrayList<ContentInfo> getTips(
-			IHaxeSourceFile haxeFile, 
-			int position) {
+	static public ArrayList<ContentInfo> getTips(IHaxeSourceFile haxeFile, int position) {
 
 		HaxeConfiguration configuration = new HaxeConfiguration();
 		
 		configuration.addClassName(haxeFile.getDefaultClassName());
 		configuration.setExplicitNoOutput();
-		configuration.enableTips(
-				haxeFile.getBaseFile().getLocation().toOSString(), 
-				position);
+		configuration.enableTips(haxeFile.getBaseFile().getLocation().toOSString(),	position);
 		
-		IHaxeSourceFolder[] sourceFolders = 
-				haxeFile.getHaxeProject().getSourceFolders();
+		IHaxeSourceFolder[] sourceFolders = haxeFile.getHaxeProject().getSourceFolders();
 		
 		if (sourceFolders.length == 0) {
 			EclihxCore.getLogHelper().logError(
@@ -54,8 +49,7 @@ public class HaxeContentAssistManager {
 		}
 		
 		for (IHaxeSourceFolder sourceFolder : sourceFolders) {
-			configuration.addSourceDirectory(
-					sourceFolder.getBaseFolder().getLocation().toOSString());
+			configuration.addSourceDirectory(sourceFolder.getBaseFolder().getLocation().toOSString());
 		}
 		
 		//new HaxeLauncher().run(configuration, launch, compilerPath, outputPath)
@@ -87,11 +81,10 @@ public class HaxeContentAssistManager {
 			EclihxCore.getLogHelper().logInfo("Errors: " + errors);
 			EclihxCore.getLogHelper().logInfo("Output: " + output);
 			
+			
 			if (errors.indexOf("<list>") != -1) {
 				
-				String tipsString = errors.substring(  
-						errors.indexOf("<list>"), 
-						errors.lastIndexOf("</list>") + 7);
+				String tipsString = errors;
 				
 				EclihxCore.getLogHelper().logInfo("Tips: " + tipsString);
 				
@@ -103,6 +96,17 @@ public class HaxeContentAssistManager {
 		    
 				return ((ContentInfoContainer)unmarshaller.
 						unmarshal(xmlTipsReader)).contentInfos;
+			
+			} else if (errors.indexOf("<type>") != -1) {
+				final ContentInfo callFunctionInfo = new ContentInfo();
+				callFunctionInfo.type = errors.substring(  
+						errors.indexOf("<type>") + 6, 
+						errors.lastIndexOf("</type>"));
+				
+				final ArrayList<ContentInfo> infos = new ArrayList<ContentInfo>();
+				infos.add(callFunctionInfo);
+				
+				return infos;
 			}
 			
 		} catch (InvalidConfigurationException e1) {

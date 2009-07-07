@@ -1,7 +1,11 @@
 package eclihx.ui.internal.ui.editors.hx;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.ContentAssistAction;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
@@ -10,6 +14,21 @@ import eclihx.ui.internal.ui.EclihxUIPlugin;
  * haXe language source.
  */
 public class HXEditor extends TextEditor {
+
+	@Override
+	protected void createActions() {
+		
+		super.createActions();
+		
+		/*
+		IAction action = new ContentAssistAction(aResourceBundle, 
+				"ContentAssistProposal.", this);
+		action.setActionDefinitionId(
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		setAction(actionId, action);
+		markAsStateDependentAction(actionId, true);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(action, helpContextId); */
+	}
 
 	/**
 	 * Color manager.
