@@ -71,8 +71,7 @@ public class HaxeCompilerPreferencePage extends PreferencePage implements
 				true, compilerPathComposite);
 		compilerPathField.setStringValue(initialCompilerValue);
 		compilerPathField.setEmptyStringAllowed(true);
-		compilerPathField.setFileExtensions(new String[] { 
-				OSUtil.getCompilerExtensionFilter() });
+		compilerPathField.setFileExtensions(OSUtil.getCompilerExtensionFilter());
 		compilerPathField.setPage(this);
 		
 		// Create special group for launching properties.

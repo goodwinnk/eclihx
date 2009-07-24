@@ -8,6 +8,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.IStatusHandler;
 
+import eclihx.core.util.OSUtil;
 import eclihx.debug.flash.FlashRunner;
 import eclihx.launching.EclihxLauncher;
 import eclihx.launching.HaxeRunnerConfiguration;
@@ -53,16 +54,10 @@ public class FlashDebugRunner implements IHaxeRunner {
 	// FIXME 3 Copied from HaxeRunner
 	private void validateConfiguration(
 			HaxeRunnerConfiguration config) throws CoreException {
-		if (config.getCompilerPath() == null || 
-				config.getCompilerPath().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, 
-					"haXe compiler wasn't defined properly.");
-		}
 		
-		// TODO 9 make it work not only in windows
-		if (!config.getCompilerPath().endsWith("haxe.exe")) { 
-			throwState(IStatus.ERROR, IStatus.OK, 
-					"There should choose haxe.exe in compiler.");
+		IStatus status = OSUtil.validateCompilerPath(config.getCompilerPath());
+		if (!status.isOK()) {
+			throwState(IStatus.ERROR, IStatus.ERROR, status.getMessage());
 		}
 	
 		if (config.getOutputDirectory() == null || 

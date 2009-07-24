@@ -1,5 +1,6 @@
 package eclihx.core.util;
 
+import java.io.File;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -9,6 +10,13 @@ import eclihx.core.EclihxCore;
  * Class for storing operation system specific options.
  */
 public final class OSUtil {
+	
+	static private String compilerName = System.getProperty("os.name").startsWith("Win")?"haxe.exe":"haxe";
+	static private String[] compilerExtensionFilter = {
+		System.getProperty("os.name").startsWith("Win")?"haxe.exe":"haxe",
+		System.getProperty("os.name").startsWith("Win")?"haxe":"haxe.exe",
+				"*.*", "*"
+	};
 
 	/**
 	 * Add extension separator to the parameter if there are no any.
@@ -43,14 +51,22 @@ public final class OSUtil {
 	}
 
 	/**
+	 * Gets the file name of the haXe compiler, i.e. "haxe.exe" in windows and "haxe" otherwise
+	 * 
+	 * @return haXe compiler file name without path.
+	 */
+	static public String getCompilerFileName() {
+		return compilerName;
+	}
+	
+	/**
 	 * Gets file filter for the compiler. It can be something like "*.*" or
 	 * "*.exe" or even "haxe.exe".
 	 * 
 	 * @return File filter for compiler file dialog.
 	 */
-	static public String getCompilerExtensionFilter() {
-		// TODO 8 Support other operation systems
-		return "haxe.exe";
+	static public String[] getCompilerExtensionFilter() {
+		return compilerExtensionFilter;
 	}
 	
 	/**
@@ -72,13 +88,18 @@ public final class OSUtil {
 					"Compiler path can't be empty");
 		}
 		
-		// TODO 9 make it work not only in windows
-		if (!path.endsWith(getCompilerExtensionFilter())) { 
+		File exeFile = new File(path);
+		if (!exeFile.exists()) {
 			return new Status(
 					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
-					"Invalid extension for the choosen compiler.");
+					"Compiler file not found: " + path);
 		}
-		
+		if (!exeFile.canExecute()) {
+			return new Status(
+					IStatus.ERROR, EclihxCore.PLUGIN_ID, 
+					"Compiler file is not executable: " + path);
+		}
+			
 		return new Status(IStatus.OK, EclihxCore.PLUGIN_ID, "");		
 	}
 
