@@ -30,7 +30,6 @@ import eclihx.ui.internal.ui.editors.SingleTokenScanner;
 public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	
 	private HXDoubleClickStrategy doubleClickStrategy;
-	//private ColorManager colorManager;
 	
 	private final HXScanner hxCodeScanner;
 	private final AbstractScanner singleLineCommentScanner;
@@ -40,6 +39,11 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	private final AbstractScanner hxDocScanner;
 	private final AbstractScanner hxConditionCompilationScanner;
 	
+	/**
+	 * Distribute property change events to all interested parts.
+	 * 
+	 * @param event an event to distribute.
+	 */
 	public void adaptToPreferenceChange(PropertyChangeEvent event) {
 		hxCodeScanner.adaptToPreferenceChange(event);
 		singleLineCommentScanner.adaptToPreferenceChange(event);
@@ -57,15 +61,21 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant assistant = new ContentAssistant();
 		
+		HXContextAssist haxeContextAssist = new HXContextAssist();
+		
 		assistant.enableAutoActivation(true);
 		assistant.setAutoActivationDelay(300);
-		assistant.setContentAssistProcessor(new HXContextAssist(), IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.setContentAssistProcessor(haxeContextAssist, IDocument.DEFAULT_CONTENT_TYPE);
+		assistant.addCompletionListener(haxeContextAssist);
+		assistant.setShowEmptyList(true);
 		
 		return assistant;
 	}
 
-
-
+	/**
+	 * Configuration constructor. 
+	 * @param colorManager A manager for the used colors.
+	 */
 	public HXSourceViewerConfiguration(ColorManager colorManager) {
 		
 		IPreferenceStore store = EclihxUIPlugin.getDefault().getPreferenceStore();
@@ -155,12 +165,6 @@ public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
 	protected AbstractScanner getRegexprScanner() {
 		return regexprScanner;
 	}
-	
-	
-	/*protected AbstractScanner getHXDocScanner() {
-		return hxDocScanner;
-	}*/
-	
 	
 	protected AbstractScanner getHXConditionCompilationScanner() {
 		return hxConditionCompilationScanner;

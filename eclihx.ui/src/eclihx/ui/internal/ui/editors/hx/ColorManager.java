@@ -69,11 +69,11 @@ public class ColorManager implements ISharedTextColors {
 	}
 
 	public void dispose(Display display) {
-		HashMap<RGB, Color> colorTable= fDisplayTable.get(display);
+		HashMap<RGB, Color> colorTable = fDisplayTable.get(display);
 		if (colorTable != null) {
-			Iterator<Color> e= colorTable.values().iterator();
+			Iterator<Color> e = colorTable.values().iterator();
 			while (e.hasNext()) {
-				Color color= e.next();
+				Color color = e.next();
 				if (color != null && !color.isDisposed())
 					color.dispose();
 			}
