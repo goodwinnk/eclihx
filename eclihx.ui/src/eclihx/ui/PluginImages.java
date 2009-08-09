@@ -17,13 +17,15 @@ import org.osgi.framework.Bundle;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
 /**
+ * On the base of JDT sources.
+ * 
  * Bundle of most images used by the Java plug-in.
  * 
  * On the base of jdt.ui
  */
 public class PluginImages {
 
-	public static final IPath ICONS_PATH = new Path("$nl$/icons"); //$NON-NLS-1$
+	private static final IPath ICONS_PATH = new Path("$nl$/icons"); //$NON-NLS-1$
 
 	private static final String NAME_PREFIX = "eclihx.ui."; //$NON-NLS-1$
 	private static final int NAME_PREFIX_LENGTH = NAME_PREFIX.length();
@@ -37,35 +39,73 @@ public class PluginImages {
 	private static final String UNDEFINED = "";
 
 	/*
-	 * Keys for images available from the Java-UI plug-in image registry.
+	 * Keys for images available from the EclihX-UI plug-in image register.
 	 */
-	public static final String IMG_MISC_PUBLIC = NAME_PREFIX 
-			+ "methpub_obj.gif";
-	public static final String IMG_MISC_PROTECTED = NAME_PREFIX 
-			+ "methpro_obj.gif";
-	public static final String IMG_MISC_PRIVATE = NAME_PREFIX 
-			+ "methpri_obj.gif";
-	public static final String IMG_MISC_DEFAULT = NAME_PREFIX 
-			+ "methdef_obj.gif";
 	
-	public static final String IMG_FIELD_PUBLIC = NAME_PREFIX
-			+ "field_public_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_FIELD_PROTECTED = NAME_PREFIX
-			+ "field_protected_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_FIELD_PRIVATE = NAME_PREFIX
-			+ "field_private_obj.gif"; //$NON-NLS-1$
-	public static final String IMG_FIELD_DEFAULT = NAME_PREFIX
-			+ "field_default_obj.gif"; //$NON-NLS-1$
+	/**
+	 * Public function image key.
+	 */
+	public static final String IMG_MISC_PUBLIC = NAME_PREFIX + "methpub_obj.gif";
 	
+	/**
+	 * Protected function image key.
+	 */
+	public static final String IMG_MISC_PROTECTED = NAME_PREFIX + "methpro_obj.gif";
+	
+	/**
+	 * Private function image key.
+	 */
+	public static final String IMG_MISC_PRIVATE = NAME_PREFIX + "methpri_obj.gif";
+	
+	/**
+	 * Default function image key.
+	 */
+	public static final String IMG_MISC_DEFAULT = NAME_PREFIX + "methdef_obj.gif";
+	
+	/**
+	 * Public field image key.
+	 */
+	public static final String IMG_FIELD_PUBLIC = NAME_PREFIX + "field_public_obj.gif";
+	
+	/**
+	 * Protected field image key.
+	 */
+	public static final String IMG_FIELD_PROTECTED = NAME_PREFIX + "field_protected_obj.gif";
+	
+	/**
+	 * Private field image key.
+	 */
+	public static final String IMG_FIELD_PRIVATE = NAME_PREFIX + "field_private_obj.gif";
+	
+	/**
+	 * Default field image key.
+	 */
+	public static final String IMG_FIELD_DEFAULT = NAME_PREFIX + "field_default_obj.gif";
+	
+	/**
+	 * Public class image key.
+	 */
+	public static final String IMG_CLASS_PUBLIC = NAME_PREFIX + "innerclass_public_obj.gif";
+	
+	/**
+	 * Project image key.
+	 */
 	public static final String IMG_PROJECT = NAME_PREFIX + "h_project_s.gif";
-	public static final String IMG_SOURCE_FOLDER = NAME_PREFIX + 
-			"sourcefolder_s.gif";
-	public static final String IMG_BUILD_FILE = NAME_PREFIX + 
-			"build_file_s.png";
-	public static final String IMG_PACKAGE = NAME_PREFIX + 
-			"h_package_s.gif";
 	
+	/**
+	 * Source folder image key.
+	 */
+	public static final String IMG_SOURCE_FOLDER = NAME_PREFIX + "sourcefolder_s.gif";
 	
+	/**
+	 * Build file image key.
+	 */
+	public static final String IMG_BUILD_FILE = NAME_PREFIX + "build_file_s.png";
+	
+	/**
+	 * Package image key.
+	 */
+	public static final String IMG_PACKAGE = NAME_PREFIX + "h_package_s.gif";
 	
 	/*
 	 * Set of predefined Image Descriptors.
@@ -87,6 +127,9 @@ public class PluginImages {
 			createManagedFromKey(ASSIST_PREFIX, IMG_FIELD_PRIVATE);
 	public static final ImageDescriptor DESC_FIELD_DEFAULT = 
 			createManagedFromKey(ASSIST_PREFIX, IMG_FIELD_DEFAULT);
+	
+	public static final ImageDescriptor DESC_CLASS_PUBLIC = 
+		createManagedFromKey(ASSIST_PREFIX, IMG_CLASS_PUBLIC);
 	
 	public static final ImageDescriptor DESC_OBJ_PROJECT =
 			createManagedFromKey(UNDEFINED, IMG_PROJECT);
@@ -250,13 +293,12 @@ public class PluginImages {
 		return create(prefix, name, true);
 	}
 
-	/*
+	/**
 	 * Creates an image descriptor for the given prefix and name in the JDT UI
 	 * bundle and let tye descriptor cache the image data. If no image could be
 	 * found, the 'missing image descriptor' is returned.
 	 */
-	private static ImageDescriptor createUnManagedCached(String prefix,
-			String name) {
+	private static ImageDescriptor createUnManagedCached(String prefix, String name) {
 		return new CachedImageDescriptor(create(prefix, name, true));
 	}
 

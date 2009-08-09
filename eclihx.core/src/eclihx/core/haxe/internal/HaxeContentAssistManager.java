@@ -3,6 +3,7 @@ package eclihx.core.haxe.internal;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -23,14 +24,25 @@ import eclihx.core.util.ProcessUtil;
  */
 public class HaxeContentAssistManager {
 
+	private static final String OPEN_LIST_TAG = "<list>";
+	private static final String CLOSE_LIST_TAG = "</list>";
+	
+	private static final String OPEN_TYPE_TAG = "<type>";
+	private static final String CLOSE_TYPE_TAG = "</type>";
+	
+	private static final String OPEN_ROOT_TAG = "<root>";
+	private static final String CLOSE_ROOT_TAG = "</root>";
+		
+	
 	/**
 	 * Get the tips for the defined position in file and 
 	 * selected configuration.
+	 * 
 	 * @param haxeFile the haXe file for getting tip. 
 	 * @param position offset in file where tip should be got.
 	 * @return set of tips. 
 	 */
-	static public ArrayList<ContentInfo> getTips(IHaxeSourceFile haxeFile, int position) {
+	static public List<ContentInfo> getTips(IHaxeSourceFile haxeFile, int position) {
 
 		HaxeConfiguration configuration = new HaxeConfiguration();
 		
@@ -76,41 +88,64 @@ public class HaxeContentAssistManager {
 			);
 			
 			final String errors = errorString.toString();
-			final String output = outputString.toString();
 			
 			EclihxCore.getLogHelper().logInfo("Errors: " + errors);
-			EclihxCore.getLogHelper().logInfo("Output: " + output);
 			
+			{
+				// Read type content assist info.
+				
+				int startInfoListIndex = errors.indexOf(OPEN_LIST_TAG);
+				int endInfoListIndex = errors.indexOf(CLOSE_LIST_TAG);
+				
+				if (startInfoListIndex != -1 && endInfoListIndex != -1) {
+					
+					final String typeTip = errors.substring(startInfoListIndex, 
+							endInfoListIndex + CLOSE_LIST_TAG.length());
+					
+					final JAXBContext context = JAXBContext.newInstance(
+							ContentInfoContainer.class);
+					
+					final Unmarshaller unmarshaller = context.createUnmarshaller();
+					final StringReader xmlTipsReader = new StringReader(typeTip);		
+			    
+					return ((ContentInfoContainer)unmarshaller.
+							unmarshal(xmlTipsReader)).contentInfos;
+				
+				}
+			}
 			
-			if (errors.indexOf("<list>") != -1) {
+			{
+				// Read call information.
+				int startFunctionDescription = errors.indexOf(OPEN_TYPE_TAG);
+				int endFunctionDescription = errors.indexOf(CLOSE_TYPE_TAG);
 				
-				String tipsString = errors;
-				
-				EclihxCore.getLogHelper().logInfo("Tips: " + tipsString);
-				
-				JAXBContext context = JAXBContext.newInstance(
-						ContentInfoContainer.class);
-				
-				Unmarshaller unmarshaller = context.createUnmarshaller();
-				StringReader xmlTipsReader = new StringReader(tipsString);		
-		    
-				return ((ContentInfoContainer)unmarshaller.
-						unmarshal(xmlTipsReader)).contentInfos;
-			
-			} else if (errors.indexOf("<type>") != -1) {
-				final ContentInfo callFunctionInfo = new ContentInfo();
-				callFunctionInfo.type = errors.substring(  
-						errors.indexOf("<type>") + 6, 
-						errors.lastIndexOf("</type>"));
-				
-				final ArrayList<ContentInfo> infos = new ArrayList<ContentInfo>();
-				infos.add(callFunctionInfo);
-				
-				return infos;
+				if (startFunctionDescription != -1 && endFunctionDescription != -1) {
+					
+					final String callTip = errors.substring(startFunctionDescription, 
+							endFunctionDescription + CLOSE_TYPE_TAG.length());
+					
+					final String wrappedTip = OPEN_ROOT_TAG + callTip + CLOSE_ROOT_TAG;
+					
+					final JAXBContext context = JAXBContext.newInstance(
+							FunctionSignature.class);
+					
+					final Unmarshaller unmarshaller = context.createUnmarshaller();
+					final StringReader xmlTipsReader = new StringReader(wrappedTip);		
+			    
+					FunctionSignature functionSignature = 
+							(FunctionSignature)unmarshaller.unmarshal(xmlTipsReader);
+					
+					// Move signature information to ContentInfo object.
+					final ContentInfo callFunctionInfo = new ContentInfo();
+					callFunctionInfo.setType(functionSignature.getFullType());
+					final ArrayList<ContentInfo> infos = new ArrayList<ContentInfo>();
+					infos.add(callFunctionInfo);
+					
+					return infos;
+				}
 			}
 			
 		} catch (InvalidConfigurationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (JAXBException e) {
 			e.printStackTrace();
