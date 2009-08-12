@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.internal.HaxePreferencesManager;
@@ -36,12 +37,8 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	 */
 	public static String getClassName(String fileName) {
 
-		if (!fileName.endsWith(HaxePreferencesManager.HAXE_FILE_EXTENSION)) {
-			// TODO 4 Find better exception for this situation.
-			throw new RuntimeException(
-					"Class name for source file should always exist");
-		}
-
+		Assert.isLegal(fileName.endsWith(HaxePreferencesManager.HAXE_FILE_EXTENSION));
+		
 		int lastNameIndex = fileName.length()
 				- HaxePreferencesManager.HAXE_FILE_EXTENSION.length() - 1;
 

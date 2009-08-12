@@ -11,7 +11,8 @@ Require-Bundle: org.junit4;bundle-version="4.3.1",
  org.eclipse.debug.core;bundle-version="3.4.0",
  org.eclipse.ui.navigator;bundle-version="3.3.100"
 Bundle-ActivationPolicy: lazy; exclude:="eclihx.tests.core
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/easymock-2.5.1.jar
 Import-Package: org.eclipse.core.runtime,
  org.eclipse.jface.text.rules
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
