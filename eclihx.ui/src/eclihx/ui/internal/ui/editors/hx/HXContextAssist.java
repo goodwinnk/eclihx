@@ -20,7 +20,7 @@ import org.eclipse.ui.IFileEditorInput;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.ContentInfo;
-import eclihx.core.haxe.internal.HaxeContentAssistManager;
+import eclihx.core.haxe.internal.HaxeContextAssistManager;
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.ui.PluginImages;
@@ -298,7 +298,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 			return null;
 		}
 		
-		return HaxeContentAssistManager.getTips(haxeFile, offset);
+		return HaxeContextAssistManager.getTips(haxeFile, offset);
 	}
 	
 	/*================== Begin IContentAssistProcessor methods ===================================*/

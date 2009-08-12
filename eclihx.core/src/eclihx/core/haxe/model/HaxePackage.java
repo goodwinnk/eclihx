@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.haxe.internal.HaxeContentManager;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
@@ -200,30 +201,24 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 					"Invalid source file name."));
 		}
 		
-		// TODO 3 Make default file content provider. License, class and so on.
-		InputStream stream = new ByteArrayInputStream(
-				createHaxeDefaultContent(haxeFileName).getBytes());
-		
 		IFile sourceFile = fFolder.getFile(haxeFileName);
-		sourceFile.create(stream, true, monitor);
+		sourceFile.create(new ByteArrayInputStream("".getBytes()), true, monitor);
 		
+		IHaxeSourceFile haxeFile = new HaxeSourceFile(sourceFile, this);
+		
+		InputStream stream = new ByteArrayInputStream(
+				createHaxeDefaultContent(haxeFile).getBytes());
+
+		sourceFile.setContents(stream, true, false, monitor);
+				
 		return new HaxeSourceFile(sourceFile, this);
-		
 	}
 	
 	/**
 	 * Method creates a default content for file.
 	 */
-	protected String createHaxeDefaultContent(String fileName) {
-		
-		String content = "";
-		
-		if (!isDefault()) {
-			content += String.format("package %s;\n\n", getName());
-		}
-		
-		content += HaxeFileContent.getInstance().createHaxeContent(content, fileName);		
-		return content;
+	protected String createHaxeDefaultContent(IHaxeSourceFile haxeFile) {
+		return HaxeContentManager.getInstance().createHaxeContent(haxeFile);
 	}
 	
 	/*
@@ -289,11 +284,10 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 		
 		try {
 			for (IResource resource : fFolder.members()) {
-				if (resource.getType() == IResource.FILE) {
-					if (HaxeElementValidator.validateHaxeFileName(
-							resource.getName()).isOK()) {
-						return false;
-					}					
+				if (resource.getType() == IResource.FILE &&
+						HaxeElementValidator.validateHaxeFileName(resource.getName()).isOK()) {
+					
+					return false;
 				}
 			}
 		} catch (CoreException e) {
