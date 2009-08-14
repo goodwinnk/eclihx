@@ -110,8 +110,8 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 			
 			for(IResource memberResource : resources) {
 				if (memberResource.getType() == IResource.FILE) {
-					//TODO 4 Move constant to the better place
-					if (memberResource.getFileExtension().equals("hxml")) {
+					//TODO 4 replace "hxml" with a constant (good practice)
+					if ("hxml".equals(memberResource.getFileExtension())) {
 						buildFiles.add((IFile)memberResource);
 					}			
 				} else {
