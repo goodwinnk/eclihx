@@ -1,9 +1,15 @@
 package eclihx.tests.core;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.eclipse.core.runtime.FileLocator;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
@@ -31,11 +37,13 @@ public class BuildParamParserTest {
 	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseFile(java.lang.String)}.
 	 * @throws ParseError errors in parsing. 
 	 * @throws InvalidConfigurationException errors in configuration.
+	 * @throws IOException test bug: file can't be read
+	 * @throws MalformedURLException test bug: url cannot be resolved  
 	 */
 	@Test
-	public void testParseFile() throws ParseError, InvalidConfigurationException {
+	public void testParseFile() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException {
 		String path = 
-			System.getProperty("user.dir") + "\\Resources\\test1.hxml";
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/test1.hxml")).getPath();
 		HaxeConfigurationList configurationList = parser.parseFile(path);
 		HaxeConfiguration configuration = 
 			configurationList.getMainConfiguration();
@@ -49,26 +57,30 @@ public class BuildParamParserTest {
 	/**
 	 * This test checks that parser can accept files with comments.
 	 * @throws ParseError errors in parsing.
+	 * @throws IOException test bug: file can't be read
+	 * @throws MalformedURLException test bug: url cannot be resolved  
 	 */
 	@Test
 	public void testParseFileWithComments() 
-		throws ParseError {
+		throws ParseError, MalformedURLException, IOException {
 		
-		String path = System.getProperty("user.dir") + 
-			"\\Resources\\testComments.hxml";
+		String path = 
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/testComments.hxml")).getPath();
 		parser.parseFile(path);
 	}
 	
 	/**
 	 * Test file with next separator.
 	 * @throws ParseError errors in parsing.
+	 * @throws IOException test bug: file can't be read
+	 * @throws MalformedURLException test bug: url cannot be resolved  
 	 */
 	@Test
 	public void testParseFileWithNext() 
-		throws ParseError {
+		throws ParseError, MalformedURLException, IOException {
 		
-		String path = System.getProperty("user.dir") + 
-			"\\Resources\\withNext.hxml";
+		String path = 
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/withNext.hxml")).getPath();
 		parser.parseFile(path);
 	}
 
@@ -106,18 +118,20 @@ public class BuildParamParserTest {
 	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
 	 * @throws ParseError errors in parsing.
 	 * @throws InvalidConfigurationException errors in configuration.
+	 * @throws IOException test bug: file can't be read
+	 * @throws MalformedURLException test bug: url cannot be resolved  
 	 */
 	@Test
-	public void testParse() throws ParseError, InvalidConfigurationException {
+	public void testParse() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException {
 		
-		String filePath = String.format(
-			"%s\\Resources\\part.hxml", System.getProperty("user.dir")); 
+		String path = 
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/part.hxml")).getPath();
 		
 		HaxeConfiguration config = 
 			parser.parseString(
 				String.format(
 					"--no-traces --no-output -D fdb -debug %s",
-					filePath)).getMainConfiguration();
+					path)).getMainConfiguration();
 		
 		Assert.assertTrue(config.isDebug());
 		Assert.assertTrue(config.hasCompilationFlags("fdb"));

@@ -72,7 +72,7 @@ public final class FinishLaunchHandler implements IStatusHandler {
 			final IHaxeProject haxeProject) {
 
 		final String projectPath = OSUtil
-				.repalceToHaxeOutputSlashes(haxeProject.getProjectBase()
+				.replaceToHaxeOutputSlashes(haxeProject.getProjectBase()
 						.getLocation().toString());
 
 		final int pathLength = projectPath.length();
