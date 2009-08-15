@@ -5,17 +5,30 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
+import org.eclipse.core.runtime.Platform; 
 
 /**
  * Class for storing operation system specific options.
  */
 public final class OSUtil {
 	
-	static private String compilerName = System.getProperty("os.name").startsWith("Win")?"haxe.exe":"haxe";
+	/**
+	 * A convenience flag
+	 * True if platform is win32 based, false otherwise.
+	 * @see org.eclipse.core.runtime.Platform#getOS()
+	 */
+	static public final boolean isPlatformWin32 = Platform.OS_WIN32.equals(Platform.getOS());
+
+	/**
+	 * A convenience String that represent the system dependent
+	 * path separator ("\" on win32 systems, "/" otherwise) 
+	 * @see java.io.File#pathSeparator
+	 */
+	static public final String pathSeparator = File.pathSeparator;
+	
+	static private String compilerName = isPlatformWin32?"haxe.exe":"haxe";
 	static private String[] compilerExtensionFilter = {
-		System.getProperty("os.name").startsWith("Win")?"haxe.exe":"haxe",
-		System.getProperty("os.name").startsWith("Win")?"haxe":"haxe.exe",
-				"*.*", "*"
+		isPlatformWin32?"haxe.exe":"haxe", "*.*", "*"
 	};
 
 	/**
@@ -108,7 +121,7 @@ public final class OSUtil {
 	 * @param path the path for replacement.
 	 * @return new string with replaced slashes.
 	 */
-	public static String repalceToHaxeOutputSlashes(String path) {
+	public static String replaceToHaxeOutputSlashes(String path) {
 		return path.replaceAll("\\\\", "/");
 	}
 }
