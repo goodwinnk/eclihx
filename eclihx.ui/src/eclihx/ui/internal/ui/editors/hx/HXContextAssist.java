@@ -208,7 +208,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		} else if (contentInfo.isVariable()) {	
 			return generateFieldProposal(offsetStart, offsetEnd, contentInfo); 
 		} else {
-			Assert.isTrue(contentInfo.isCallDescription());
+			EclihxUIPlugin.getLogHelper().logError("Unknown content info: " + contentInfo);
 			return null;
 		}
 	}
@@ -295,7 +295,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		IHaxeSourceFile haxeFile = getHaxeSourceFile(editor.getEditorInput());
 		
 		if (haxeFile == null) {
-			return null;
+			return new ArrayList<ContentInfo>();
 		}
 		
 		return HaxeContextAssistManager.getTips(haxeFile, offset);

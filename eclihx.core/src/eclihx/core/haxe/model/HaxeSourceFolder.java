@@ -197,7 +197,7 @@ public final class HaxeSourceFolder extends HaxeElement
 		if (!relativePath.isEmpty()) {
 			
 			String packageName = 
-					relativePath.toString().replaceAll("\\.", "\\\\");
+					relativePath.toString().replaceAll("/", "\\.");
 			
 			IHaxePackage[] packages = getPackages();
 			

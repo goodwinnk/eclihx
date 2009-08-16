@@ -5,7 +5,6 @@ package eclihx.tests.core;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eclihx.core.haxe.internal.HaxeElementValidator;
@@ -14,7 +13,7 @@ import eclihx.core.haxe.internal.HaxeElementValidator;
  * Class HaxeElementValidator tests.
  */
 public class HaxeElementValidatorTest {
-
+	
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validatePackageName(java.lang.String)}.
 	 */
@@ -101,12 +100,9 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
-	@Ignore
 	@Test
 	public void testValidateBuildFileNameInvalidChars() {
-		Assert.assertFalse(
-				HaxeElementValidator.validateBuildFileName(
-						"text?.hxml").isOK());		
+		Assert.assertFalse(HaxeElementValidator.validateBuildFileName("text?.hxml").isOK());		
 		
 	}
 	
@@ -123,7 +119,6 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
-	@Ignore
 	@Test
 	public void testValidateBuildFileNameBackSlash() {
 		Assert.assertFalse(
@@ -135,7 +130,6 @@ public class HaxeElementValidatorTest {
 	/**
 	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
 	 */
-	@Ignore
 	@Test
 	public void testValidateBuildFileNameSlash() {
 		Assert.assertFalse(
@@ -145,15 +139,75 @@ public class HaxeElementValidatorTest {
 	}
 	
 	/**
-	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateBuildFileName(String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
 	 */
-	@Ignore
 	@Test
-	public void testValidateBuildFileNameSuccess() {
-		Assert.assertTrue(
-				HaxeElementValidator.validateBuildFileName(
-						"build.hxml").isOK());		
+	public void testValidateHaxeFileNameSuccess() {
+		Assert.assertTrue(HaxeElementValidator.validateHaxeFileName("Test.hx").isOK());		
 	}
 	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameLowFirstLetter() {
+		Assert.assertFalse(HaxeElementValidator.validateBuildFileName("some.hx").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameEmpty() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName("").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameEmptyClassName() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName(".hx").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameSpaces() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName("Bad name.hx").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameInvalidExtension() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName("SomeOther.txt").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameNoExtension() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName("Test").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameStartWithNumber() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName("4Build.hx").isOK());		
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.HaxeElementValidator#validateHaxeFileName(String)}.
+	 */
+	@Test
+	public void testValidateHaxeFileNameStartWithUnderscore() {
+		Assert.assertFalse(HaxeElementValidator.validateHaxeFileName("_Build.hx").isOK());		
+	}
 
 }

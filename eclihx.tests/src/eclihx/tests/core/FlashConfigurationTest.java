@@ -68,20 +68,31 @@ public class FlashConfigurationTest {
 	
 	/**
 	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 * Test libraries with spaces are quoted.
+	 * @throws InvalidConfigurationException If test is trying to test an invalid configuration.
 	 */
 	@Test
-	public void testPrintConfigurationFlash9() {
-		flashConfiguration.setOutputFile("out.swf");
-		flashConfiguration.setVersion(9);
+	public void testPrintConfigurationQuotedLib() throws InvalidConfigurationException {
+		flashConfiguration.setOutputFile("some.swf");
+		flashConfiguration.setVersion(8);
+		flashConfiguration.addLibrary("some dir\\swflib.swf");
 		
-		try {
-			Assert.assertEquals(null, 
-				"-swf9 out.swf ", 
-				flashConfiguration.printConfiguration()
-			);
-		} catch (InvalidConfigurationException e) {
-			Assert.fail();
-		}
+		Assert.assertEquals(null, 
+				"-swf-version 8 -swf some.swf -swf-lib \"some dir\\swflib.swf\" ", 
+				flashConfiguration.printConfiguration());
+	}
+	
+	/**
+	 * Test for {@link FlashConfiguration#printConfiguration()}
+	 */
+	@Test
+	public void testValidateSuccess() {
+		
+		flashConfiguration.setHeader(null);
+		flashConfiguration.setOutputFile("out.swf");
+		flashConfiguration.setVersion(7);
+		
+		Assert.assertTrue(flashConfiguration.validate());
 	}
 
 	/**
@@ -106,18 +117,5 @@ public class FlashConfigurationTest {
 		// No output file test.
 		flashConfiguration.setVersion(7);
 		Assert.assertFalse(flashConfiguration.validate());
-	}
-	
-	/**
-	 * Test for {@link FlashConfiguration#printConfiguration()}
-	 */
-	@Test
-	public void testValidateSuccess() {
-		
-		flashConfiguration.setHeader(null);
-		flashConfiguration.setOutputFile("out.swf");
-		flashConfiguration.setVersion(7);
-		
-		Assert.assertTrue(flashConfiguration.validate());
 	}
 }
