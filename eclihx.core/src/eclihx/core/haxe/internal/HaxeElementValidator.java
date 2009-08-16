@@ -1,8 +1,12 @@
 package eclihx.core.haxe.internal;
 
+import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
@@ -171,40 +175,48 @@ public final class HaxeElementValidator {
 	 */
 	public static IStatus validateHaxeFileName(String haxeFileName) {
 		
-		//FIXME 4 Is it allowed to make files with the first number char.
-		
 		final FileValidationResult validateResult = 
 			FileNameValidator.validateFileName(
 					haxeFileName, HaxePreferencesManager.HAXE_FILE_EXTENSION);
 		
-		String errorMessage = "";
-		
 		switch (validateResult.getVerdict()) {
 			case Ok:
-				return OK_STATUS;
+				{
+					final IPath haxeFile = new Path(haxeFileName);
+					final String haxeClassName = haxeFile.removeFileExtension().toString();
+					
+					// Do special haXe name checks.
+					if (!HaxeElementValidator.validateIdentifier(haxeClassName).isOK()) {
+						return createErrorStatus("File name should be a valid identifier.");
+					}
+					
+					Assert.isTrue(!haxeClassName.isEmpty()); // Identifier should check it.
+					
+					if (!Character.isUpperCase(haxeClassName.charAt(0))) {
+						return createErrorStatus("haXe file name should start with upper-case letter.");
+					}
+				}	
+				
+				break;
+				
 			case NullFileName:
-				errorMessage = "A haXe file name must not be null.";
-				break;
+				return createErrorStatus("A haXe file name must not be null.");
 			case Empty:
-				errorMessage = "A haXe file name must not be empty.";
-				break;
+				return createErrorStatus("A haXe file name must not be empty.");
 			case InvalidExtension:
-				errorMessage = String.format(
+				return createErrorStatus(String.format(
 						"A haXe file name must have '%s' extension.",
-						HaxePreferencesManager.HAXE_FILE_EXTENSION);
-				break;
+						HaxePreferencesManager.HAXE_FILE_EXTENSION));
 			case InvalidWithMessage:
-				errorMessage = validateResult.getMessage();
-				break;
+				return createErrorStatus(validateResult.getMessage());
 			case InvalidUnknown:
-				errorMessage = 
-					"A name must be a valid file name.";
-		}
+				return createErrorStatus("A name must be a valid file name.");
+			default:
+				Assert.isTrue(false); // Should never be there!
+				break;
+		}		
 		
-		assert(validateResult.getVerdict() != FileValidateVerdict.Ok);
-		
-		// If file name is valid
-		return createErrorStatus(errorMessage);
+		return OK_STATUS;
 	}
 	
 	/**

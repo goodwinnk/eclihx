@@ -115,8 +115,7 @@ public final class FinishLaunchHandler implements IStatusHandler {
 	private void refreshOutputFolder(final IHaxeProject haxeProject)
 			throws CoreException {
 
-		final IFolder outputFolder = haxeProject.getPathManager()
-				.getOutputFolder();
+		final IFolder outputFolder = haxeProject.getOutputFolder().getBaseFolder();
 
 		outputFolder.refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());

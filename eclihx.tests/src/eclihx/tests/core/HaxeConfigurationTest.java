@@ -48,8 +48,7 @@ public class HaxeConfigurationTest {
 	 * @throws InvalidConfigurationException If configuration is invalid.
 	 */
 	@Test
-	public void PrintConfigurationTips() 
-		throws InvalidConfigurationException {
+	public void PrintConfigurationTips() throws InvalidConfigurationException {
 		
 		configuration.enableTips("Test.hx", 15);
 		configuration.addClassName("Test");
@@ -58,8 +57,84 @@ public class HaxeConfigurationTest {
 		Assert.assertEquals(
 			"-cp ..\\src --display Test.hx@15 --no-output Test ",
 			configuration.printConfiguration());
-	
 	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * Test configuration printing if file path has spaces.
+	 * @throws InvalidConfigurationException if configuration is invalid.
+	 */
+	@Test
+	public void testPrintConfigureationTipsWithSpaces() throws InvalidConfigurationException {
+		configuration.enableTips("\\Project name\\src\\Test.hx", 15);
+		configuration.addClassName("Test");
+		configuration.addSourceDirectory("\\Project name\\src");
+		
+		Assert.assertEquals(
+			"-cp \"\\Project name\\src\" --display \"\\Project name\\src\\Test.hx\"@15 --no-output Test ",
+			configuration.printConfiguration());
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * Test configuration printing for quoting resource files with spaces.
+	 * @throws InvalidConfigurationException if configuration is invalid.
+	 */
+	@Test
+	public void testPrintConfigurationResourceQuoted() throws InvalidConfigurationException {
+		configuration.setExplicitNoOutput();
+		configuration.addResource("some resource.txt");
+		
+		Assert.assertEquals(
+			"--no-output -resource \"some resource.txt\" ",
+			configuration.printConfiguration());
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * Test configuration printing for quoting exclude files with spaces.
+	 * @throws InvalidConfigurationException if configuration is invalid.
+	 */
+	@Test
+	public void testPrintConfigurationExcludeFileQuoted() throws InvalidConfigurationException {
+		configuration.setExplicitNoOutput();
+		configuration.addExcludeFile("\\Long path\\some.hx");
+		
+		Assert.assertEquals(
+			"--no-output -exclude \"\\Long path\\some.hx\" ",
+			configuration.printConfiguration());
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * Test configuration printing for quoting output xml-file with spaces.
+	 * @throws InvalidConfigurationException if configuration is invalid.
+	 */
+	@Test
+	public void testPrintConfigurationOutXmlQuoted() throws InvalidConfigurationException {
+		configuration.setExplicitNoOutput();
+		configuration.setXmlDescriptionFile("\\some path\\my out.xml");
+		
+		Assert.assertEquals(
+			"--no-output -xml \"\\some path\\my out.xml\" ",
+			configuration.printConfiguration());
+	}
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.HaxeConfiguration#printConfiguration()}.
+	 * Test configuration printing for quoting the folder for swf headers.
+	 * @throws InvalidConfigurationException if configuration is invalid.
+	 */
+	@Test
+	public void testPrintConfigurationHeaderFolderQuoted() throws InvalidConfigurationException {
+		configuration.setExplicitNoOutput();
+		configuration.setSwfFileForHeaders("\\some path\\some folder");
+		
+		Assert.assertEquals(
+			"--no-output --gen-hx-classes \"\\some path\\some folder\" ",
+			configuration.printConfiguration());
+	}
+	
 	
 	/**
 	 * Checks printing of the source directories.
@@ -94,7 +169,6 @@ public class HaxeConfigurationTest {
 		Assert.assertEquals(
 			"-main TestJs -js output.js ", 
 			configuration.printConfiguration());
-		
 	}
 	
 	/**

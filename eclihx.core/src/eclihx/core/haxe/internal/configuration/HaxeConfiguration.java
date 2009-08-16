@@ -614,10 +614,9 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 
 		// Startup class
 		if (startupClass != null) {
-			outputBuilder
-					.append(GenerateParameter(
-							HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
-							startupClass));
+			outputBuilder.append(GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
+					startupClass));
 		}
 
 		// Stored libraries
@@ -646,9 +645,13 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 
 		// Display code tips
 		if (displayTips) {
+			
+			String tipsParamStr = String.format("%s@%s", 
+					OSUtil.quoteCompoundPath(tipFileName), 
+					tipFilePosition);
+			
 			outputBuilder.append(GenerateParameter(
-					HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG, String
-							.format("%s@%s", tipFileName, tipFilePosition)));
+					HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG, tipsParamStr));
 		}
 		
 		// No output
@@ -675,21 +678,21 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		for (String resourceFile : resourceFiles) {
 			outputBuilder.append(GenerateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_RESOURCE_FILE,
-					resourceFile));
+					OSUtil.quoteCompoundPath(resourceFile)));
 		}
 
 		// Exclude files
 		for (String excludeFile : excludeFiles) {
 			outputBuilder.append(GenerateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_EXCLUDE_FILE,
-					excludeFile));
+					OSUtil.quoteCompoundPath(excludeFile)));
 		}
 
 		// Xml description
 		if (outputXmlFile != null) {
 			outputBuilder.append(GenerateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_XML_DESCRIPTION_OUTPUT,
-					outputXmlFile));
+					OSUtil.quoteCompoundPath(outputXmlFile)));
 		}
 
 		// Prompt on error.
@@ -699,10 +702,9 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 
 		// CMD command
 		if (cmdCommand != null) {
-			outputBuilder
-					.append(GenerateParameter(
-							HaxePreferencesManager.PARAM_PREFIX_CMD_COMMAND,
-							cmdCommand));
+			outputBuilder.append(GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_CMD_COMMAND,
+					cmdCommand));
 		}
 
 		// No traces mode state
@@ -712,10 +714,9 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 
 		// File for generated headers
 		if (swfFileForHeaders != null) {
-			outputBuilder
-					.append(GenerateParameter(
-							HaxePreferencesManager.PARAM_PREFIX_GENERATE_HAXE_CLASSES_SWF,
-							swfFileForHeaders));
+			outputBuilder.append(GenerateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_GENERATE_HAXE_CLASSES_SWF,
+					OSUtil.quoteCompoundPath(swfFileForHeaders)));
 		}
 
 		// Flash strict mode

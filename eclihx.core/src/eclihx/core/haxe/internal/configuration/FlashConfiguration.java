@@ -31,7 +31,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	
 	
 	/**
-	 * SWF libraries.
+	 * Names of files with SWF libraries.
 	 */
 	private final ArrayList<String> swfLibraries = new ArrayList<String>();
 
@@ -94,11 +94,12 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	}
 	
 	/**
-	 * Method adds swf library to configuration.
-	 * @param libraryName The name of the library to add.
+	 * Method adds swf library file name to configuration.
+	 * 
+	 * @param libraryFileName The name of the library to add.
 	 */
-	public void addLibrary(String libraryName) {
-		swfLibraries.add(libraryName);
+	public void addLibrary(String libraryFileName) {
+		swfLibraries.add(libraryFileName);
 	}
 
 	/**
@@ -144,10 +145,10 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		}
 		
 		// SWF libraries
-		for (String libName : swfLibraries) {
+		for (String libFileName : swfLibraries) {
 			outputBuilder.append(HaxeConfiguration.GenerateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_LIB, 
-				libName
+				OSUtil.quoteCompoundPath(libFileName)
 			));		
 		}
 		

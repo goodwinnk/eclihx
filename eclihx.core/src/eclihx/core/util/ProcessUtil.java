@@ -9,8 +9,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.eclipse.debug.core.DebugPlugin;
-
 import eclihx.core.EclihxCore;
 
 /**
@@ -140,7 +138,7 @@ public class ProcessUtil {
      * Executes the command line at the given project location, and returns the 
      * corresponding process.
      * @param commandLine the command line
-     * @param project the project in which the command line is executed
+     * @param outputDirectory the file with haXe execution working directory.
      * @return the corresponding process
      * @throws IOException if the command line can't be executed
      */
@@ -148,22 +146,19 @@ public class ProcessUtil {
     		String commandLine, File outputDirectory) 
     	throws IOException {
     	
-        String fullCommandLine = commandLine + ' ' + outputDirectory.getAbsolutePath();
-           
-        Process process = Runtime.getRuntime().exec(
-        	DebugPlugin.parseArguments(commandLine), null, outputDirectory);
+    	Process process = Runtime.getRuntime().exec(commandLine, null, outputDirectory);
         
         return process;
     }
     
     /**
      * Executes the command line at the given project location, and returns the 
-     * corresponding ouput.
+     * correspondent output.
      * 
-     * The error ouput is placed before the standard output.
      * @param commandLine the command line
-     * @param project the project in which the command line is executed
-     * @return the process output
+     * @param outputDirectory the file with haXe execution working directory.
+     * @param errorString Error stream string.
+     * @param outputString Output stream string.
      */
     public static void executeProcess(
     		String commandLine, File outputDirectory,
@@ -276,12 +271,10 @@ public class ProcessUtil {
     }
     
     /**
-     * Executes the command line at the given project location, and returns the 
-     * corresponding ouput.
+     * Executes the command line with the given process object and return error and ordinal output.
      * 
-     * The error ouput is placed before the standard output.
      * @param commandLine the command line
-     * @param project the project in which the command line is executed
+     * @param process the project in which the command line is executed
      * @param standardStreams the streams to which standard output is written 
      * @param errorStreams the streams to which error output is written 
      * @return the process output

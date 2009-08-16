@@ -144,4 +144,14 @@ public class ContentInfo {
 	public boolean isCallDescription() {
 		return (name.isEmpty() && type.indexOf(COMPLEX_TYPES_SEPARATOR) != -1);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("ContentInfo: name=%s; type=%s; doc=%s.", name, type, doc);
+	}
+	
+	
 }

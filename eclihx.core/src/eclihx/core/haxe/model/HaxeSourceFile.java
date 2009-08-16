@@ -49,9 +49,10 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 		}
 
 		// Upper case first letter
-		return Character.toUpperCase(classSubstring.charAt(0))
-				+ classSubstring.substring(1, classSubstring.length());
-
+		// return Character.toUpperCase(classSubstring.charAt(0))
+		//		+ classSubstring.substring(1, classSubstring.length());
+		
+		return classSubstring;
 	}
 
 	/**
