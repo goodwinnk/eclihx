@@ -67,10 +67,6 @@ public class HXScanner extends AbstractScanner {
 	public ArrayList<IRule> createRules() {
 		ArrayList<IRule> rules = new ArrayList<IRule>();
 
-		// Add rule for character constants
-		IToken charToken = getToken(PreferenceConstants.HX_EDITOR_STRING_COLOR);
-		rules.add(new SingleLineRule("'", "'", charToken, '\\'));
-		
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new HXWhitespaceDetector()));
 		
