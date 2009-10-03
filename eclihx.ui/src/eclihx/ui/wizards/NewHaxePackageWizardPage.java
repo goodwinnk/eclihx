@@ -124,6 +124,7 @@ public final class NewHaxePackageWizardPage extends AbstractSelectionPage {
 			label.setText("Package Name:");
 	
 			packageText = new Text(top, SWT.BORDER | SWT.SINGLE);
+			packageText.setFocus();
 			
 			packageText.setLayoutData(
 					new GridData(GridData.FILL_HORIZONTAL));
