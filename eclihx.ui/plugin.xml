@@ -426,4 +426,17 @@
               extensions="*">
         </factory>
      </extension>
+	<extension point = "org.eclipse.ui.popupMenus">
+    	<objectContribution
+        	id="eclihx.ui.actions.renameActionDelegate"
+        	objectClass="eclihx.core.haxe.model.core.IHaxeSourceFile">
+	    	<action id="eclihx.ui.actions.renameActionDelegate"
+	        	label="Rename"
+	       		menubarPath="additions"
+	       		class="eclihx.ui.actions.RenameActionDelegate"	
+           		definitionId="eclihx.ui.actions.RenameActionDelegate.action1"
+	       		enablesFor="1">
+	    	</action>
+	 	</objectContribution>
+	 </extension>
 </plugin>
