@@ -177,7 +177,8 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 			
 			Label label = new Label(top, SWT.NULL);
 			label.setText("File Name:");
-	
+			label.setFocus();
+			
 			haxeNameField = new Text(top, SWT.BORDER | SWT.SINGLE);
 			
 			haxeNameField.setLayoutData(
