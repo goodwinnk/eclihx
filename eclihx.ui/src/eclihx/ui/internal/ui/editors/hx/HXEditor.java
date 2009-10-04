@@ -1,9 +1,15 @@
 package eclihx.ui.internal.ui.editors.hx;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
@@ -73,13 +79,26 @@ public class HXEditor extends TextEditor {
 	private final ColorManager colorManager;
 
 	/**
+	 * Combine eclihx.ui preference store with EditorUI store.
+	 * 
+	 * @return combined preference store.
+	 */
+	private IPreferenceStore createCombinedPreferenceStore() {
+		List<IPreferenceStore> stores = new ArrayList<IPreferenceStore>(2);
+
+		stores.add(EclihxUIPlugin.getDefault().getPreferenceStore());
+		stores.add(EditorsUI.getPreferenceStore());
+
+		return new ChainedPreferenceStore(stores.toArray(new IPreferenceStore[stores.size()]));
+	}
+
+	/**
 	 * Standard constructor.
 	 */
 	public HXEditor() {
 		super();
 
-		// Set preference store to the store of the ui plugin
-		setPreferenceStore(EclihxUIPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(createCombinedPreferenceStore());
 		setDocumentProvider(new HXDocumentProvider());
 
 		colorManager = new ColorManager();
