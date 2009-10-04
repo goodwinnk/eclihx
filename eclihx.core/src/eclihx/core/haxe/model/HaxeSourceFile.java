@@ -25,7 +25,7 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 	/**
 	 * Package of this file.
 	 */
-	private final IHaxePackage fPackage;
+	private IHaxePackage fPackage;
 
 	/**
 	 * Return default class name for the file with the given name.
@@ -158,4 +158,8 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 		return packagePrefix + getClassName();
 	}
 
+	public void move(HaxePackage haxePackage) {
+		this.fPackage = haxePackage;
+	}
+	
 }
