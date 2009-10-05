@@ -2,15 +2,17 @@ package eclihx.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
 import org.eclipse.ltk.ui.refactoring.resource.RenameResourceWizard;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.core.haxe.model.HaxeSourceFile;
+import eclihx.ui.internal.ui.views.HaxeExplorerView;
 
 /**
  * Open a wizard for refactoring the haxe source file name.
@@ -22,10 +24,12 @@ public class RenameActionDelegate implements IObjectActionDelegate {
 	private static final String ID = "eclihx.ui.actions.renameActionDelegate";
 
 	public void run(IAction action) {
+		IViewPart view = getView(HaxeExplorerView.HAXE_EXPLORER_ID);
+		HaxeExplorerView adapter = (HaxeExplorerView) view.getAdapter(HaxeExplorerView.class);
+		TreeSelection selection = (TreeSelection) adapter.getCommonViewer().getSelection();
+		HaxeSourceFile haxeSourceFileSelected = (HaxeSourceFile) selection.getFirstElement();
 		
-		// TODO : select the file in the navigator and not the file opened in the editor
-		IEditorPart editor = EclihxUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		RenameResourceWizard refactoringWizard = new RenameResourceWizard(((IFileEditorInput) editor.getEditorInput()).getFile());
+		RenameResourceWizard refactoringWizard = new RenameResourceWizard(haxeSourceFileSelected.getBaseFile());
 		RefactoringWizardOpenOperation op= new RefactoringWizardOpenOperation(refactoringWizard);
 		
 		try {
@@ -34,7 +38,17 @@ public class RenameActionDelegate implements IObjectActionDelegate {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public IViewPart getView(String id) {
+		IViewReference viewReferences[] = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences();
+		for (int i = 0; i < viewReferences.length; i++) {
+			if (id.equals(viewReferences[i].getId())) {
+				return viewReferences[i].getView(false);
+			}
+		}
+		return null;
+	}
+		
 	public void setActivePart(IAction action, IWorkbenchPart part) {
 		
 	}

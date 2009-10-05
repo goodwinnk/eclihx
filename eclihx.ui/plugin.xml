@@ -458,7 +458,7 @@
 	       		menubarPath="additions"
 	       		class="eclihx.ui.actions.MoveActionDelegate"	
            		definitionId="eclihx.ui.actions.MoveActionDelegate.action1"
-	       		enablesFor="2">
+	       		enablesFor="1">
 	    	</action>
 	 	</objectContribution>
 	 </extension>
