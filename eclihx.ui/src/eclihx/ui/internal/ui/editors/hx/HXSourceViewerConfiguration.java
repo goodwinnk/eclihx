@@ -13,6 +13,7 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
@@ -27,7 +28,7 @@ import eclihx.ui.internal.ui.editors.SingleTokenScanner;
  * its specific knowledge about the returned object, the configuration might 
  * share such objects or compute them according to some rules.
  */
-public class HXSourceViewerConfiguration extends SourceViewerConfiguration {
+public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 	
 	private HXDoubleClickStrategy doubleClickStrategy;
 	
