@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.configuration.CompilationError;
 import eclihx.core.util.language.Pair;
 

@@ -13,7 +13,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
-import eclihx.core.*;
+import eclihx.core.CorePreferenceInitializer;
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxeProject;
 

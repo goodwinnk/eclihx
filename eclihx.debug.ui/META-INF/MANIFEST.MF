@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EclihX Debug UI Plug-in
 Bundle-SymbolicName: eclihx.debug.ui;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: eclihx.debug.ui.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,

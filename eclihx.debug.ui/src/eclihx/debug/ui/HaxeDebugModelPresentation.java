@@ -8,7 +8,6 @@ import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
-
 import org.eclipse.ui.part.FileEditorInput;
 
 //import eclihx.debug.flash.FlashBreakpoint;

@@ -1,6 +1,5 @@
 package eclihx.core.haxe.internal;
 
-import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
