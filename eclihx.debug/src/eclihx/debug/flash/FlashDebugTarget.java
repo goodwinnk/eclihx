@@ -1,6 +1,7 @@
 package eclihx.debug.flash;
 
 import java.util.ArrayList;
+
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,6 +19,7 @@ import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
+
 import flash.tools.debugger.Frame;
 import flash.tools.debugger.Location;
 import flash.tools.debugger.NoResponseException;

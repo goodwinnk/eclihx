@@ -1,5 +1,7 @@
 package eclihx.ui.launch.handlers;
 
+import static eclihx.core.util.language.CollectionUtils.array;
+
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -32,8 +34,6 @@ import eclihx.core.util.OSUtil;
 import eclihx.launching.HaxeLaunchDelegate.FinishLaunchInfo;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
-
-import static eclihx.core.util.language.CollectionUtils.array;
 
 /**
  * Handlers the end of launch operation.

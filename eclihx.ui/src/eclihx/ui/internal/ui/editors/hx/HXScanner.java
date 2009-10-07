@@ -1,13 +1,13 @@
 package eclihx.ui.internal.ui.editors.hx;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
-import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
-import java.util.ArrayList;
 
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.editors.AbstractScanner;

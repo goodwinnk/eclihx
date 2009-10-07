@@ -1,6 +1,9 @@
 package eclihx.ui.internal.ui.editors.hx;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextViewer;
 
 public class HXDoubleClickStrategy implements ITextDoubleClickStrategy {
 	protected ITextViewer fText;
