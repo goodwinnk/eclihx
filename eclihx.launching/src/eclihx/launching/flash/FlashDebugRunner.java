@@ -82,7 +82,7 @@ public class FlashDebugRunner implements IHaxeRunner {
 		(new FlashRunner()).run(launch, configuration.getBuildFile(), 
 				configuration.getOutputDirectory());
 
-		return "Flash runner. This feature isn't ready!";
+		return "Flash debug runner. This feature isn't ready!";
 		
 		/*
 		int requestPort = -1;
