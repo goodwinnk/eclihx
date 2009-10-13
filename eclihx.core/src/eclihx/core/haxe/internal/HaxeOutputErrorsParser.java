@@ -3,6 +3,10 @@ package eclihx.core.haxe.internal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.runtime.Assert;
 
 import eclihx.core.haxe.internal.configuration.CompilationError;
 import eclihx.core.util.language.Pair;
@@ -17,26 +21,23 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	private static final String SUPPORTED_VERSIONS[] = { ">=2.0" };
 	
 	/**
+	 * Regular expression for splitting haXe error to groups.
+	 * (file) : (line number) : (characters) : message
+	 */
+	private static final Pattern LINE_ERROR_PATTERN = Pattern.compile(
+			"([^:]*)\\:(\\d+):([^:]*):(.*)");
+	
+	/**
+	 * Regular expression for reading errors characters.
+	 * characters (first chart) - (last chart)
+	 */
+	private static final Pattern CHARACTERS_ERROR_PATTERN = Pattern.compile(
+			"\\s*characters\\s*(\\d+)\\-(\\d+)\\s*");
+	
+	/**
 	 * String which is given in successful build.
 	 */
 	private static final String SUCCESS_BUILD_STRING = "Building complete";
-	
-	/**
-	 * A substring which split file name, line, characters and a message of 
-	 * the error.
-	 */
-	private static final String LINE_ERROR_SEPARATOR = ":";
-	
-	/**
-	 * A string printed before error characters. 
-	 */
-	private static final String CHARACTER_PREFIX = "characters";
-	
-	/**
-	 * Characters separator. 
-	 */
-	private static final String CHARACTER_SEPARATOR = "-";
-	
 	
 	/*
 	 * (non-Javadoc)
@@ -54,7 +55,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @return a file name
 	 */
 	protected String processFileName(String fileNamePart) {
-		return fileNamePart;
+		return fileNamePart.trim();
 	}
 	
 	/**
@@ -78,36 +79,23 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @return a pair with the start and end character.
 	 */
 	protected Pair<Integer, Integer> processCharacters(String charactersPart) {
-		int indexOfPrefix = charactersPart.indexOf(CHARACTER_PREFIX);
-		if (indexOfPrefix == -1) {
-			return null;
+		
+		final Matcher matcher = CHARACTERS_ERROR_PATTERN.matcher(charactersPart);
+		
+		if (matcher.matches()) {	
+			
+			try {
+				int startCharPos = Integer.parseInt(matcher.group(1));
+				int endCharPos = Integer.parseInt(matcher.group(2));
+				
+				return new Pair<Integer, Integer>(startCharPos, endCharPos);
+			} catch (NumberFormatException numberFormatException) {
+				Assert.isTrue(false);
+				return null;
+			}
 		}
 		
-		String startEndStr = charactersPart.substring(
-				indexOfPrefix + CHARACTER_PREFIX.length());
-		
-		String charactersIntegers[] = startEndStr.split(CHARACTER_SEPARATOR);
-		
-		if (charactersIntegers.length == 0 || charactersIntegers.length > 2) {
-			// No or too many character integers. 
-			return null;
-		}
-		
-		try {
-			int startChar = Integer.parseInt(charactersIntegers[0].trim());
-			int endChar; 
-
-			if (charactersIntegers.length == 2) {
-				endChar = Integer.parseInt(charactersIntegers[1].trim());
-			} else {
-				assert(charactersIntegers.length == 1);
-				endChar = startChar;
-			}	
-			return new Pair<Integer, Integer>(startChar, endChar);
-
-		} catch (NumberFormatException numberFormatException) {
-			return null;
-		}
+		return null;
 	}
 	
 	/**
@@ -116,38 +104,32 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @return error message.
 	 */
 	protected String processMessage(String messagePart) {
-		return messagePart;		
+		return messagePart.trim();		
 	}
 	
-	/**
-	 * Method process a line with the compile error.
-	 * 
-	 * Example of the line with the error:
-	 * SmallTest/src/Test.hx:3: characters 6-7 : Missing ;
-	 * 
-	 * @param errorLine a line with the error.
-	 * @return new compile error object or null if parsing wan't success.
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.internal.IHaxeOutputErrorsParser#processErrorLine(java.lang.String)
 	 */
-	protected ICompilerError processErrorLine(String errorLine) {
-		String errorDescriptionParts[] = errorLine.split(LINE_ERROR_SEPARATOR);
+	public ICompilerError processErrorLine(String errorLine) {
 		
-		if (errorDescriptionParts.length != 4) {
-			// This is not a haXe compilation error
-			return null;
-		}
+		final Matcher matcher = LINE_ERROR_PATTERN.matcher(errorLine);
 		
-		String filePath = processFileName(errorDescriptionParts[0]);
-		Integer lineNumber = processLineNumber(errorDescriptionParts[1]);
-		Pair<Integer, Integer> characters = processCharacters(errorDescriptionParts[2]);
-		String message = processMessage(errorDescriptionParts[3]);
-		
-		if (!(filePath == null || lineNumber == null || characters == null || 
-				message == null)) {
+		if (matcher.matches()) {			
+			String filePath = processFileName(matcher.group(1));
+			Integer lineNumber = processLineNumber(matcher.group(2));
+			Pair<Integer, Integer> characters = processCharacters(matcher.group(3));
+			String message = processMessage(matcher.group(4));
 			
-			return new CompilationError(filePath, lineNumber, characters, message);
+			if (!(filePath == null || lineNumber == null || characters == null || 
+					message == null)) {
+				
+				return new CompilationError(filePath, lineNumber, characters, message);
+			}			
 		}
 		
-		return null;		
+		// This is not a haXe compilation error
+		return null;
 	}
 	
 	/*
@@ -157,8 +139,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	@Override
 	public List<ICompilerError> parseErrors(String output, String buildFile) {
 		
-		ArrayList<ICompilerError> errorsList = 
-				new ArrayList<ICompilerError>(); 
+		ArrayList<ICompilerError> errorsList = new ArrayList<ICompilerError>(); 
 		
 		// Check build is success
 		if (!output.contains(SUCCESS_BUILD_STRING)) {
@@ -169,6 +150,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 				if (error != null) {
 					errorsList.add(error);
 				} else {
+					// Error processing failed and we add to the build file
 					errorsList.add(new CompilationError(buildFile, 0, 
 							new Pair<Integer, Integer>(0, 0), line));
 				}

@@ -129,7 +129,7 @@ public final class FinishLaunchHandler implements IStatusHandler {
 	 * @param buildFileName name of the build file. 
 	 * @return List of the compile errors.
 	 * 
-	 *         TODO 9 Is there exists warnings in haXe? Can't we process them.
+	 *         TODO 9 Are there exist warnings in haXe? Can't we process them.
 	 *         TODO 4 Parsing of the errors should be moved to the launch level.
 	 */
 	private List<ICompilerError> getCompilerErrors(final String output,
