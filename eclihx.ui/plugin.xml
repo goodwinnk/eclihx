@@ -174,11 +174,17 @@
                    <test
                          property="org.eclipse.debug.ui.matchesPattern"
                          value="*.hxml">
+                   </test>
+                   <test
+                         property="org.eclipse.debug.ui.matchesPattern"
+                         value="*.hx">
                    </test></or>
                 </iterate>
              </with>
           </enablement>
        </contextualLaunch>
+       <configurationType
+             id="eclihx.launching.HaxeLaunchDelegate"></configurationType>
     </shortcut>
  </extension>
  <extension
