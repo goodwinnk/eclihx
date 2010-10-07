@@ -122,7 +122,7 @@ public class HaxeRunner implements IHaxeRunner {
 			//		parser.parseFile(
 			//			configuration.getBuildFile()).getMainConfiguration();
 	        HaxeConfigurationList executionList = 
-	        		parser.parseFile(configuration.getBuildFile());
+	        		parser.parseFile(configuration.getBuildFile(), configuration.getWorkingDirectory());
 	        
 	        String fullOutput = "";
 	        

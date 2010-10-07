@@ -271,20 +271,20 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
+		
 		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.PROJECT_NAME, projectNameText
-						.getText());
+				IHaxeLaunchConfigurationConstants.PROJECT_NAME, projectNameText.getText());
+		
 		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText
-						.getText());
+				IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText.getText());
+		
 		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY,
-				sourceDirectoryText.getText());
+				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, sourceDirectoryText.getText());
+		
 		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY,
-				outputDirectoryText.getText());
+				IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY,	outputDirectoryText.getText());
 
-		// TODO 1 Make separate place for overriding initializer
+		// TODO 3 Make separate place for overriding initializer
 		configuration.setAttribute(
 			IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH,
 			EclihxCore.getDefault().getPluginPreferences().getString(
@@ -320,9 +320,10 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	private void initializeProjectName(ILaunchConfiguration configuration) {
 		String projectNameString = "";
 		try {
+			
 			projectNameString = configuration.getAttribute(
-					IHaxeLaunchConfigurationConstants.PROJECT_NAME,
-					projectNameString);
+					IHaxeLaunchConfigurationConstants.PROJECT_NAME, projectNameString);
+			
 		} catch (CoreException e) {
 			EclihxCore.getLogHelper().logError(e);
 		}
