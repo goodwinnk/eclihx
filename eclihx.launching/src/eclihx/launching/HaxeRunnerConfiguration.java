@@ -46,7 +46,12 @@ public class HaxeRunnerConfiguration {
 				(String) null));
         
 		setBuildFile(configuration.getAttribute(
-				IHaxeLaunchConfigurationConstants.BUILD_FILE, (String) null));
+				IHaxeLaunchConfigurationConstants.BUILD_FILE, 
+				(String) null));
+		
+		setWorkingDirectory(configuration.getAttribute(
+				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, 
+				(String) null));
         
         // TODO 8 get attributes
         setArguments(null);

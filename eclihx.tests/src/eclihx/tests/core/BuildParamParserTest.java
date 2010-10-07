@@ -1,6 +1,5 @@
 package eclihx.tests.core;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +12,7 @@ import org.eclipse.core.runtime.FileLocator;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
+import eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform;
 import eclihx.core.haxe.internal.parser.BuildParamParser;
 import eclihx.core.util.console.parser.core.ParseError;
 
@@ -42,9 +42,12 @@ public class BuildParamParserTest {
 	 */
 	@Test
 	public void testParseFile() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException {
-		String path = 
+		String filePath = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/test1.hxml")).getPath();
-		HaxeConfigurationList configurationList = parser.parseFile(path);
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		HaxeConfigurationList configurationList = parser.parseFile(filePath, directoryPath);
 		HaxeConfiguration configuration = 
 			configurationList.getMainConfiguration();
 		
@@ -66,7 +69,11 @@ public class BuildParamParserTest {
 		
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/testComments.hxml")).getPath();
-		parser.parseFile(path);
+		
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		parser.parseFile(path, directoryPath);
 	}
 	
 	/**
@@ -81,37 +88,56 @@ public class BuildParamParserTest {
 		
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/withNext.hxml")).getPath();
-		parser.parseFile(path);
+		
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+
+		parser.parseFile(path, directoryPath);
 	}
 
 	/**
 	 * Tests debug configuration 
 	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
 	 * @throws ParseError errors in parsing.
+	 * @throws IOException 
+	 * @throws MalformedURLException 
 	 */
 	@Test
-	public void debugConfigurationParse() throws ParseError {
-		parser.parseString("-debug 	-D fdb -swf Test.swf -swf-version 9");
+	public void debugConfigurationParse() throws ParseError, MalformedURLException, IOException {
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		parser.parseString("-debug 	-D fdb -swf Test.swf -swf-version 9", directoryPath);
 	}
 	
 	/**
 	 * Invalid configuration.
 	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
 	 * @throws ParseError errors in parsing.
+	 * @throws IOException 
+	 * @throws MalformedURLException 
 	 */
 	@Test
-	public void badConfigurationParse() throws ParseError {
-		parser.parseString("-debug -D fdb -swf Test.swf -swf-version 9 TestWhile");
+	public void badConfigurationParse() throws ParseError, MalformedURLException, IOException {
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		parser.parseString("-debug -D fdb -swf Test.swf -swf-version 9 TestWhile", directoryPath);
 	}
 	
 	/**
 	 * Test --display option.
 	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
 	 * @throws ParseError errors in configuration.
+	 * @throws IOException 
+	 * @throws MalformedURLException 
 	 */
 	@Test
-	public void testDisplayOption() throws ParseError {
-		parser.parseString("--display hihihihi@1");
+	public void testDisplayOption() throws ParseError, MalformedURLException, IOException {		
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		parser.parseString("--display hihihihi@1", directoryPath);
 	}
 	
 	/**
@@ -127,16 +153,64 @@ public class BuildParamParserTest {
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/part.hxml")).getPath();
 		
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
 		HaxeConfiguration config = 
 			parser.parseString(
 				String.format(
 					"--no-traces --no-output -D fdb -debug %s",
-					path)).getMainConfiguration();
+					path), directoryPath).getMainConfiguration();
 		
 		Assert.assertTrue(config.isDebug());
 		Assert.assertTrue(config.hasCompilationFlags("fdb"));
 		Assert.assertTrue(config.isNoOutputMode());
 		Assert.assertTrue(config.isNoTracesMode());
 	}
-
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 * Test is't ok to have a main class without -main option
+	 * 
+	 * @throws ParseError errors in parsing.
+	 * @throws InvalidConfigurationException errors in configuration.
+	 * @throws IOException test bug: file can't be read
+	 * @throws MalformedURLException test bug: url cannot be resolved  
+	 */
+	@Test
+	public void testSeparateMain() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException
+	{
+		String path = 
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/separateMain.hxml")).getPath();
+		
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		HaxeConfiguration config = parser.parseFile(path, directoryPath).getMainConfiguration();
+		
+		Assert.assertTrue(config.getStartupClass().equals("TestCode"));
+	}
+	
+	/**
+	 * Test internal configuration file
+	 * 
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 * @throws InvalidConfigurationException
+	 * @throws ParseError
+	 */
+	@Test
+	public void testInternalBuildFile() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError
+	{
+		String path = 
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/internalParent.hxml")).getPath();
+		
+		String directoryPath =
+			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
+		
+		HaxeConfiguration config = parser.parseFile(path, directoryPath).getMainConfiguration();
+		
+		Assert.assertTrue(config.isDebug());
+		Assert.assertTrue(config.getPlatform() == Platform.Flash);		
+	}
 }

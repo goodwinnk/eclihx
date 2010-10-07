@@ -31,15 +31,15 @@ public class FlashRunner {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void run(ILaunch launch, String fileName, String outputFolder) throws CoreException {
+	public void run(ILaunch launch, String fileName, String outputFolder, String workingDirectory) 
+			throws CoreException {
 		try {
 			
-			BuildParamParser parser = new BuildParamParser();
-			
+			BuildParamParser parser = new BuildParamParser();			
 			
 			HaxeConfiguration config;
 			try {
-				config = parser.parseFile(fileName).getMainConfiguration();
+				config = parser.parseFile(fileName, workingDirectory).getMainConfiguration();
 			} catch (InvalidConfigurationException e) {
 				// TODO 6 Bad thing. We can fall here 
 				return;

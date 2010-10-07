@@ -1,8 +1,13 @@
 package eclihx.core.haxe.internal.parser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Path;
 
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
@@ -60,9 +65,15 @@ public final class BuildParamParser {
 				String.format("Multiple targets"));	
 	
 	private final Parser parser;
-	private HaxeConfiguration currentConfig = null;
-	private boolean parsingFile = false;
-	private boolean confintueConfig = false;
+	
+	private HaxeConfiguration currentConfig = null;	
+	private HaxeConfigurationList configList = null;
+	private String executeFolder = null;	
+	
+	// True if parsing new configuration should continue filling the previous configuration
+	private boolean continueConfig = false;
+	
+	
 	
 	private class LibraryParam implements IStringValue {
 		public void save(String value) throws ParseError {
@@ -110,36 +121,20 @@ public final class BuildParamParser {
 		}
 	}
 	
-	private class HxmlStringParam implements IStringValue {
+	private class HxmlOrMainStringParam implements IStringValue {
 
 		public void save(String value) throws ParseError {
 			
-			if (parsingFile) {
-				
-				//TODO 8 Show a place of error!
-
-				// If we're already parsing file we shouldn't accept this parameter
-				throw new ParseError("Invalid parameter in the hxml-file");
-			
-			} else {
-				
-				if (value.startsWith("-")) {
-					throw new ParseError(
-						String.format("Invalid option: %s", value));
-					
-				} else if (value.endsWith("hxml")) {
-					
-					confintueConfig = true;
-					parseFile(value);
-					
-				} else {
-					
-					mainParam.check();
-					currentConfig.setStartupClass(value);
-					
-				}		
-				
-			}			
+			if (value.endsWith("hxml"))
+			{
+				continueConfig = true;
+				parseInternalFile(value);
+			}
+			else
+			{
+				mainParam.check();
+				currentConfig.setStartupClass(value);
+			}
 		}		
 	}
 	
@@ -157,7 +152,7 @@ public final class BuildParamParser {
 			currentConfig.getNekoConfig().setOutputFile(value);
 		}
 	}
-	private void init() {
+	private void initParserParams() {
 		Parameter params[] = new Parameter[] {
 			
 			// -cp <path> : add a directory to find source files
@@ -491,7 +486,7 @@ public final class BuildParamParser {
 					}
 				}),
 			
-			//  --help  Display this list of options
+			// --help  Display this list of options
 			Builder.createFlagParam(
 				HaxePreferencesManager.PARAM_PREFIX_HELP2_FLAG,
 				new IParamExistense () {
@@ -502,8 +497,8 @@ public final class BuildParamParser {
 					}
 				}),
 			
-			// hxml file
-			Builder.createStringParam("", new HxmlStringParam())
+			// It could be an hxml file or main class
+			Builder.createStringParam("", new HxmlOrMainStringParam())
 		};
 		
 		try {
@@ -515,12 +510,12 @@ public final class BuildParamParser {
 	
 	public BuildParamParser() {
 		parser = new Parser();
-		init();
+		initParserParams();
 	}
 	
-	private  HaxeConfiguration parseConfiguration(String strArray[]) throws ParseError {
+	private HaxeConfiguration parseConfiguration(String strArray[]) throws ParseError {
 		
-		if (!confintueConfig) {
+		if (!continueConfig) {
 			
 			// Reset counters 
 			platformParam.reset();
@@ -529,53 +524,119 @@ public final class BuildParamParser {
 			
 			currentConfig = new HaxeConfiguration();
 		}
+		else
+		{
+			continueConfig = false;
+		}
 		
 		parser.parse(strArray);
 		
 		return currentConfig;		
 	}
 	
-	private HaxeConfigurationList parse(String str) throws ParseError {
+	private void parse(String str) throws ParseError {
 		
 		String configStrs[] = str.split("--next");
 		
-		HaxeConfigurationList configList = new HaxeConfigurationList();
-	
-		for (String configStr : configStrs) {			
+		for (String configStr : configStrs) {	
+			// TODO 8: there could be a bug with paths containing spaces or tabs.
 			configList.add(parseConfiguration(
-					configStr.replaceAll("\\s+", " ").trim().split(" ")));			
+					configStr.replaceAll("[\\s\\t]+", " ").trim().split(" ")));			
 		}
+	}
+	
+	/**
+	 * @param executeFolder Folder of the parser execution. Will be used for searching internal hxml files.
+	 */
+	private void reinitialize(String executeFolder) throws ParseError
+	{
+		currentConfig = null;
+		configList = new HaxeConfigurationList();
+		
+		File executeFolderPath = new File(executeFolder);
+		if (!executeFolderPath.canRead())
+		{
+			throw new ParseError(String.format("Can't read parser folder: \"%s\"", executeFolder));
+		}		
+		
+		this.executeFolder = executeFolder;
+	}
+	
+	/**
+	 * Read file content to string and give it to parser. 
+	 * @param fileName
+	 * @return
+	 * @throws ParseError
+	 */
+	private void parseInternalFile(String filePath) throws ParseError
+	{
+		File buildFile = new File(filePath);
+		if (!buildFile.isAbsolute())
+		{
+			buildFile = new File(executeFolder, filePath);
+		}
+		
+		if (!buildFile.exists())
+		{
+			throw new ParseError(String.format("Build file \"%s\" doesn't exist.", buildFile.getPath()));
+		}		
+
+		try {
+			
+			String fileContent = new String();
+			BufferedReader in = new BufferedReader(new FileReader(buildFile));
+
+		    try{
+		    	String buffer = new String();
+				
+				while((buffer = in.readLine())!= null) {
+					String trimString = buffer.trim();
+					
+					if (!(trimString.length() == 0 || trimString.startsWith("#"))) {
+						// We adds only non-comments and not-empty strings 
+						fileContent += trimString + " ";
+					}
+				}
+		    }
+		    finally{
+		    	in.close();
+		    }	
+		
+			parse(fileContent);
+			
+		} catch (IOException e) {
+			throw new ParseError(String.format("Can't read build file: %s.", e.getMessage()));
+		}
+	}
+	
+	/**
+	 * Parse haXe configuration from input string. This should be used for parsing console parameters.
+	 * @param configStr String to parse.
+	 * @param executeFolder Absolute folder path of the parser execution. Will be used for searching internal hxml files.
+	 * @return
+	 * @throws ParseError
+	 */
+	public HaxeConfigurationList parseString(String configStr, String executeFolder) throws ParseError {
+		reinitialize(executeFolder);
+		parse(configStr);
 		
 		return configList;
 	}
 	
-	public HaxeConfigurationList parseString(String configStr) throws ParseError {
-		this.parsingFile = false;
-		return parse(configStr);
-	}
-	
-	public HaxeConfigurationList parseFile(String fileName) throws ParseError
+	/**
+	 * Parse file with haXe configuration. 
+	 * 
+	 * @param filePath Initial hxml file for parsing. 
+	 * @param executeFolder Absolute folder path of the parser execution. Will be used for searching internal hxml files.
+	 * 
+	 * @return
+	 * @throws ParseError
+	 */
+	public HaxeConfigurationList parseFile(String filePath, String executeFolder) throws ParseError
 	{
-		this.parsingFile = true;
+		reinitialize(executeFolder);
+		parseInternalFile(filePath);
 		
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(fileName));
-			String buffer, fileContent = new String();
-			while((buffer = in.readLine())!= null) {
-				String trimString = buffer.trim();
-				
-				if (!(trimString.length() == 0 || trimString.startsWith("#"))) {
-					// We adds only non-comments and not-empty strings 
-					fileContent += trimString + " ";
-				}
-			}
-			in.close();
-			
-			// Remove all not necessary spaces and new line symbols
-			return parse(fileContent);
-			
-		} catch (IOException e) {
-			throw new ParseError("Can't open file!");
-		}
+		return configList;
 	}
 }
