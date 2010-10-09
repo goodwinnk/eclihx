@@ -142,9 +142,10 @@
           id="eclihx.ui.page1"
           name="%projectBuildPathPage.name">
        <enabledWhen>
-          <instanceof
-                value="org.eclipse.core.resources.IProject">
-          </instanceof>
+          <test
+                property="org.eclipse.core.resources.projectNature"
+                value="eclihx.core.haxenature">
+          </test>
        </enabledWhen>
     </page>
  </extension>
