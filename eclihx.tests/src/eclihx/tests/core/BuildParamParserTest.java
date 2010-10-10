@@ -34,7 +34,7 @@ public class BuildParamParserTest {
 	}	
 
 	/**
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseFile(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseFile(java.lang.String, java.lang.String)}.
 	 * @throws ParseError errors in parsing. 
 	 * @throws InvalidConfigurationException errors in configuration.
 	 * @throws IOException test bug: file can't be read
@@ -97,10 +97,10 @@ public class BuildParamParserTest {
 
 	/**
 	 * Tests debug configuration 
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String, java.lang.String)}.
 	 * @throws ParseError errors in parsing.
-	 * @throws IOException 
-	 * @throws MalformedURLException 
+	 * @throws IOException {@link FileLocator#toFileURL(URL)} - if an error occurs during the conversion
+	 * @throws MalformedURLException {@link URL#URL(String)} MalformedURLException - If the string specifies an unknown protocol.
 	 */
 	@Test
 	public void debugConfigurationParse() throws ParseError, MalformedURLException, IOException {
@@ -112,10 +112,10 @@ public class BuildParamParserTest {
 	
 	/**
 	 * Invalid configuration.
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String, java.lang.String)}.
 	 * @throws ParseError errors in parsing.
-	 * @throws IOException 
-	 * @throws MalformedURLException 
+	 * @throws IOException {@link FileLocator#toFileURL(URL)} - if an error occurs during the conversion
+	 * @throws MalformedURLException {@link URL#URL(String)} MalformedURLException - If the string specifies an unknown protocol.
 	 */
 	@Test
 	public void badConfigurationParse() throws ParseError, MalformedURLException, IOException {
@@ -127,10 +127,10 @@ public class BuildParamParserTest {
 	
 	/**
 	 * Test --display option.
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String, java.lang.String)}.
 	 * @throws ParseError errors in configuration.
-	 * @throws IOException 
-	 * @throws MalformedURLException 
+	 * @throws IOException {@link FileLocator#toFileURL(URL)} - if an error occurs during the conversion
+	 * @throws MalformedURLException {@link URL#URL(String)} MalformedURLException - If the string specifies an unknown protocol.
 	 */
 	@Test
 	public void testDisplayOption() throws ParseError, MalformedURLException, IOException {		
@@ -141,11 +141,11 @@ public class BuildParamParserTest {
 	}
 	
 	/**
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String, java.lang.String)}.
 	 * @throws ParseError errors in parsing.
 	 * @throws InvalidConfigurationException errors in configuration.
-	 * @throws IOException test bug: file can't be read
-	 * @throws MalformedURLException test bug: url cannot be resolved  
+	 * @throws IOException {@link FileLocator#toFileURL(URL)} - if an error occurs during the conversion
+	 * @throws MalformedURLException {@link URL#URL(String)} MalformedURLException - If the string specifies an unknown protocol.
 	 */
 	@Test
 	public void testParse() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException {
@@ -169,13 +169,13 @@ public class BuildParamParserTest {
 	}
 	
 	/**
-	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String)}.
+	 * Test method for {@link eclihx.core.haxe.internal.parser.BuildParamParser#parseString(java.lang.String, java.lang.String)}.
 	 * Test is't ok to have a main class without -main option
 	 * 
 	 * @throws ParseError errors in parsing.
 	 * @throws InvalidConfigurationException errors in configuration.
-	 * @throws IOException test bug: file can't be read
-	 * @throws MalformedURLException test bug: url cannot be resolved  
+	 * @throws IOException {@link FileLocator#toFileURL(URL)} - if an error occurs during the conversion
+	 * @throws MalformedURLException {@link URL#URL(String)} MalformedURLException - If the string specifies an unknown protocol.
 	 */
 	@Test
 	public void testSeparateMain() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException
@@ -194,10 +194,10 @@ public class BuildParamParserTest {
 	/**
 	 * Test internal configuration file
 	 * 
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 * @throws InvalidConfigurationException
-	 * @throws ParseError
+	 * @throws IOException {@link FileLocator#toFileURL(URL)} - if an error occurs during the conversion
+	 * @throws MalformedURLException {@link URL#URL(String)} MalformedURLException - If the string specifies an unknown protocol.
+	 * @throws ParseError errors in parsing.
+	 * @throws InvalidConfigurationException errors in configuration.
 	 */
 	@Test
 	public void testInternalBuildFile() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError

@@ -21,9 +21,9 @@ public class CodeFormatterTest {
 	public void testFormat() {
 		
 		CodeFormatter.FormatOptions options = new CodeFormatter.FormatOptions();
-		options.bracketNewLines = true;
-		options.insertTabs = false;
-		options.intendWidth = 2;
+		CodeFormatter.FormatOptions.bracketNewLines = true;
+		CodeFormatter.FormatOptions.insertTabs = false;
+		CodeFormatter.FormatOptions.intendWidth = 2;
 		
 		String str = CodeFormatter.format(
 				"class A { public static function (){ if (a==1){}}}", 

@@ -24,9 +24,6 @@ public class HaxeProjectTest {
 	 */
 	private IHaxeProject testProject;
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@Before
 	public void setUp() throws Exception {
 		IHaxeWorkspace haxeWorkspace = 
@@ -35,9 +32,6 @@ public class HaxeProjectTest {
 		testProject = haxeWorkspace.createHaxeProject("TestProject", null);
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	@After
 	public void tearDown() throws Exception {
 		testProject.getProjectBase().delete(true, null);
