@@ -1,115 +1,58 @@
 package eclihx.ui.internal.ui.editors.hx;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 
-public class HXDoubleClickStrategy implements ITextDoubleClickStrategy {
-	protected ITextViewer fText;
-
-	public void doubleClicked(ITextViewer part) {
-		int pos = part.getSelectedRange().x;
-
-		if (pos < 0)
-			return;
-
-		fText = part;
-
-		if (!selectComment(pos)) {
-			selectWord(pos);
-		}
-	}
-	protected boolean selectComment(int caretPos) {
-		IDocument doc = fText.getDocument();
-		int startPos, endPos;
-
+/**
+ * A special double click strategy for the editor.
+ * It has and advantage to see parts of identifiers  
+ */
+public class HXDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
+	
+	@Override
+	protected IRegion findWord(IDocument document, int offset) {
 		try {
-			int pos = caretPos;
-			char c = ' ';
-
-			while (pos >= 0) {
-				c = doc.getChar(pos);
-				if (c == '\\') {
-					pos -= 2;
-					continue;
+			
+			int length = document.getLength();
+			
+			if (offset >= length)
+			{
+				return null;
+			}
+			
+			if (!Character.isJavaIdentifierPart(document.getChar(offset)))
+			{
+				return new Region(offset, 1);
+			}
+			
+			int pos;
+			for (pos = offset; pos >= 0; --pos) {
+				if (!Character.isJavaIdentifierPart(document.getChar(pos)))
+				{
+					break;
 				}
-				if (c == Character.LINE_SEPARATOR || c == '\"')
-					break;
-				--pos;
-			}
-
-			if (c != '\"')
-				return false;
-
-			startPos = pos;
-
-			pos = caretPos;
-			int length = doc.getLength();
-			c = ' ';
-
-			while (pos < length) {
-				c = doc.getChar(pos);
-				if (c == Character.LINE_SEPARATOR || c == '\"')
-					break;
-				++pos;
-			}
-			if (c != '\"')
-				return false;
-
-			endPos = pos;
-
-			int offset = startPos + 1;
-			int len = endPos - offset;
-			fText.setSelectedRange(offset, len);
-			return true;
-		} catch (BadLocationException x) {
+		    }
+			
+			int startWordOffset = pos + 1 < length ? pos + 1 : pos;		    
+		    
+		    int endWordOffset;
+		    for (endWordOffset = offset; endWordOffset < length; ++endWordOffset)
+		    {
+		    	if (!Character.isJavaIdentifierPart(document.getChar(endWordOffset)))
+		    	{
+		            break;
+		    	}
+		    }
+		    
+		    return new Region(startWordOffset, endWordOffset - startWordOffset);	 
+		    
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
-
-		return false;
-	}
-	protected boolean selectWord(int caretPos) {
-
-		IDocument doc = fText.getDocument();
-		int startPos, endPos;
-
-		try {
-
-			int pos = caretPos;
-			char c;
-
-			while (pos >= 0) {
-				c = doc.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
-					break;
-				--pos;
-			}
-
-			startPos = pos;
-
-			pos = caretPos;
-			int length = doc.getLength();
-
-			while (pos < length) {
-				c = doc.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
-					break;
-				++pos;
-			}
-
-			endPos = pos;
-			selectRange(startPos, endPos);
-			return true;
-
-		} catch (BadLocationException x) {
-		}
-
-		return false;
-	}
-
-	private void selectRange(int startPos, int stopPos) {
-		int offset = startPos + 1;
-		int length = stopPos - offset;
-		fText.setSelectedRange(offset, length);
+		
+		return null;
 	}
 }
