@@ -3,6 +3,7 @@
 package eclihx.ui.internal.ui.editors.hx;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -11,7 +12,6 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
@@ -30,7 +30,7 @@ import eclihx.ui.internal.ui.editors.SingleTokenScanner;
  */
 public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 	
-	private HXDoubleClickStrategy doubleClickStrategy;
+	private ITextDoubleClickStrategy doubleClickStrategy;
 	
 	private final HXScanner hxCodeScanner;
 	private final AbstractScanner singleLineCommentScanner;
@@ -138,7 +138,10 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 		ISourceViewer sourceViewer,
 		String contentType) {
 		if (doubleClickStrategy == null)
+		{
 			doubleClickStrategy = new HXDoubleClickStrategy();
+		}
+		
 		return doubleClickStrategy;
 	}
 	
