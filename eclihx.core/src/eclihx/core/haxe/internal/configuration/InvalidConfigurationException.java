@@ -11,8 +11,8 @@ public class InvalidConfigurationException extends MultiMessageException {
 	private static final long serialVersionUID = -72326432204925939L;
 
 	/**
-	 * Constuctor with one message. 
-	 * @param errorMessages the reasons of the exception.
+	 * Constructor with one message. 
+	 * @param errorMessage the reasons of the exception.
 	 */
 	public InvalidConfigurationException(String errorMessage) {
 		super(errorMessage);

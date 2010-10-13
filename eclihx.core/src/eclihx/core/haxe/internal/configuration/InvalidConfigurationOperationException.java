@@ -10,6 +10,7 @@ public class InvalidConfigurationOperationException extends Exception {
 
 	/**
 	 * Default constructor with the exception reason.
+	 * @param message Reason of the exception.
 	 */
 	public InvalidConfigurationOperationException(String message) {
 		super(message);

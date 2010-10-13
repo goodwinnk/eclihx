@@ -22,6 +22,7 @@ public interface IConfiguration {
 	
 	/**
 	 * Prints the configuration.
+	 * @return String representation of the configuration.
 	 * 
 	 * @throws InvalidConfigurationException 
 	 * 		exception with the errors descriptions if configuration is invalid
