@@ -16,9 +16,8 @@ import eclihx.launching.flash.FlashDebugRunner;
 import eclihx.launching.haxe.HaxeRunner;
 
 /**
- * Start point for haXe project launching. 
- * see the information about 
- * org.eclipse.debug.core.launchConfigurationTypes extension point.
+ * Start point for haXe project launching.
+ * See {@link LaunchConfigurationDelegate} and org.eclipse.debug.core.launchConfigurationTypes extension point.
  */
 public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	
@@ -57,11 +56,9 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 		 * Default constructor.
 		 * @param output the string of the output.
 		 * @param projectName the name of the project was launched.
+		 * @param buildFileName build file name
 		 */
-		public FinishLaunchInfo(String output, String projectName, 
-				String buildFileName) {
-			
-			super();
+		public FinishLaunchInfo(String output, String projectName, String buildFileName) {			
 			this.output = output;
 			this.projectName = projectName;
 			this.buildFileName = buildFileName;
@@ -73,12 +70,11 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	 * @param mode
 	 * @return
 	 */
-	private IHaxeRunner chooseHaxeRunner(
-			String mode, HaxeRunnerConfiguration configuration) {
+	private IHaxeRunner chooseHaxeRunner(String mode, HaxeRunnerConfiguration configuration) {
 		
 		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
 		
-			// TODO 8 Check that this is a flash runner
+			// TODO 9 Check that this is a flash runner
 			return new FlashDebugRunner();
 			
 		} else if (ILaunchManager.RUN_MODE.equals(mode)) {
@@ -100,16 +96,12 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	private void sendFinishNotification(String projectName, String output, String buildFile) 
 			throws CoreException {
         
-		IStatus status = new Status(
-        		IStatus.ERROR, EclihxLauncher.PLUGIN_ID, 112, "", null); 
-        IStatusHandler handler = 
-        		DebugPlugin.getDefault().getStatusHandler(status);
+		IStatus status = new Status(IStatus.ERROR, EclihxLauncher.PLUGIN_ID, 112, "", null); 
+        IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
 
         if (handler != null) {
-        	handler.handleStatus(
-        			status, new FinishLaunchInfo(output, projectName, buildFile));
+        	handler.handleStatus(status, new FinishLaunchInfo(output, projectName, buildFile));
         }
-        
 	}
 
 	/*
@@ -156,57 +148,5 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
         } finally {
             monitor.done();        	
         }
-	}
-	
-	/*
-	private void refreshOutputFolder(String projectName) {
-		IHaxeProject haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
-		if (haxeProject != null) {
-			IFolder folder = haxeProject.getPathManager().getOutputFolder();
-			if (folder != null) {
-				try {
-					folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-				} catch (CoreException e) {
-					EclihxLogger.logError(e);
-				}
-			}
-		}
-	}*/
-	
-	
-	/**
-	 * Checks if string isn't quoted yet and adds quotation marks to the both ends of the string.
-	 * @param str
-	 * @return Quoted string
-	 */
-	/*
-	private String quoteString(String str) {
-		if ( !(str.startsWith("\"") || (str.endsWith("\""))) ) {
-			return "\"" + str + "\"";
-		}
-		return str;				
-	}*/
-	
-	/*
-	private void throwState(int severity, int code, String message) throws CoreException {
-		IStatus status = new Status(severity, EclihxLauncher.PLUGIN_ID, code, message, null); //$NON-NLS-1$
-		IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
-	
-		if (handler == null) {
-			// if there is no handler, throw the exception
-			throw new CoreException(status);
-		} else {
-			Object result = handler.handleStatus(status, null);
-			
-			if (result instanceof Boolean) {
-				boolean stop = ((Boolean)result).booleanValue();
-				if (stop) {
-					throw (new CoreException(status));
-				}
-			}
-		}				
-	}
-	*/
-	
-	
+	}	
 }
