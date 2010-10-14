@@ -2,6 +2,9 @@ package eclihx.core.util.console.parser.core;
 
 import eclihx.core.util.console.parser.IParamExistense;
 
+/**
+ * A single parameter of the console to parse.
+ */
 public final class Parameter {
 	
 	/**
@@ -19,24 +22,46 @@ public final class Parameter {
 	 */	
 	private final ParamExistenceChecker existenceFlag;
 	
-	
-	public Parameter(String prefix, IParamExistense flag, IValueParser[] valueProcessors) {
+	/**
+	 * Create new console parameter.
+	 * 
+	 * @param prefix A string unique prefix for identifying parameter.
+	 * @param flagBehavior Some special behavior should be activated when parser get current parameter.
+	 * @param valueProcessors Processors for values which can contain this parameter.
+	 */
+	public Parameter(String prefix, IParamExistense flagBehavior, IValueParser[] valueProcessors) {
 		this.prefix = prefix;
-		this.existenceFlag = new ParamExistenceChecker(flag);
+		this.existenceFlag = new ParamExistenceChecker(flagBehavior);
 		this.valueProcessors = valueProcessors;
 	}
 	
+	/**
+	 * Number of values this parameter accepts.
+	 * 
+	 * @return Number of values this parameter accepts.
+	 */
 	public int numberOfParameters() {
 		return (valueProcessors == null ? 0 : valueProcessors.length);
 	}
 	
+	/**
+	 * A string unique prefix for identifying parameter.
+	 * 
+	 * @return A string unique prefix for identifying parameter.
+	 */
 	public final String getPrefix() {
 		return prefix;
 	}
 	
-	public final void parse(String[] values) throws ParseError {
+	/**
+	 * Parse values.
+	 * 
+	 * @param values
+	 * @throws ParseError
+	 */
+	final void parse(String[] values) throws ParseError {
 		
-		// Some internal error
+		// Some internal parse error
 		assert(numberOfParameters() < values.length);
 		
 		if (valueProcessors != null) {
@@ -53,7 +78,11 @@ public final class Parameter {
 		existenceFlag.exist();
 	}
 	
-	public void absence() throws ParseError {
+	/**
+	 * Called with parser when current parameter wasn'te found in input. 
+	 * @throws ParseError
+	 */
+	void absence() throws ParseError {
 		existenceFlag.absence();
 	}
 }

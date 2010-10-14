@@ -12,6 +12,11 @@ public final class ParamExistenceChecker {
 	 */
 	private final IParamExistense saveAction;
 
+	/**
+	 * An action which should be done if parameter will be found.
+	 * 
+	 * @param saveAction An action which should be done if parameter will be found. Null is valid.
+	 */
 	public ParamExistenceChecker(IParamExistense saveAction) {
 		this.saveAction = saveAction;
 	}
@@ -19,7 +24,7 @@ public final class ParamExistenceChecker {
 	/**
 	 * Parser should call this method if parameter found
 	 * 
-	 * @throws ParseError
+	 * @throws ParseError Parser error.
 	 */
 	public final void exist() throws ParseError {
 		if (saveAction != null) {
@@ -31,7 +36,7 @@ public final class ParamExistenceChecker {
 	 * Parser should call this method if it sure that it won't find the
 	 * parameter
 	 * 
-	 * @throws ParseError
+	 * @throws ParseError Parser error.
 	 */
 	public final void absence() throws ParseError {
 		if (saveAction != null) {
