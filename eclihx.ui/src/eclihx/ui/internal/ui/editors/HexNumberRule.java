@@ -8,9 +8,8 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.WordPatternRule;
 
-
 /**
- * Reads hex number
+ * Reads hex number.
  */
 public final class HexNumberRule implements IRule {
 	

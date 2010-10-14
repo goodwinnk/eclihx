@@ -24,10 +24,13 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 
-
+/**
+ * Color manager for haxe-file editor. 
+ */
 public class ColorManager implements ISharedTextColors {
 	
 	protected HashMap<String, RGB> fKeyTable= new HashMap<String, RGB>(10);
+	
 	protected HashMap<Display, HashMap<RGB, Color>> fDisplayTable = 
 			new HashMap<Display, HashMap<RGB, Color>>(2);
 

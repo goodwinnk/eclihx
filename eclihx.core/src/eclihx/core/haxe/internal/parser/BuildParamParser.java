@@ -5,10 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.Path;
-
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
@@ -152,6 +148,7 @@ public final class BuildParamParser {
 			currentConfig.getNekoConfig().setOutputFile(value);
 		}
 	}
+	
 	private void initParserParams() {
 		Parameter params[] = new Parameter[] {
 			
@@ -508,9 +505,22 @@ public final class BuildParamParser {
 		}
 	}
 	
+	/**
+	 * Default constructor.
+	 */
 	public BuildParamParser() {
 		parser = new Parser();
 		initParserParams();
+	}
+	
+	/**
+	 * Get a list of accepted hxml options keys.
+	 * 
+	 * @return A list of accepted configuration options.
+	 */
+	public Iterable<String> getParametersKeys()
+	{	
+		return parser.getParametersKeys();
 	}
 	
 	private HaxeConfiguration parseConfiguration(String strArray[]) throws ParseError {
@@ -565,7 +575,7 @@ public final class BuildParamParser {
 	/**
 	 * Read file content to string and give it to parser. 
 	 * @param fileName
-	 * @return
+	 * 
 	 * @throws ParseError
 	 */
 	private void parseInternalFile(String filePath) throws ParseError
@@ -613,8 +623,9 @@ public final class BuildParamParser {
 	 * Parse haXe configuration from input string. This should be used for parsing console parameters.
 	 * @param configStr String to parse.
 	 * @param executeFolder Absolute folder path of the parser execution. Will be used for searching internal hxml files.
-	 * @return
-	 * @throws ParseError
+	 *
+	 * @return List of parsed configurations
+	 * @throws ParseError An error with the description of the parser problem
 	 */
 	public HaxeConfigurationList parseString(String configStr, String executeFolder) throws ParseError {
 		reinitialize(executeFolder);
@@ -629,8 +640,8 @@ public final class BuildParamParser {
 	 * @param filePath Initial hxml file for parsing. 
 	 * @param executeFolder Absolute folder path of the parser execution. Will be used for searching internal hxml files.
 	 * 
-	 * @return
-	 * @throws ParseError
+	 * @return List of parsed configurations
+	 * @throws ParseError An error with the description of the parser problem
 	 */
 	public HaxeConfigurationList parseFile(String filePath, String executeFolder) throws ParseError
 	{
