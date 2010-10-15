@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import eclihx.core.util.language.Pair;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
@@ -146,26 +147,11 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 	 * for values until user will ask for it.
 	 */
 	private final class SyntaxPreferencesGroup {
+		
 		/**
 		 * Help class for storing syntax group values
 		 */
 		private final class SyntaxValues {
-			
-//			/**
-//			 * Checks for equality
-//			 */
-//			@Override
-//			public boolean equals(Object valuesObject) {
-//				if (valuesObject instanceof SyntaxValues) {
-//					SyntaxValues values = (SyntaxValues)valuesObject;
-//					
-//					return isBold == values.isBold && isItalic == values.isItalic && 
-//						   ((color == values.color) || (color != null && color.equals(values.color)));
-//				}			
-//				
-//				return false;
-//			}
-			
 			public RGB color;
 			public boolean isBold;
 			public boolean isItalic;
@@ -174,8 +160,7 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 		
 		private final String colorNameProperty;
 		private final String boldNameProperty;
-		private final String italicNameProperty;
-		
+		private final String italicNameProperty;		
 		
 		/**
 		 * True if user made an attempt to change the value
@@ -247,14 +232,10 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 				
 				values = new SyntaxValues();
 				
-				if (defaultRequest) {
-					
+				if (defaultRequest) {					
 					values.color = PreferenceConverter.getDefaultColor(getPreferenceStore(), colorNameProperty);
 					values.isBold = getPreferenceStore().getDefaultBoolean(boldNameProperty);
-					values.isItalic = getPreferenceStore().getDefaultBoolean(italicNameProperty);
-					
-
-					
+					values.isItalic = getPreferenceStore().getDefaultBoolean(italicNameProperty);					
 				} else {					
 					values.color = PreferenceConverter.getColor(getPreferenceStore(), colorNameProperty);
 					values.isBold = getPreferenceStore().getBoolean(boldNameProperty);
@@ -339,18 +320,37 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 	private final ArrayList<SyntaxPreferencesGroup> haxeOptions = 
 		new ArrayList<SyntaxPreferencesGroup>();
 	
+	/**
+	 * haXe documentation options
+	 */
 	private final ArrayList<SyntaxPreferencesGroup> haxeDocOptions =
 		new ArrayList<SyntaxPreferencesGroup>();
 	
 	/**
+	 * hxml editor options
+	 */
+	private final ArrayList<SyntaxPreferencesGroup> hxmlOptions =
+		new ArrayList<SyntaxPreferencesGroup>();
+	
+	/**
+	 * Single store for all groups for unify working with them.
+	 * UI group name -> List of preferences
+	 */
+	private final ArrayList<Pair<String, ArrayList<SyntaxPreferencesGroup>>> editorPartsOptionsLists = 
+		new ArrayList<Pair<String, ArrayList<SyntaxPreferencesGroup>>>();
+	
+	/**
 	 * Controls for syntax options
 	 */
-	private SyntaxEditorsGroup syntaxEditors = null;
-	
+	private SyntaxEditorsGroup syntaxEditors = null;	
 	
 	public void init(IWorkbench workbench) {
 		
 		setTitle("Editors colors preferences");
+		
+		editorPartsOptionsLists.add(new Pair<String, ArrayList<SyntaxPreferencesGroup>>("haXe", haxeOptions));
+		editorPartsOptionsLists.add(new Pair<String, ArrayList<SyntaxPreferencesGroup>>("haXe doc", haxeDocOptions));
+		editorPartsOptionsLists.add(new Pair<String, ArrayList<SyntaxPreferencesGroup>>("hxml", hxmlOptions));
 		
 		{
 			// Initialize haXe code preferences
@@ -477,7 +477,37 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 			);
 		}
 		
-		{  // Sort groups
+		{
+			hxmlOptions.add(
+				new SyntaxPreferencesGroup(
+					"Values",
+					PreferenceConstants.HXML_EDITOR_DEFAULT_COLOR,
+					PreferenceConstants.HXML_EDITOR_DEFAULT_BOLD,
+					PreferenceConstants.HXML_EDITOR_DEFAULT_ITALIC
+				)
+			);
+			
+			hxmlOptions.add(
+				new SyntaxPreferencesGroup(
+					"Options",
+					PreferenceConstants.HXML_EDITOR_OPTION_COLOR,
+					PreferenceConstants.HXML_EDITOR_OPTION_BOLD,
+					PreferenceConstants.HXML_EDITOR_OPTION_ITALIC
+				)
+			);
+			
+			hxmlOptions.add(
+				new SyntaxPreferencesGroup(
+					"Comments",
+					PreferenceConstants.HXML_EDITOR_COMMENT_COLOR,
+					PreferenceConstants.HXML_EDITOR_COMMENT_BOLD,
+					PreferenceConstants.HXML_EDITOR_COMMENT_ITALIC
+				)
+			);
+		}
+		
+		{  
+			// Sort groups
 			
 			// This comparator take in account only names of the groups and it's
 			// used to sort number of groups in alphabetic order.
@@ -489,8 +519,11 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 					}
 				};
 			
-			Collections.sort(haxeOptions, nameComparator);
-			Collections.sort(haxeDocOptions, nameComparator);
+			for (Pair<String, ArrayList<SyntaxPreferencesGroup>> editorPartDescription : 
+				editorPartsOptionsLists)
+			{
+				Collections.sort(editorPartDescription.getSecond(), nameComparator);
+			}
 		}
 	}
 	
@@ -506,36 +539,22 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 		
 		final Tree tree = new Tree(parent, SWT.BORDER | SWT.SINGLE);
 				
-		final String haxeName = "haXe";
-		final String haxeDocName = "haXe doc";
-		final String hxmlName = "hxml"; 
-			
 		final LinkedList<TreeItem> rootTreeItems = new LinkedList<TreeItem>();
-		final String rootElementNames[] = new String[] {haxeName, haxeDocName, hxmlName};
 		
-		for (String rootName : rootElementNames) {
-			
+		for (Pair<String, ArrayList<SyntaxPreferencesGroup>> editorPartList : editorPartsOptionsLists) {
 			// Create an element and add to root elements
 			final TreeItem rootItem = new TreeItem(tree, SWT.NONE);
-			rootItem.setText(rootName);
+			rootItem.setText(editorPartList.getFirst());
 			rootItem.setData(null);
 			rootTreeItems.add(rootItem);
 			
-			if (rootName.equals(haxeName)) {
-				for (SyntaxPreferencesGroup option : haxeOptions) {
-					TreeItem child = new TreeItem(rootItem, SWT.NONE);
-					child.setText(option.getName());
-					child.setData(option);
-				}
-			} else if (rootName.equals(haxeDocName)) {
-				for (SyntaxPreferencesGroup option : haxeDocOptions) {
-					TreeItem child = new TreeItem(rootItem, SWT.NONE);
-					child.setText(option.getName());
-					child.setData(option);
-				}
+			for (SyntaxPreferencesGroup option : editorPartList.getSecond()) {
+				TreeItem child = new TreeItem(rootItem, SWT.NONE);
+				child.setText(option.getName());
+				child.setData(option);
 			}
 		}
-		
+			
 		tree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -611,14 +630,13 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 	 */
 	@Override
 	protected void performDefaults() {
-		for (SyntaxPreferencesGroup option : haxeOptions) {
-			option.resetToDefaults();
-			syntaxEditors.refresh();
-		}
 		
-		for (SyntaxPreferencesGroup option : haxeDocOptions) {
-			option.resetToDefaults();
-			syntaxEditors.refresh();
+		for (Pair<String, ArrayList<SyntaxPreferencesGroup>> editorPartList : editorPartsOptionsLists)
+		{
+			for (SyntaxPreferencesGroup option : editorPartList.getSecond()) {
+				option.resetToDefaults();
+				syntaxEditors.refresh();
+			}
 		}
 	}
 
@@ -628,12 +646,12 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 	 */
 	@Override
 	public boolean performOk() {
-		for (SyntaxPreferencesGroup option : haxeOptions) {
-			option.save();
-		}
 		
-		for (SyntaxPreferencesGroup option : haxeDocOptions) {
-			option.save();
+		for (Pair<String, ArrayList<SyntaxPreferencesGroup>> editorPartList : editorPartsOptionsLists)
+		{
+			for (SyntaxPreferencesGroup option : editorPartList.getSecond()) {
+				option.save();
+			}
 		}
 		
 		return super.performOk();

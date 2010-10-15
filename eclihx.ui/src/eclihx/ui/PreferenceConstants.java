@@ -10,6 +10,7 @@ import eclihx.ui.internal.ui.EclihxUIPlugin;
 /**
  * Preference IDs and default values for EclihX-UI plug-in
  */
+@SuppressWarnings("all")
 public final class PreferenceConstants {
 	
 	//========= haXe Editor Style Settings =========//
@@ -108,17 +109,38 @@ public final class PreferenceConstants {
 	public final static String HX_EDITOR_DEFAULT_ITALIC = 
 		"hx_editor_default_italic";
 	
+	public final static String HXML_EDITOR_DEFAULT_COLOR = 
+		"hxml_editor_default_color";
+	public final static String HXML_EDITOR_DEFAULT_BOLD = 
+		"hxml_editor_default_bold";
+	public final static String HXML_EDITOR_DEFAULT_ITALIC = 
+		"hxml_editor_default_italic";
+	
+	public final static String HXML_EDITOR_OPTION_COLOR = 
+		"hxml_editor_option_color";
+	public final static String HXML_EDITOR_OPTION_BOLD = 
+		"hxml_editor_option_bold";
+	public final static String HXML_EDITOR_OPTION_ITALIC = 
+		"hxml_editor_option_italic";
+	
+	public final static String HXML_EDITOR_COMMENT_COLOR = 
+		"hxml_editor_comment_color";
+	public final static String HXML_EDITOR_COMMENT_BOLD = 
+		"hxml_editor_comment_bold";
+	public final static String HXML_EDITOR_COMMENT_ITALIC = 
+		"hxml_editor_comment_italic";
+	
 	/**
 	 * A named preferences that controls if problem view should always be
 	 * activated in the case of haXe build errors.
 	 */
 	public final static String HAXE_ALWAYS_OPEN_PROBLEM_VIEW_ON_ERRORS =
-			"eclihx.ui.haxe_always_open_problem_view_on_errors";
+			"haxe_always_open_problem_view_on_errors";
 	
 	//==============================================//
 	
 	public final static String HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE = 
-		"\"package ;\" string for default package";	
+		"hx_package_properties_default_package";	
 
 	public final static String HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE = 
 		"hx_format_option_properties_bracket_new_line";
@@ -208,6 +230,21 @@ public final class PreferenceConstants {
 			store, HX_EDITOR_DEFAULT_COLOR, new RGB(0, 0, 0));
 		store.setDefault(HX_EDITOR_DEFAULT_BOLD, false);
 		store.setDefault(HX_EDITOR_DEFAULT_ITALIC, false);
+		
+		PreferenceConverter.setDefault(
+				store, HXML_EDITOR_DEFAULT_COLOR, new RGB(0, 0, 0));
+		store.setDefault(HXML_EDITOR_DEFAULT_BOLD, false);
+		store.setDefault(HXML_EDITOR_DEFAULT_ITALIC, false);
+
+		PreferenceConverter.setDefault(
+				store, HXML_EDITOR_COMMENT_COLOR, new RGB(0, 0, 0));
+		store.setDefault(HXML_EDITOR_COMMENT_BOLD, false);
+		store.setDefault(HXML_EDITOR_COMMENT_ITALIC, true);
+
+		PreferenceConverter.setDefault(
+				store, HXML_EDITOR_OPTION_COLOR, new RGB(0, 0, 0));
+		store.setDefault(HXML_EDITOR_OPTION_BOLD, true);
+		store.setDefault(HXML_EDITOR_OPTION_ITALIC, false);
 		
 		store.setDefault(HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE, false);
