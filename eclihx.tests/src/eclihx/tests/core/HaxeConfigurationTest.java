@@ -1,10 +1,13 @@
 package eclihx.tests.core;
 
+import java.util.ArrayList;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
+import eclihx.core.haxe.internal.configuration.IConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform;
 
@@ -190,8 +193,11 @@ public class HaxeConfigurationTest {
 	 */
 	@Test
 	public void testValidate() {
-		// TODO 9 Finish this method
-		Assert.assertTrue(configuration.validate());
+		ArrayList<String> errors = configuration.validate();
+		
+		Assert.assertTrue(!configuration.isValid());
+		Assert.assertTrue(errors.size() == 1);
+		Assert.assertTrue(errors.get(0).equals(IConfiguration.EMPTY_CONFIGURATION_ERROR));
 	}
 
 }

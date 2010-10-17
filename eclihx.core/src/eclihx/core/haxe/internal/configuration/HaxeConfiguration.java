@@ -607,9 +607,12 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 */
 	@Override
 	public String printConfiguration() throws InvalidConfigurationException {
-
 		validateException();
-
+		return printWithoutCheck();
+	}
+	
+	protected String printWithoutCheck()
+	{
 		StringBuilder outputBuilder = new StringBuilder();
 
 		// Startup class
@@ -739,7 +742,11 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		
 		// Platforms
 		if (isPlatformExplicitlySet) {
-			outputBuilder.append(getTargetConfiguration().printConfiguration());
+			try {
+				outputBuilder.append(getTargetConfiguration().printConfiguration());
+			} catch (InvalidConfigurationException e) {
+				// Do nothing just omit printing this configuration
+			}
 		}
 		
 		// Print classes names.
@@ -760,8 +767,24 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 */
 	@Override
 	protected ArrayList<String> internalValidate() {
-		// TODO 9 Add validation of the configuration
-		return new ArrayList<String>();
+		
+		ArrayList<String> errors = new ArrayList<String>();
+		
+		String printed;
+			
+		if (isPlatformExplicitlySet) {
+			ArrayList<String> targetPlatformErrors = getTargetConfiguration().validate();
+			errors.addAll(targetPlatformErrors);
+		}
+		
+		printed = printWithoutCheck();
+		
+		if (printed.isEmpty())
+		{
+			errors.add(IConfiguration.EMPTY_CONFIGURATION_ERROR);
+		}
+		
+		return errors;
 	}
 	
 	/**

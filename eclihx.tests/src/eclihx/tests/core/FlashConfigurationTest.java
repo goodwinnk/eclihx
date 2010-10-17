@@ -92,7 +92,7 @@ public class FlashConfigurationTest {
 		flashConfiguration.setOutputFile("out.swf");
 		flashConfiguration.setVersion(7);
 		
-		Assert.assertTrue(flashConfiguration.validate());
+		Assert.assertTrue(flashConfiguration.isValid());
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class FlashConfigurationTest {
 		
 		// Invalid version.
 		flashConfiguration.setVersion(15);
-		Assert.assertFalse(flashConfiguration.validate());
+		Assert.assertFalse(flashConfiguration.isValid());
 	}
 	
 	/**
@@ -116,6 +116,6 @@ public class FlashConfigurationTest {
 
 		// No output file test.
 		flashConfiguration.setVersion(7);
-		Assert.assertFalse(flashConfiguration.validate());
+		Assert.assertFalse(flashConfiguration.isValid());
 	}
 }
