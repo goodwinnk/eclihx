@@ -13,8 +13,7 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	 * @throws InvalidConfigurationException exception with the errors 
 	 * 		   descriptions if configuration is invalid.
 	 */
-	abstract public String printConfiguration() 
-		throws InvalidConfigurationException;
+	abstract public String printConfiguration() throws InvalidConfigurationException;
 
 	/**
 	 * Performs validation of the configuration and returns description of 
@@ -29,11 +28,20 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	 * @return <code>true</code> if configuration is valid.
 	 */
 	@Override
-	public final boolean validate() {
+	public final ArrayList<String> validate() {
 		// True if there are no error messages
-		return (internalValidate().isEmpty());
+		return internalValidate();
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.internal.configuration.IConfiguration#isValid()
+	 */
+	@Override
+	public boolean isValid() {
+		return internalValidate().isEmpty();	
+	}
+	
 	/**
 	 * Validates the configuration and throws an exception if configuration
 	 * invalid.
@@ -41,16 +49,12 @@ public abstract class AbstractConfiguration implements IConfiguration {
 	 * @throws InvalidConfigurationException exception with 
 	 * 		   the errors descriptions.
 	 */
-	@Override
-	public final void validateException() throws InvalidConfigurationException {
+	protected final void validateException() throws InvalidConfigurationException {
 		ArrayList<String> errors = internalValidate();
 		
 		// Throw an exception if there are errors
 		if (!errors.isEmpty()) {
-			throw new InvalidConfigurationException(
-				errors.toArray(new String[0])
-			);
+			throw new InvalidConfigurationException(errors.toArray(new String[0]));
 		}		
 	}
-
 }

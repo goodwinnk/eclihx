@@ -1,24 +1,29 @@
 package eclihx.core.haxe.internal.configuration;
 
+import java.util.ArrayList;
+
 /**
  * Common interface for configurations. 
  */
 public interface IConfiguration {	
 	
 	/**
+	 * Error message is configuration is empty.
+	 */
+	public static final String EMPTY_CONFIGURATION_ERROR = "Configuration is empty";
+	
+	/**
 	 * Validates the configuration.
 	 * @return <code>true</code> if configuration is valid.
 	 */
-	boolean validate();
+	boolean isValid();
 	
 	/**
-	 * Validates the configuration and throws an exception if configuration
-	 * invalid.
-	 *
-	 * @throws InvalidConfigurationException 
-	 * 			exception with the errors descriptions.
+	 * Validates the configuration and gets the errors.
+	 * Configuration is valid if errors list is empty
+	 * @return List of errors in configurations
 	 */
-	void validateException() throws InvalidConfigurationException;
+	ArrayList<String> validate();
 	
 	/**
 	 * Prints the configuration.

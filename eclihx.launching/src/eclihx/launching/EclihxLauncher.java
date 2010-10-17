@@ -46,7 +46,6 @@ public class EclihxLauncher extends Plugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		savePluginPreferences();
 		plugin = null;
 		super.stop(context);
 	}

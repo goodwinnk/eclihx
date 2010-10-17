@@ -5,8 +5,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 /**
  * Initializer of the preferences for the launcher plug-in.
  */
-public class LauncherPreferenceInitializer extends
-		AbstractPreferenceInitializer {
+public class LauncherPreferenceInitializer extends AbstractPreferenceInitializer {
 	
 	/*
 	 * (non-Javadoc)

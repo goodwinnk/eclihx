@@ -495,7 +495,7 @@ public final class BuildParamParser {
 				}),
 			
 			// It could be an hxml file or main class
-			Builder.createStringParam("", new HxmlOrMainStringParam())
+			Builder.createEmptyStringParam(new HxmlOrMainStringParam())
 		};
 		
 		try {
@@ -549,9 +549,22 @@ public final class BuildParamParser {
 		String configStrs[] = str.split("--next");
 		
 		for (String configStr : configStrs) {	
-			// TODO 8: there could be a bug with paths containing spaces or tabs.
-			configList.add(parseConfiguration(
-					configStr.replaceAll("[\\s\\t]+", " ").trim().split(" ")));			
+			
+			String[] inputParams;
+			
+			String trimmedConfig = configStr.trim();
+			
+			if (trimmedConfig.isEmpty())
+			{
+				inputParams = new String[0];
+			}
+			else
+			{
+				// FIXME 10: Will break paths with spaces!
+				inputParams = trimmedConfig.replaceAll("[\\s\\t]+", " ").trim().split(" ");
+			}
+			
+			configList.add(parseConfiguration(inputParams));			
 		}
 	}
 	

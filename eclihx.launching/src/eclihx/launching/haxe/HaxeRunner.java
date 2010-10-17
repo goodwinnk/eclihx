@@ -1,6 +1,7 @@
 package eclihx.launching.haxe;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -109,45 +110,50 @@ public class HaxeRunner implements IHaxeRunner {
 		// Validates haXe configuration.
 		validateConfiguration(configuration);
 		
-		try {
+		// output directory
+        File outputDirectory = new File(configuration.getOutputDirectory());
+        
+        BuildParamParser parser = new BuildParamParser();
 
-			// output directory
-	        File outputDirectory = new File(configuration.getOutputDirectory());
-	        
-	        BuildParamParser parser = new BuildParamParser();
-	                
-	        //HaxeConfiguration haxeConfig;
-			
-			//haxeConfig = 
-			//		parser.parseFile(
-			//			configuration.getBuildFile()).getMainConfiguration();
-	        HaxeConfigurationList executionList = 
-	        		parser.parseFile(configuration.getBuildFile(), configuration.getWorkingDirectory());
-	        
-	        String fullOutput = "";
-	        
-	        for (HaxeConfiguration haxeConfig : executionList) {
-	        	haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
-				
-				final HaxeLauncher launcher = new HaxeLauncher();
-				
-				launcher.run(haxeConfig, launch, configuration.getCompilerPath(), 
-								outputDirectory);
-				
-				String errorsString = launcher.getErrorString();
-				String outputString = launcher.getOutputString();
-				
-				fullOutput += outputString;
-				
-				if (!errorsString.isEmpty()) {
-					return errorsString;
-				}
-	        }
-			
-			return "Building complete.\n" + fullOutput;
-			
-		} catch (ParseError e) {
-			throw generateCoreException(e);
+        HaxeConfigurationList executionList;
+        
+        try
+        {
+        	executionList = 
+        		parser.parseFile(configuration.getBuildFile(), configuration.getWorkingDirectory());
+        }
+        catch (ParseError e) {
+			return e.getMessage();
 		}
+        
+        for (HaxeConfiguration haxeConfig : executionList)
+        {
+        	ArrayList<String> configErrors = haxeConfig.validate();
+        	if (!configErrors.isEmpty())
+        	{
+        		return configErrors.toString();
+        	}
+        }
+        
+        String fullOutput = "";
+        
+        for (HaxeConfiguration haxeConfig : executionList) {
+        	haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
+			
+			final HaxeLauncher launcher = new HaxeLauncher();
+			
+			launcher.run(haxeConfig, launch, configuration.getCompilerPath(), outputDirectory);
+			
+			String errorsString = launcher.getErrorString();
+			String outputString = launcher.getOutputString();
+			
+			fullOutput += outputString;
+			
+			if (!errorsString.isEmpty()) {
+				return errorsString;
+			}
+        }
+		
+		return "Building complete.\n" + fullOutput;
 	}
 }

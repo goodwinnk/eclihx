@@ -61,7 +61,7 @@ public class Parser {
 		
 		return keys;
 	}
-
+	
 	/**
 	 * Parse an array of input arguments.
 	 * 
@@ -70,8 +70,7 @@ public class Parser {
 	 */
 	public void parse(String[] args) throws ParseError {
 		
-		HashSet<String> notActivatedParams = 
-			new HashSet<String>(parametersStore.keySet());
+		HashSet<String> notActivatedParams = new HashSet<String>(parametersStore.keySet());
 		
 		int i = 0; // current argument index
 		
@@ -101,6 +100,7 @@ public class Parser {
 				
 			} else {
 				// Bad thing here...We don't know how to proceed
+				// TODO 5: Add recovery ability
 				throw new ParseError(String.format("Uknown prefix '%1$s'", args[i]));
 			}
 		}	
@@ -108,8 +108,7 @@ public class Parser {
 		for (String prefix : notActivatedParams) {
 
 			// Because we have built notActivatedParams from prefixes 
-			assert(parametersStore.get(prefix) != null);
-			
+			assert(parametersStore.get(prefix) != null);			
 			parametersStore.get(prefix).absence();
 		}
 	}

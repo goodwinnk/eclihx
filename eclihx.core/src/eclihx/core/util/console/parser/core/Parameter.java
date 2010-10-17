@@ -66,8 +66,7 @@ public final class Parameter {
 		
 		if (valueProcessors != null) {
 			if (values.length < valueProcessors.length) {
-				throw new ParseError(String.format(
-						"Not enough parameters for '%1$s' prefix", prefix));
+				throw new ParseError(String.format("Not enough parameters for '%1$s' prefix", prefix));
 			}
 		
 			for (int i = 0; i < values.length; ++i) {

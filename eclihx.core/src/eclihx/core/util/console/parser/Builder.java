@@ -119,6 +119,17 @@ public class Builder {
 		return createStringParam("", null, value);
 	}
 	
+	/**
+	 * Creating a string parameter with empty key.
+	 * 
+	 * @param value store callback for the value.
+	 * @param existanceAction action should be done if parameter exists or not.
+	 * @return new string parameter.
+	 */
+	public static Parameter createEmptyStringParam(IStringValue value, IParamExistense existanceAction) {
+		return createStringParam("", existanceAction, value);
+	}
+	
 	
 	/**
 	 * Method creates an integer parameter.
