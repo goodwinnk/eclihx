@@ -8,7 +8,11 @@ import org.eclipse.debug.core.IBreakpointManagerListener;
 import org.eclipse.debug.core.IBreakpointsListener;
 import org.eclipse.debug.core.model.IBreakpoint;
 //import org.eclipse.debug.core.model.IBreakpointImportParticipant;
+import org.eclipse.debug.core.model.IBreakpointImportParticipant;
 
+/**
+ * Breakpoints manager.
+ */
 public class FlashBreakpointManager implements IBreakpointManager {
 
 	public void addBreakpoint(IBreakpoint breakpoint) throws CoreException {
@@ -126,12 +130,10 @@ public class FlashBreakpointManager implements IBreakpointManager {
 
 	}
 
-/*
+
 	@Override
-	public IBreakpointImportParticipant[] getImportParticipants(
-			String markertype) throws CoreException {
+	public IBreakpointImportParticipant[] getImportParticipants(String markertype) throws CoreException {
 		// TODO Auto-generated method stub
-		return new IBreakpointImportParticipant[0];
+		return null;
 	}
-*/
 }
