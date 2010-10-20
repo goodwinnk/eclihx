@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.rules.IRule;
 
-import eclihx.ui.internal.ui.editors.hx.ColorManager;
 
 /**
  * Extension of the AbstractScanner which allows to redefine default token with

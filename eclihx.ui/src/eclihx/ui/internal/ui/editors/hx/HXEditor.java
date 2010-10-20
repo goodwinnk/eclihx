@@ -14,6 +14,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.ui.internal.ui.editors.ColorManager;
 
 /**
  * Class extend functionality of the standard text editor to make it work with
@@ -125,8 +126,7 @@ public class HXEditor extends TextEditor {
 	protected boolean affectsTextPresentation(PropertyChangeEvent event) {
 
 		if (getSourceViewerConfiguration() instanceof HXSourceViewerConfiguration) {
-			((HXSourceViewerConfiguration) getSourceViewerConfiguration())
-					.adaptToPreferenceChange(event);
+			((HXSourceViewerConfiguration) getSourceViewerConfiguration()).adaptToPreferenceChange(event);
 			return true;
 		}
 

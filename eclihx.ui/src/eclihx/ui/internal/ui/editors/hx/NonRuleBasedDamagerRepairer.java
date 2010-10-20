@@ -12,8 +12,11 @@ import org.eclipse.jface.text.presentation.IPresentationDamager;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.swt.custom.StyleRange;
 
-public class NonRuleBasedDamagerRepairer
-	implements IPresentationDamager, IPresentationRepairer {
+/**
+ * Damage repairer.
+ */
+// TODO: Delete if not necessary
+public class NonRuleBasedDamagerRepairer implements IPresentationDamager, IPresentationRepairer {
 
 	/** The document this object works on */
 	protected IDocument fDocument;
