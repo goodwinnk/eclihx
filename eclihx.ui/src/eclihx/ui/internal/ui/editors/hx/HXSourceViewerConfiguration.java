@@ -17,6 +17,7 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
+import eclihx.ui.internal.ui.editors.ColorManager;
 import eclihx.ui.internal.ui.editors.SingleTokenScanner;
 
 /**

@@ -19,7 +19,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import eclihx.ui.internal.ui.editors.hx.ColorManager;
 
 
 /**
@@ -42,11 +41,12 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 		 * @param strikethroughKey the strike through key.
 		 * @param underlineKey the underline key.
 		 */
-		public TextAttributesKey(String colorKey, 
-				           String boldKey, 
-				           String italicKey, 
-				           String strikethroughKey,
-				           String underlineKey) {
+		public TextAttributesKey(
+				String colorKey, 
+				String boldKey, 
+				String italicKey, 
+				String strikethroughKey,
+				String underlineKey) {
 			
 			this.propertyNameColor = colorKey;
 			this.propertyNameBold = boldKey;
@@ -166,7 +166,6 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 			fNeedsLazyColorLoading = false;
 		}
 	}
-
 	
 	/**
 	 * Here we store tokens without colors
@@ -240,7 +239,6 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 
 		return new TextAttribute(color, null, style);
 	}
-
 	
 	
 	/**
@@ -250,7 +248,10 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	 */
 	protected Token getToken(String key) {
 		if (fNeedsLazyColorLoading)
+		{
 			resolveProxyAttributes();
+		}
+		
 		return fTokenMap.get(key);
 	}
 

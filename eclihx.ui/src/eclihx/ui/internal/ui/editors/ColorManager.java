@@ -13,7 +13,7 @@
  *
  */
 
-package eclihx.ui.internal.ui.editors.hx;
+package eclihx.ui.internal.ui.editors;
 
 import java.util.HashMap;
 import java.util.Iterator;
