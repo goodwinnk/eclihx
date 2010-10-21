@@ -11,7 +11,6 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.ColorManager;
-import eclihx.ui.internal.ui.editors.hx.HXSourceViewerConfiguration;
 
 /**
  * An editor for hxml-files.

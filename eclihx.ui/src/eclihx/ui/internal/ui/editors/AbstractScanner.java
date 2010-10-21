@@ -19,8 +19,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-
-
 /**
  * Initialized with a color manager and a preference store, its subclasses are
  * only responsible for providing a list of preference keys for based on which tokens
@@ -189,14 +187,6 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	 * @param key
 	 */
 	private void addToken(TextAttributesKey key) {
-		if (fColorManager != null && key.propertyNameColor != null && fColorManager.getColor(key.propertyNameColor) == null) {
-			// Register color value in manager
-			RGB rgb = PreferenceConverter.getColor(fPreferenceStore, key.propertyNameColor);
-			fColorManager.getColor(key.propertyNameColor);
-			fColorManager.unbindColor(key.propertyNameColor);
-			fColorManager.bindColor(key.propertyNameColor, rgb);
-		}
-
 		if (!fNeedsLazyColorLoading) {
 			// Store token without a color
 			fTokenMap.put(key.propertyNameColor, new Token(createTextAttribute(key)));
@@ -219,25 +209,30 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	 */
 	private TextAttribute createTextAttribute(TextAttributesKey keys) {
 		
-		Color color = null;
-		if (keys.propertyNameColor != null)
-			color = fColorManager.getColor(keys.propertyNameColor);
+		RGB rgbColor = null;
+		if (keys.propertyNameColor != null) {
+			rgbColor = PreferenceConverter.getColor(fPreferenceStore, keys.propertyNameColor);
+		}
 
 		int style = SWT.NORMAL;
 		
-		if (keys.propertyNameBold != null && fPreferenceStore.getBoolean(keys.propertyNameBold))
+		if (keys.propertyNameBold != null && fPreferenceStore.getBoolean(keys.propertyNameBold)) {			
 			style |= SWT.BOLD;
+		}
 		
-		if (keys.propertyNameItalic != null && fPreferenceStore.getBoolean(keys.propertyNameItalic))
+		if (keys.propertyNameItalic != null && fPreferenceStore.getBoolean(keys.propertyNameItalic)) {
 			style |= SWT.ITALIC;
+		}
 
-		if (keys.propertyNameStrikethrough != null && fPreferenceStore.getBoolean(keys.propertyNameStrikethrough))
+		if (keys.propertyNameStrikethrough != null && fPreferenceStore.getBoolean(keys.propertyNameStrikethrough)) {
 			style |= TextAttribute.STRIKETHROUGH;
+		}
 
-		if (keys.propertyNameUnderline != null && fPreferenceStore.getBoolean(keys.propertyNameUnderline))
+		if (keys.propertyNameUnderline != null && fPreferenceStore.getBoolean(keys.propertyNameUnderline)) {
 			style |= TextAttribute.UNDERLINE;
+		}
 
-		return new TextAttribute(color, null, style);
+		return new TextAttribute(fColorManager.getColor(rgbColor), null, style);
 	}
 	
 	
@@ -349,14 +344,7 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 
 		// Replace color
 		if (rgb != null) {
-			String property = event.getProperty();
-			Color color = fColorManager.getColor(property);
-
-			if (color == null || !rgb.equals(color.getRGB())) {
-				fColorManager.unbindColor(property);
-				fColorManager.bindColor(property, rgb);
-				color = fColorManager.getColor(property);
-			}
+			Color color = fColorManager.getColor(rgb);
 
 			Object data = token.getData();
 			if (data instanceof TextAttribute) {
