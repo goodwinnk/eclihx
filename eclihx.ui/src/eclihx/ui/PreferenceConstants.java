@@ -235,14 +235,14 @@ public final class PreferenceConstants {
 				store, HXML_EDITOR_DEFAULT_COLOR, new RGB(0, 0, 0));
 		store.setDefault(HXML_EDITOR_DEFAULT_BOLD, false);
 		store.setDefault(HXML_EDITOR_DEFAULT_ITALIC, false);
-
+		
 		PreferenceConverter.setDefault(
-				store, HXML_EDITOR_COMMENT_COLOR, new RGB(0, 0, 0));
+				store, HXML_EDITOR_COMMENT_COLOR, new RGB(128, 128, 128));
 		store.setDefault(HXML_EDITOR_COMMENT_BOLD, false);
 		store.setDefault(HXML_EDITOR_COMMENT_ITALIC, true);
-
+		
 		PreferenceConverter.setDefault(
-				store, HXML_EDITOR_OPTION_COLOR, new RGB(0, 0, 0));
+				store, HXML_EDITOR_OPTION_COLOR,  new RGB(127, 0, 85));
 		store.setDefault(HXML_EDITOR_OPTION_BOLD, true);
 		store.setDefault(HXML_EDITOR_OPTION_ITALIC, false);
 		
