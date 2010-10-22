@@ -13,7 +13,7 @@ import eclihx.ui.internal.ui.editors.AbstractScanner;
 import eclihx.ui.internal.ui.editors.AdvancedNumberRule;
 import eclihx.ui.internal.ui.editors.BracketRule;
 import eclihx.ui.internal.ui.editors.ColorManager;
-import eclihx.ui.internal.ui.editors.WordDetector;
+import eclihx.ui.internal.ui.editors.CodeWhitespaceDetector;
 
 /**
  * Scanner for haxe keywords and brackets.
@@ -100,7 +100,7 @@ public class HXScanner extends AbstractScanner {
 		ArrayList<IRule> rules = new ArrayList<IRule>();
 
 		// Add generic whitespace rule.
-		rules.add(new WhitespaceRule(new HXWhitespaceDetector()));
+		rules.add(new WhitespaceRule(new CodeWhitespaceDetector()));
 		
 		IToken bracketToken = getToken(PreferenceConstants.HX_EDITOR_BRACKET_COLOR);
 		rules.add(new BracketRule('(', ')', bracketToken));

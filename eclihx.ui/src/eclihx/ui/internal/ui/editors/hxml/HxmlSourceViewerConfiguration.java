@@ -11,9 +11,11 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 
+import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
 import eclihx.ui.internal.ui.editors.ColorManager;
+import eclihx.ui.internal.ui.editors.SingleTokenScanner;
 
 /**
  * Configuration for hxml-files code editor.
@@ -21,11 +23,16 @@ import eclihx.ui.internal.ui.editors.ColorManager;
 class HxmlSourceViewerConfiguration extends SourceViewerConfiguration {
 	
 	private final AbstractScanner hxmlCodeScanner;
+	private final AbstractScanner hxmlCommentScanner;
 
 	public HxmlSourceViewerConfiguration(ColorManager colorManager)
 	{
 		IPreferenceStore store = EclihxUIPlugin.getDefault().getPreferenceStore();		
-		hxmlCodeScanner = new HxmlScanner(colorManager, store);
+		hxmlCodeScanner = new HxmlScanner(colorManager, store);		
+		hxmlCommentScanner = new SingleTokenScanner(colorManager, store,
+			PreferenceConstants.HXML_EDITOR_COMMENT_COLOR,
+			PreferenceConstants.HXML_EDITOR_COMMENT_BOLD,
+			PreferenceConstants.HXML_EDITOR_COMMENT_ITALIC);
 	}
 	
 	/**
@@ -57,6 +64,10 @@ class HxmlSourceViewerConfiguration extends SourceViewerConfiguration {
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		
+		dr = new DefaultDamagerRepairer(hxmlCommentScanner);
+		reconciler.setDamager(dr, HxmlPartitionScanner.HXML_SINGLE_LINE_COMMENT);
+		reconciler.setRepairer(dr, HxmlPartitionScanner.HXML_SINGLE_LINE_COMMENT);
+		
 		return reconciler;
 	}
 
@@ -66,8 +77,6 @@ class HxmlSourceViewerConfiguration extends SourceViewerConfiguration {
 	 */
 	public void adaptToPreferenceChange(PropertyChangeEvent event) {
 		hxmlCodeScanner.adaptToPreferenceChange(event);
-		
+		hxmlCommentScanner.adaptToPreferenceChange(event);
 	}
-	
-	
 }

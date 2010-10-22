@@ -1,4 +1,4 @@
-package eclihx.ui.internal.ui.editors;
+package eclihx.ui.internal.ui.editors.hx;
 
 import org.eclipse.jface.text.rules.IWordDetector;
 
