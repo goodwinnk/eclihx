@@ -38,6 +38,13 @@
             name="%hxmlEditor.name">
       </editor>
    </extension>
+  <extension
+        point="org.eclipse.core.filebuffers.documentSetup">
+     <participant
+           class="eclihx.ui.internal.ui.editors.hxml.HxmlPartitionScanner"
+           extensions="hxml">
+     </participant>
+  </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page

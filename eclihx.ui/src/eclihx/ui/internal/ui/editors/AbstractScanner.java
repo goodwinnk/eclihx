@@ -86,7 +86,7 @@ public abstract class AbstractScanner extends BufferedRuleBasedScanner {
 	private final ColorManager fColorManager;
 	private final IPreferenceStore fPreferenceStore;
 
-	private final HashMap<String, Token> fTokenMap= new HashMap<String, Token>();
+	private final HashMap<String, Token> fTokenMap = new HashMap<String, Token>();
 	
 	private TextAttributesKey[] fAttributesKeys;
 	

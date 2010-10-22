@@ -1,4 +1,4 @@
-package eclihx.ui.internal.ui.editors.hx;
+package eclihx.ui.internal.ui.editors;
 
 import org.eclipse.jface.text.rules.IWhitespaceDetector;
 
@@ -7,7 +7,7 @@ import org.eclipse.jface.text.rules.IWhitespaceDetector;
  * 
  * @see IWhitespaceDetector
  */
-public class HXWhitespaceDetector implements IWhitespaceDetector {
+public class CodeWhitespaceDetector implements IWhitespaceDetector {
 
 	/*
 	 * (non-Javadoc)
@@ -15,6 +15,6 @@ public class HXWhitespaceDetector implements IWhitespaceDetector {
 	 */
 	@Override
 	public boolean isWhitespace(char c) {
-		return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+		return Character.isWhitespace(c);
 	}
 }

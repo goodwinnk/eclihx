@@ -6,11 +6,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
+import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 import eclihx.core.haxe.internal.parser.BuildParamParser;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
+import eclihx.ui.internal.ui.editors.CodeWhitespaceDetector;
 import eclihx.ui.internal.ui.editors.ColorManager;
 
 /**
@@ -51,17 +53,20 @@ public class HxmlScanner extends AbstractScanner {
 	protected ArrayList<IRule> createRules() {
 		
 		ArrayList<IRule> rules = new ArrayList<IRule>();
+		
+		// Add generic whitespace rule.
+		rules.add(new WhitespaceRule(new CodeWhitespaceDetector()));
 
 		IToken wordDefaultToken = getToken(PreferenceConstants.HXML_EDITOR_DEFAULT_COLOR); 
 		WordRule wr = new WordRule(new IWordDetector() {			
 			@Override
 			public boolean isWordStart(char c) {
-				return !Character.isSpaceChar(c);
+				return !Character.isWhitespace(c);
 			}
 			
 			@Override
 			public boolean isWordPart(char c) {
-				return !Character.isSpaceChar(c);
+				return !Character.isWhitespace(c);
 			}
 		}, wordDefaultToken);
 		
