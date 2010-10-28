@@ -1,7 +1,5 @@
 package eclihx.core.haxe.model;
 
-
-
 /**
  * haXe code simple formatter.
  */

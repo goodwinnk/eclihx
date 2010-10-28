@@ -158,8 +158,13 @@ public class HaxeSourceFile extends HaxeElement implements IHaxeSourceFile {
 		return packagePrefix + getClassName();
 	}
 
+	/**
+	 * Move haxe file.
+	 * @param haxePackage move to other haXe package.
+	 */
 	public void move(HaxePackage haxePackage) {
-		this.fPackage = haxePackage;
+		// FIXME 10: tie-in refactorings should be done
+		fPackage = haxePackage;
 	}
 	
 }
