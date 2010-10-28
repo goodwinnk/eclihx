@@ -11,14 +11,14 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IHaxeProject;
+import eclihx.core.haxe.model.helper.ProjectCreator;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.wizards.NewHaxeProjectWizardFirstPage;
 
 /**
  * Wizard for the haXe project creation. 
  */
-public class HaxeProjectWizard extends AbstractMonitorWizard 
-		implements INewWizard, IExecutableExtension {
+public class HaxeProjectWizard extends AbstractMonitorWizard implements INewWizard, IExecutableExtension {
 
 	/**
 	 * The wizard page with the new project data definition fields.
@@ -79,46 +79,17 @@ public class HaxeProjectWizard extends AbstractMonitorWizard
 	@Override
 	protected void doFinish(IProgressMonitor monitor) {
 		
-		monitor.beginTask("haXe Project creation", 4);
-		
 		try {
 			
-			monitor.setTaskName("Creation of project: " + 
-					firstPage.getProjectName());
-			
-			IHaxeProject haxeProject = 
-					EclihxCore.getDefault().getHaxeWorkspace().
-							createHaxeProject(
-									firstPage.getProjectName(), monitor);
-			
-			monitor.worked(1);
-			
-			monitor.setTaskName("Creation of build file: " + 
-					firstPage.getBuildFileName());
-			
-			haxeProject.createBuildFile(firstPage.getBuildFileName(), monitor);
-			
-			monitor.worked(1);
-			
-			monitor.setTaskName("Creation of output folder: " + 
-					firstPage.getOutputFolderName());
-			
-			haxeProject.createOutputFolder(
-					firstPage.getOutputFolderName(), monitor);
-			
-			monitor.worked(1);
-			
-			monitor.setTaskName("Creation of source folder: " + 
-					firstPage.getSourceFolderName());
-			
-			haxeProject.createSourceFolder(
-					firstPage.getSourceFolderName(), monitor);
-			
-			monitor.worked(1);
+			ProjectCreator.createCommonProject(
+					firstPage.getProjectName(), 
+					firstPage.getBuildFileName(), 
+					firstPage.getOutputFolderName(), 
+					firstPage.getSourceFolderName(), 
+					monitor);
 			
 			// Switch to haXe perspective
 			BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
-
 			
 		} catch (CoreException e) {
 			EclihxUIPlugin.getLogHelper().logError(e);

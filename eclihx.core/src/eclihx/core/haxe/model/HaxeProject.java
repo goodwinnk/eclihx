@@ -142,14 +142,25 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 	public IHaxeBuildFile createBuildFile(
 			String fileName, IProgressMonitor monitor) throws CoreException {
 		
+		return createBuildFile(fileName, "", monitor);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see eclihx.core.haxe.model.core.IHaxeProject#createBuildFile(java.lang.String, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IHaxeBuildFile createBuildFile(String fileName,
+			String initialContent, IProgressMonitor monitor)
+			throws CoreException {
+		
 		if (!HaxeElementValidator.validateBuildFileName(fileName).isOK()) {
 			throw new CoreException(new Status(
 					IStatus.ERROR, EclihxCore.PLUGIN_ID,
 					"Build file name is invalid"));
 		}		
 		
-		// TODO 3 Make default content provider
-		InputStream stream = new ByteArrayInputStream(("").getBytes());
+		InputStream stream = new ByteArrayInputStream((initialContent).getBytes());
 				
 		IFile buildFile = fProject.getFile(fileName);
 		buildFile.create(stream, true, monitor);

@@ -96,6 +96,20 @@ public interface IHaxeProject extends IHaxeElement {
 			throws CoreException;
 	
 	/**
+	 * Creates new build file.
+	 * 
+	 * @param fileName the name of the build file.
+	 * @param initialContent Initial file content.
+	 * @param monitor the operation monitor. <code>null</code> 
+	 *        value is allowed.
+	 * @return the created build file.
+	 * @throws CoreException if file name is not a build file name, or
+	 * 		   the error of IFile.create method.
+	 */
+	IHaxeBuildFile createBuildFile(String fileName, String initialContent, IProgressMonitor monitor) 
+			throws CoreException;	
+	
+	/**
 	 * Creates a new source folder.
 	 * 
 	 * @param sourceFolderName the name of the source folder.
