@@ -3,6 +3,7 @@ package eclihx.core.haxe.internal;
 /**
  * Manager of haXe specific constants.
  */
+@SuppressWarnings("all")
 public class HaxePreferencesManager {
 	
 	/**

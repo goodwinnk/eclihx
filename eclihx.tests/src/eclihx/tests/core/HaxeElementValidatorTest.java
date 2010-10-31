@@ -3,6 +3,8 @@
  */
 package eclihx.tests.core;
 
+import java.io.File;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -102,8 +104,8 @@ public class HaxeElementValidatorTest {
 	 */
 	@Test
 	public void testValidateBuildFileNameInvalidChars() {
-		Assert.assertFalse(HaxeElementValidator.validateBuildFileName("text?.hxml").isOK());		
-		
+		// TODO 2: add specific test for different OS systems 
+		Assert.assertFalse(HaxeElementValidator.validateBuildFileName("text/.hxml").isOK());
 	}
 	
 	/**
@@ -123,8 +125,7 @@ public class HaxeElementValidatorTest {
 	public void testValidateBuildFileNameBackSlash() {
 		Assert.assertFalse(
 				HaxeElementValidator.validateBuildFileName(
-						"hi\\ha.hxml").isOK());		
-		
+						"hi" + File.separatorChar + "a.hxml").isOK());
 	}
 	
 	/**
