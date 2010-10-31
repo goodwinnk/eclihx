@@ -1,7 +1,13 @@
 package eclihx.core.haxe.internal;
 
+/**
+ * Interface for haXe build parameters
+ */
 public interface IBuildParamsContainer {
 	
+	/**
+	 * haXe code available platforms
+	 */
 	enum TargetPlatform {
 		Flash,
 		AS,
@@ -23,6 +29,5 @@ public interface IBuildParamsContainer {
 	boolean isDebugInstructionsEnabled();
 	void setDebugInstructionsEnabled(boolean debugInstrucitonsEnabled);
 	
-	void merge(IBuildParamsContainer container);
-	
+	void merge(IBuildParamsContainer container);	
 }

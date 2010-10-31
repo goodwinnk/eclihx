@@ -1,6 +1,7 @@
 package eclihx.ui;
 
 import java.net.URL;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -16,6 +17,8 @@ import org.osgi.framework.Bundle;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
+// TODO 9: Refactor code
+
 /**
  * On the base of JDT sources.
  * 
@@ -23,6 +26,7 @@ import eclihx.ui.internal.ui.EclihxUIPlugin;
  * 
  * On the base of jdt.ui
  */
+@SuppressWarnings("all")
 public class PluginImages {
 
 	private static final IPath ICONS_PATH = new Path("$nl$/icons"); //$NON-NLS-1$
