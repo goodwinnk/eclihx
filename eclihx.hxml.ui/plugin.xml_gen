@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+    <extension
+            point="org.eclipse.ui.editors">
+        <editor
+            class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.XtextEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="true"
+            extensions="hxml"
+            id="eclihx.hxml.HXml"
+            name="HXml Editor">
+        </editor>
+    </extension>
+    <extension
+        point="org.eclipse.ui.handlers">
+        <handler
+            class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclarationHandler"
+            commandId="org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclaration">
+            <activeWhen>
+                <reference
+                    definitionId="eclihx.hxml.HXml.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+        <handler
+            class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.handler.ValidateActionHandler"
+            commandId="eclihx.hxml.HXml.validate">
+         <activeWhen>
+            <reference
+                    definitionId="eclihx.hxml.HXml.Editor.opened">
+            </reference>
+         </activeWhen>
+      </handler>
+    </extension>
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="eclihx.hxml.HXml.Editor.opened">
+            <and>
+                <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+                <with variable="activeEditor">
+                    <test property="org.eclipse.xtext.ui.core.editor.XtextEditor.languageName" 
+                        value="eclihx.hxml.HXml" 
+                        forcePluginActivation="true"/>
+                </with>        
+            </and>
+        </definition>
+    </extension>
+    <extension
+            point="org.eclipse.ui.preferencePages">
+        <page
+            class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+            id="eclihx.hxml.HXml"
+            name="HXml"
+            category="org.eclipse.xtext.languages">
+            <keywordReference id="eclihx.hxml.ui.keyword_HXml"/>
+        </page>
+        <page
+            category="eclihx.hxml.HXml"
+            class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="eclihx.hxml.HXml.coloring"
+            name="Syntax Coloring">
+            <keywordReference id="eclihx.hxml.ui.keyword_HXml"/>
+        </page>
+        <page
+            category="eclihx.hxml.HXml"
+            class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.templates.XtextTemplatePreferencePage"
+            id="eclihx.hxml.HXml.templates"
+            name="Templates">
+            <keywordReference id="eclihx.hxml.ui.keyword_HXml"/>
+        </page>
+    </extension>
+    <extension
+        point="org.eclipse.ui.keywords">
+        <keyword
+            id="eclihx.hxml.ui.keyword_HXml"
+            label="HXml"/>
+    </extension>
+    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Trigger expensive validation"
+            id="eclihx.hxml.HXml.validate"
+            name="Validate">
+      </command>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="popup:#TextEditorContext?after=group.open">
+             <command
+                 commandId="eclihx.hxml.HXml.validate"
+                 style="push"
+                 tooltip="Trigger expensive validation">
+            <visibleWhen checkEnabled="false">
+                <reference
+                    definitionId="eclihx.hxml.HXml.Editor.opened">
+                </reference>
+            </visibleWhen>
+         </command>  
+         </menuContribution>
+    </extension>
+
+<!-- adding resource factories -->
+
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="eclihx.hxml.HXmlExecutableExtensionFactory:org.eclipse.xtext.resource.XtextResourceFactory"
+			type="hxml">
+		</parser>
+	</extension>
+
+
+
+
+</plugin>
