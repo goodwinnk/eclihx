@@ -1,0 +1,48 @@
+grammar eclihx.hxml.HXml with org.eclipse.xtext.common.Terminals
+
+generate hxml "http://www.xtext.org/example/HXml"
+
+Model :
+	(elements+=Type)*;
+	
+Classpath :
+	'-cp' value=STRING;
+	
+Javascript :
+	'-js' value=STRING;
+
+Swf :
+	'-swf' value=STRING;
+	
+Swf9 :
+	'-swf9' value=STRING;
+
+Neko :
+	'-neko' value=STRING;
+	
+Php :
+	'-php' value=STRING;
+	
+Cpp :
+	'-cpp' value=STRING;
+
+Xml :
+	'-xml' value=STRING;
+
+Main :
+	'-main' value=STRING;
+
+Lib :
+	'-lib' value=STRING;
+
+Flag :
+	'-D' value=STRING;
+
+Verbose :
+	'-v' value=STRING;
+	
+Debug :
+	'-debug' value=STRING;
+	
+Type:
+	Classpath | Javascript | Swf | Swf9 | Neko | Php | Cpp | Xml | Main | Lib | Flag | Verbose | Debug;
