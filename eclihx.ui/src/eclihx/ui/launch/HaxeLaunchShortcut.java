@@ -4,6 +4,9 @@ import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * haXe launch shortcut
+ */
 public class HaxeLaunchShortcut implements ILaunchShortcut {
 
 	public void launch(ISelection selection, String mode) {
