@@ -46,7 +46,7 @@ public class ProjectCreator {
 		builder.append("\n");
 				
 		builder.append("# Uncomment and place your main class with package\n");
-		builder.append("# -main YouClassName\n");		
+		builder.append("# -main package.subpackage.ClassName\n");		
 		
 		return builder.toString();
 	}

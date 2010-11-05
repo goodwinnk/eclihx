@@ -37,7 +37,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 
 	
 	/**
-	 * Get the output file path. Can be null if it wasn't set before.
+	 * Get the output file path. Can be null if it hasn't been set before.
 	 * @return output file path.
 	 */
 	public String getOutputFile() {

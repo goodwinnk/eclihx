@@ -12,8 +12,6 @@ public class HaxeRunnerConfiguration {
 	private String fWorkingDirectory;
 	private String fBuildFile;
 	private String fCompilerPath;
-	private String fSourceDirectory;
-	private String fOutputDirectory;
 	
 	/**
 	 * Simple constructor. Main functionality moved to <code>load</code> method 
@@ -36,14 +34,6 @@ public class HaxeRunnerConfiguration {
 				configuration.getAttribute( 
 						IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, 
 						""));
-        
-		setOutputDirectory(configuration.getAttribute(
-				IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, 
-				(String) null));
-        
-		setSourceDirectory(configuration.getAttribute(
-				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, 
-				(String) null));
         
 		setBuildFile(configuration.getAttribute(
 				IHaxeLaunchConfigurationConstants.BUILD_FILE, 
@@ -119,43 +109,5 @@ public class HaxeRunnerConfiguration {
 	 */
 	public void setCompilerPath(String compilePath) {
 		fCompilerPath = compilePath;
-	}
-
-	/**
-	 * Get the source directory string. 
-	 * @return the source directory string.
-	 */
-	public String getSourceDirectory() {
-		return fSourceDirectory;
-	}
-
-	/**
-	 * Set the source directory string.
-	 * @param sourceDirectory the source directory string.
-	 */
-	public void setSourceDirectory(String sourceDirectory) {
-		fSourceDirectory = sourceDirectory;
-		
-        // FIXME 7 dirty hack
-        if (fSourceDirectory.endsWith("\\")) {
-        	fSourceDirectory = fSourceDirectory.substring(
-        			0, fSourceDirectory.length() - 1);
-        }
-	}
-
-	/**
-	 * Get the output directory path. 
-	 * @return the output directory path.
-	 */
-	public String getOutputDirectory() {
-		return fOutputDirectory;
-	}
-
-	/**
-	 * Set the output directory.
-	 * @param outputDirectory the output directory path.
-	 */
-	public void setOutputDirectory(String outputDirectory) {
-		fOutputDirectory = outputDirectory;
 	}
 }

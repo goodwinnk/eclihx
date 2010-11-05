@@ -17,6 +17,7 @@ import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
 import eclihx.core.util.OSUtil;
 import eclihx.core.util.ProcessUtil;
+import eclihx.core.util.ProcessUtil.ProcessExecResult;
 
 /**
  * This class will generate content tips for the particular 
@@ -64,30 +65,20 @@ public class HaxeContextAssistManager {
 			configuration.addSourceDirectory(sourceFolder.getBaseFolder().getLocation().toOSString());
 		}
 		
-		//new HaxeLauncher().run(configuration, launch, compilerPath, outputPath)
-		
 		try {
-			
-			final StringBuilder errorString = new StringBuilder();
-			final StringBuilder outputString = new StringBuilder();
-			
 			// TODO 9 need a warning here if preference hasn't been set. 
 			final String haxePath = 
 				EclihxCore.getDefault().getPluginPreferences().getString(
 					CorePreferenceInitializer.HAXE_COMPILER_PATH); 
 			
-			File outputDirectory = new File(
-					haxeFile.getHaxeProject().
-							getOutputFolder().getBaseFolder().
-									getLocation().toOSString());
+			File workingDirectory = haxeFile.getHaxeProject().getProjectBase().getLocation().toFile();
 			
-			ProcessUtil.executeProcess(
-				OSUtil.quoteCompoundPath(haxePath) 
-				+ " " + configuration.printConfiguration(), 
-				outputDirectory, errorString, outputString
+			ProcessExecResult executeProcessResult = ProcessUtil.executeProcess(
+				OSUtil.quoteCompoundPath(haxePath) + " " + configuration.printConfiguration(), 
+				workingDirectory
 			);
 			
-			final String errors = errorString.toString();
+			final String errors = executeProcessResult.getErrorsString();
 			
 			EclihxCore.getLogHelper().logInfo("Errors: " + errors);
 			

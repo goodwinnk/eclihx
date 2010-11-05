@@ -1,7 +1,7 @@
 package eclihx.ui.launch.tabs;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -26,7 +26,6 @@ import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
 import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IHaxeProject;
-import eclihx.core.haxe.model.core.IProjectPathManager;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.utils.StandardDialogs;
@@ -48,13 +47,12 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 * Here we are going to store all build files in the project.
 	 * This variable isn't supposed to get null values.
 	 */
-	String[] buildFilesCache = new String[0];
+	final ArrayList<IFile> buildFilesCache = new ArrayList<IFile>();
 
 	/* Controls */
 	private Text projectNameText;
 	private Text buildFileNameText;
-	private Text sourceDirectoryText;
-	private Text outputDirectoryText;
+	private Text workingDirectoryText;
 	private Button projectBuildButton;
 
 	private final ModifyListener fModifyListener = new ModifyListener() {
@@ -63,18 +61,6 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			updateLaunchConfigurationDialog();
 		}
 	};
-
-	/**
-	 * Converts array of <code>IFile</code> objects
-	 * to absolute paths strings
-	 */
-	private String[] getAbsolutePaths(IFile[] files) {
-		List<String> paths = new ArrayList<String>(files.length);
-		for (IFile file : files) {
-			paths.add(file.getLocation().toString());
-		}
-		return paths.toArray(new String[0]);
-	}
 
 	/**
 	 * Handler for the button of project selection.
@@ -94,22 +80,13 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 			// After that current project should be updated
 			if (haxeProject != null) {
-				IProjectPathManager pathManager = haxeProject.getPathManager();
-
-				if (buildFilesCache.length > 0) {
-					buildFileNameText.setText(buildFilesCache[0]);
+				if (!buildFilesCache.isEmpty()) {
+					buildFileNameText.setText(buildFilesCache.get(0).getLocation().toOSString());
+					workingDirectoryText.setText(buildFilesCache.get(0).getParent().getLocation().toOSString());
 				} else {
 					buildFileNameText.setText("");
+					workingDirectoryText.setText("");					
 				}
-
-				// Output folder
-				outputDirectoryText.setText(
-					pathManager.getOutputFolder().getLocation().toString());
-
-				// Source folder
-				sourceDirectoryText.setText(
-					pathManager.getSourceFolders().get(0).
-					getLocation().toString());
 			}
 		}
 	}
@@ -130,9 +107,14 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 
 			if (buildFileName != null) {
 				buildFileNameText.setText(buildFileName);
+
+				for (IFile buildFile : buildFilesCache) {
+					if (buildFile.getLocation().toOSString().equals(buildFileName)) {
+						workingDirectoryText.setText(buildFile.getParent().getLocation().toOSString());
+					}	
+				}
 			} else {
-				EclihxUIPlugin.getLogHelper().
-						logInfo("The selected file wasn't found.");
+				EclihxUIPlugin.getLogHelper().logInfo("The selected file wasn't found.");
 			}
 		}
 	}
@@ -212,29 +194,16 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 
-		// Add source directory
-		Group sourceDirectoryGroup = new Group(top, SWT.NONE);
-		sourceDirectoryGroup.setText("Source Directory");
-		sourceDirectoryGroup.setLayout(layout);
-		sourceDirectoryGroup.setLayoutData(horizontantalGrid);
+		// Add working  directory
+		Group workingDirectoryGroup = new Group(top, SWT.NONE);
+		workingDirectoryGroup.setText("Execute from directory");
+		workingDirectoryGroup.setLayout(layout);
+		workingDirectoryGroup.setLayoutData(horizontantalGrid);
 
-		sourceDirectoryText = new Text(sourceDirectoryGroup, SWT.BORDER);
-		sourceDirectoryText.setLayoutData(horizontantalGrid);
-		sourceDirectoryText.setEditable(false);
-		sourceDirectoryText.setText("");
-		sourceDirectoryText.addModifyListener(fModifyListener);
-
-		// Output working directory group
-		Group outputDirectoryGroup = new Group(top, SWT.NONE);
-		outputDirectoryGroup.setText("Output Directory");
-		outputDirectoryGroup.setLayout(layout);
-		outputDirectoryGroup.setLayoutData(horizontantalGrid);
-
-		outputDirectoryText = new Text(outputDirectoryGroup, SWT.BORDER);
-		outputDirectoryText.setLayoutData(horizontantalGrid);
-		outputDirectoryText.setEditable(false);
-		outputDirectoryText.setText("");
-		outputDirectoryText.addModifyListener(fModifyListener);
+		workingDirectoryText = new Text(workingDirectoryGroup, SWT.BORDER);
+		workingDirectoryText.setLayoutData(horizontantalGrid);
+		workingDirectoryText.setEditable(false);
+		workingDirectoryText.setText("");
 
 		setControl(top);
 	}
@@ -259,8 +228,6 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		initializeProjectName(configuration);
 		initializeBuildFile(configuration);
 		initializeWorkingDirectory(configuration);
-		initializeOutputDirectory(configuration);
-
 	}
 
 	/*
@@ -279,11 +246,8 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 				IHaxeLaunchConfigurationConstants.BUILD_FILE, buildFileNameText.getText());
 		
 		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, sourceDirectoryText.getText());
+				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, workingDirectoryText.getText());
 		
-		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY,	outputDirectoryText.getText());
-
 		// TODO 3 Make separate place for overriding initializer
 		configuration.setAttribute(
 			IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH,
@@ -309,8 +273,6 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(
 				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, "");
 		configuration.setAttribute(
-				IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY, "");
-		configuration.setAttribute(
 				IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, "");
 	}
 
@@ -334,9 +296,9 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	/**
 	 * Initialize working directory field from the configuration
 	 */
-	private void 
-		initializeWorkingDirectory(ILaunchConfiguration configuration) {
+	private void initializeWorkingDirectory(ILaunchConfiguration configuration) {
 		String workingDirectoryString = "";
+		
 		try {
 			workingDirectoryString = configuration.getAttribute(
 					IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY,
@@ -344,22 +306,8 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		} catch (CoreException e) {
 			EclihxCore.getLogHelper().logError(e);
 		}
-		sourceDirectoryText.setText(workingDirectoryString);
-	}
-
-	/**
-	 * Initialize working directory field from the configuration
-	 */
-	private void initializeOutputDirectory(ILaunchConfiguration configuration) {
-		String outputDirectoryString = "";
-		try {
-			outputDirectoryString = configuration.getAttribute(
-					IHaxeLaunchConfigurationConstants.OUTPUT_DIRECTORY,
-					outputDirectoryString);
-		} catch (CoreException e) {
-			EclihxCore.getLogHelper().logError(e);
-		}
-		outputDirectoryText.setText(outputDirectoryString);
+		
+		workingDirectoryText.setText(workingDirectoryString);
 	}
 
 	/**
@@ -397,6 +345,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			// Project name
 			String projectName = launchConfig.getAttribute(
 					IHaxeLaunchConfigurationConstants.PROJECT_NAME, "");
+			
 			if (projectName == null || projectName.isEmpty()) {
 				setMessage("Choose the haXe project");
 				setErrorMessage(null);
@@ -404,7 +353,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			}
 
 			// Build file check
-			if (buildFilesCache != null && buildFilesCache.length == 0) {
+			if (buildFilesCache != null && buildFilesCache.isEmpty()) {
 				setErrorMessage(
 					"This version of EclihX only supports building based " +
 					"on hxml-file. Please create one for this project before " +
@@ -466,20 +415,17 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 				if (!haxeProject.isOpen()) {
 					haxeProject.open(null);
 				}
-
-				buildFilesCache = getAbsolutePaths(haxeProject.getBuildFiles());
+				
+				buildFilesCache.addAll(Arrays.asList(haxeProject.getBuildFiles()));
 				projectBuildButton.setEnabled(true);
 				
 			} else {
-				
-				// Clear the list
-				buildFilesCache = new String[0];
+				buildFilesCache.clear();
 				projectBuildButton.setEnabled(false);
-			
 			}
 		} catch (CoreException e) {
 			haxeProject = null;
-			buildFilesCache = null;
+			buildFilesCache.clear();
 		}		
 	}
 }

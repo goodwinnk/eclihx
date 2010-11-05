@@ -59,18 +59,6 @@ public class FlashDebugRunner implements IHaxeRunner {
 		if (!status.isOK()) {
 			throwState(IStatus.ERROR, IStatus.ERROR, status.getMessage());
 		}
-	
-		if (config.getOutputDirectory() == null || 
-				config.getOutputDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, 
-					"Output directory isn't defined.");
-		}
-		
-		if (config.getSourceDirectory() == null || 
-				config.getSourceDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, 
-					"Source directory isn't defined.");
-		}		
 	}
 	
 	public String run(HaxeRunnerConfiguration configuration, ILaunch launch,
@@ -78,9 +66,7 @@ public class FlashDebugRunner implements IHaxeRunner {
 
 		validateConfiguration(configuration);
 		
-		// My attempt
-		(new FlashRunner()).run(launch, configuration.getBuildFile(), 
-				configuration.getOutputDirectory(), configuration.getWorkingDirectory());
+		(new FlashRunner()).run(launch, configuration.getBuildFile(), configuration.getWorkingDirectory());
 
 		return "Flash debug runner. This feature isn't ready!";
 		

@@ -34,11 +34,4 @@ public interface IHaxeLaunchConfigurationConstants {
 	 */
 	public static final String WORKING_DIRECTORY = 
 			EclihxLauncher.PLUGIN_ID + ".working_directory";
-	
-	/**
-	 * Directory where compiler should place output files
-	 */
-	public static final String OUTPUT_DIRECTORY = 
-			EclihxLauncher.PLUGIN_ID + ".output_directory";
-
 }
