@@ -27,19 +27,6 @@ import eclihx.launching.IHaxeRunner;
 public class HaxeRunner implements IHaxeRunner {
 	
 	/**
-	 * Method generates new core exception
-	 * @param e exception to wrap
-	 * @return new CoreException object.
-	 */
-	private CoreException generateCoreException(Exception e) {
-		return new CoreException(
-			new Status(
-				Status.ERROR, EclihxLauncher.PLUGIN_ID, 
-				e.getMessage())
-		);
-	}
-	
-	/**
 	 * 
 	 * @param severity
 	 * @param code
@@ -83,19 +70,6 @@ public class HaxeRunner implements IHaxeRunner {
 		if (!status.isOK()) {
 			throwState(IStatus.ERROR, IStatus.ERROR, status.getMessage());
 		}
-		
-		// TODO 6 Get the validation.
-		if (config.getOutputDirectory() == null || 
-				config.getOutputDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, 
-					"Output directory isn't defined.");
-		}
-		
-		if (config.getSourceDirectory() == null || 
-				config.getSourceDirectory().isEmpty()) {
-			throwState(IStatus.ERROR, IStatus.OK, 
-					"Source directory isn't defined.");
-		}		
 	}
 
 	/*
@@ -107,18 +81,16 @@ public class HaxeRunner implements IHaxeRunner {
 					ILaunch launch, 
 					IProgressMonitor monitor) throws CoreException {
 		
-		// Validates haXe configuration.
 		validateConfiguration(configuration);
 		
-		// output directory
-        File outputDirectory = new File(configuration.getOutputDirectory());
+        File workingDirectory = new File(configuration.getWorkingDirectory());
         
-        BuildParamParser parser = new BuildParamParser();
-
         HaxeConfigurationList executionList;
         
         try
         {
+        	BuildParamParser parser = new BuildParamParser();
+        	
         	executionList = 
         		parser.parseFile(configuration.getBuildFile(), configuration.getWorkingDirectory());
         }
@@ -138,11 +110,11 @@ public class HaxeRunner implements IHaxeRunner {
         String fullOutput = "";
         
         for (HaxeConfiguration haxeConfig : executionList) {
-        	haxeConfig.addSourceDirectory(configuration.getSourceDirectory());
+        	// haxeConfig.addSourceDirectory(configuration.getWorkingDirectory());
 			
 			final HaxeLauncher launcher = new HaxeLauncher();
 			
-			launcher.run(haxeConfig, launch, configuration.getCompilerPath(), outputDirectory);
+			launcher.run(haxeConfig, launch, configuration.getCompilerPath(), workingDirectory);
 			
 			String errorsString = launcher.getErrorString();
 			String outputString = launcher.getOutputString();

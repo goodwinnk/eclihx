@@ -103,7 +103,7 @@ public final class StandardDialogs {
 			// FIXME 2 Move to separate method
 			List<String> stringPaths = new ArrayList<String>(paths.length);
 			for (IFile file : paths) {
-				stringPaths.add(file.getLocation().toString());
+				stringPaths.add(file.getLocation().toOSString());
 			}
 
 			dialog.setElements(stringPaths.toArray(new String[0]));

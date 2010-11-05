@@ -31,9 +31,12 @@ public class FlashRunner {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void run(ILaunch launch, String fileName, String outputFolder, String workingDirectory) 
+	public void run(ILaunch launch, String fileName, String workingDirectory) 
 			throws CoreException {
 		try {
+			
+			// TODO 2: Get output folder from the haXe project
+			String outputFolder = ""; 
 			
 			BuildParamParser parser = new BuildParamParser();			
 			
