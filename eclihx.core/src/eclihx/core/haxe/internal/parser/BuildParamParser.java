@@ -606,18 +606,19 @@ public final class BuildParamParser {
 
 		try {
 			
-			String fileContent = new String();
+			StringBuilder fileContent = new StringBuilder();
 			BufferedReader in = new BufferedReader(new FileReader(buildFile));
 
 		    try{
-		    	String buffer = new String();
+		    	String buffer = null;
 				
 				while((buffer = in.readLine())!= null) {
 					String trimString = buffer.trim();
 					
-					if (!(trimString.length() == 0 || trimString.startsWith("#"))) {
+					if (!(trimString.isEmpty() || trimString.startsWith("#"))) {
 						// We adds only non-comments and not-empty strings 
-						fileContent += trimString + " ";
+						fileContent.append(trimString);
+						fileContent.append(" ");
 					}
 				}
 		    }
@@ -625,7 +626,7 @@ public final class BuildParamParser {
 		    	in.close();
 		    }	
 		
-			parse(fileContent);
+			parse(fileContent.toString());
 			
 		} catch (IOException e) {
 			throw new ParseError(String.format("Can't read build file: %s.", e.getMessage()));

@@ -114,21 +114,21 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		
 		if (version != null && version == 9) {
 			// use special option for storing both version and output file
-			outputBuilder.append(HaxeConfiguration.GenerateParameter(
+			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF9_OUTPUT,
 				OSUtil.quoteCompoundPath(outputFile)			
 			));
 		} else {
 			if (version != null) {
 				// write version
-				outputBuilder.append(HaxeConfiguration.GenerateParameter(
+				outputBuilder.append(HaxeConfiguration.generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION,
 					new Integer(version).toString()
 				));
 			}
 			
 			// write output file
-			outputBuilder.append(HaxeConfiguration.GenerateParameter(
+			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_OUTPUT,
 				OSUtil.quoteCompoundPath(outputFile)				
 			));			
@@ -138,7 +138,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		// it in configuration.		
 		if (header != null) {
 			// Add header
-			outputBuilder.append(HaxeConfiguration.GenerateParameter(
+			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_HEADER,
 				header				
 			));
@@ -146,7 +146,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		
 		// SWF libraries
 		for (String libFileName : swfLibraries) {
-			outputBuilder.append(HaxeConfiguration.GenerateParameter(
+			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_LIB, 
 				OSUtil.quoteCompoundPath(libFileName)
 			));		

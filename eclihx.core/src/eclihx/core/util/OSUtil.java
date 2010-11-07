@@ -7,30 +7,14 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.haxe.os.PathManager;
 
 /**
  * Class for storing operation system specific options.
  */
 public final class OSUtil {
 	
-	/**
-	 * A convenience flag
-	 * True if platform is win32 based, false otherwise.
-	 * @see org.eclipse.core.runtime.Platform#getOS()
-	 */
-	static public final boolean isPlatformWin32 = Platform.OS_WIN32.equals(Platform.getOS());
-
-	/**
-	 * A convenience String that represent the system dependent
-	 * path separator ("\" on win32 systems, "/" otherwise) 
-	 * @see java.io.File#pathSeparator
-	 */
-	static public final String pathSeparator = File.pathSeparator;
-	
-	static private String compilerName = isPlatformWin32?"haxe.exe":"haxe";
-	static private String[] compilerExtensionFilter = {
-		isPlatformWin32?"haxe.exe":"haxe", "*.*", "*"
-	};
+	static private String[] compilerExtensionFilter = { PathManager.HAXE_COMPILER_FILENAME, "*.*", "*" };
 
 	/**
 	 * Add extension separator to the parameter if there are no any.
@@ -64,15 +48,6 @@ public final class OSUtil {
 		return path;
 	}
 
-	/**
-	 * Gets the file name of the haXe compiler, i.e. "haxe.exe" in windows and "haxe" otherwise
-	 * 
-	 * @return haXe compiler file name without path.
-	 */
-	static public String getCompilerFileName() {
-		return compilerName;
-	}
-	
 	/**
 	 * Gets file filter for the compiler. It can be something like "*.*" or
 	 * "*.exe" or even "haxe.exe".

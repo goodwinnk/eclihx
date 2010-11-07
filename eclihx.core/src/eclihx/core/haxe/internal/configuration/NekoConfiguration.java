@@ -68,11 +68,11 @@ public class NekoConfiguration extends AbstractConfiguration {
 		
 		String output = "";
 		
-		output += HaxeConfiguration.GenerateParameter(
+		output += HaxeConfiguration.generateParameter(
 			HaxePreferencesManager.PARAM_PREFIX_NEKO_OUTPUT, 
 			OSUtil.quoteCompoundPath(outputFile));
 		
-		output += HaxeConfiguration.GenerateFlagParameter(
+		output += HaxeConfiguration.generateFlagParameter(
 			HaxePreferencesManager.PARAM_PREFIX_NEKO_SOURCE_FLAG, 
 			keepNekoSource);
 		 

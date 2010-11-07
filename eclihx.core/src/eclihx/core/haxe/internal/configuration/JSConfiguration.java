@@ -47,7 +47,7 @@ public class JSConfiguration extends AbstractConfiguration {
 	 */
 	@Override
 	public String printConfiguration() throws InvalidConfigurationException {
-		return HaxeConfiguration.GenerateParameter(
+		return HaxeConfiguration.generateParameter(
 			HaxePreferencesManager.PARAM_PREFIX_JAVA_SCRIPT_OUTPUT, 
 			OSUtil.quoteCompoundPath(outputFile));
 	}	
