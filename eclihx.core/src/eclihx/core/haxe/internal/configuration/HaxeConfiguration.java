@@ -200,7 +200,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * @param value parameter value
 	 * @return string representation of the parameter.
 	 */
-	public final static String GenerateParameter(String key, String value) {
+	public final static String generateParameter(String key, String value) {
 
 		if (key == null || value == null) {
 			throw new NullPointerException(
@@ -218,7 +218,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * @param exist is parameter exist configuration.
 	 * @return string representation of the flag parameter.
 	 */
-	public final static String GenerateFlagParameter(String key, 
+	public final static String generateFlagParameter(String key, 
 			boolean exist) {
 
 		if (key == null) {
@@ -617,33 +617,33 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 
 		// Startup class
 		if (startupClass != null) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
 					startupClass));
 		}
 
 		// Stored libraries
 		for (String library : libraries) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_HAXE_LIB, library));
 		}
 
 		// Compilation flags
 		for (String compileFlag : compilationFlags) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_COMPILATION_FLAG,
 					compileFlag));
 		}
 
 		// Print source directories
 		for (String sourceDirectory : sourceDirectories) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_SOURCE_DIRECTORY,
 					OSUtil.quoteCompoundPath(sourceDirectory)));
 		}
 
 		// Debug parameter
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_DEBUG_MODE_FLAG, debug));
 
 		// Display code tips
@@ -653,89 +653,89 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 					OSUtil.quoteCompoundPath(tipFileName), 
 					tipFilePosition);
 			
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG, tipsParamStr));
 		}
 		
 		// No output
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_NO_OUTPUT_FLAG,
 				explicitNoOutput));
 
 		// Verbose mode flag.
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_VERBOSE_MODE_FLAG,
 				verboseMode));
 
 		// No-inline flag
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_NO_INLINE_FLAG,
 				noInlineMode));
 
 		// Time measure mode
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_TIME_MESURE_FLAG,
 				timeMesureMode));
 
 		// Resources
 		for (String resourceFile : resourceFiles) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_RESOURCE_FILE,
 					OSUtil.quoteCompoundPath(resourceFile)));
 		}
 
 		// Exclude files
 		for (String excludeFile : excludeFiles) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_EXCLUDE_FILE,
 					OSUtil.quoteCompoundPath(excludeFile)));
 		}
 
 		// Xml description
 		if (outputXmlFile != null) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_XML_DESCRIPTION_OUTPUT,
 					OSUtil.quoteCompoundPath(outputXmlFile)));
 		}
 
 		// Prompt on error.
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_PROMT_ERROR_MODE_FLAG,
 				promptOnErrorMode));
 
 		// CMD command
 		if (cmdCommand != null) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_CMD_COMMAND,
 					cmdCommand));
 		}
 
 		// No traces mode state
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_NO_TRACES_FLAG,
 				noTracesMode));
 
 		// File for generated headers
 		if (swfFileForHeaders != null) {
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_GENERATE_HAXE_CLASSES_SWF,
 					OSUtil.quoteCompoundPath(swfFileForHeaders)));
 		}
 
 		// Flash strict mode
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_FLASH_STRICT_FLAG,
 				flashStrictMode));
 
 		// Flash strict mode
-		outputBuilder.append(GenerateFlagParameter(
+		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_FLASH_USE_STAGE_FLAG,
 				flashUseStageMode));
 
 		// Remap package directives
 		for (String directive : remapString) {
 			// Flash strict mode
-			outputBuilder.append(GenerateParameter(
+			outputBuilder.append(generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_REMAP_PACKAGE,
 					directive));
 		}

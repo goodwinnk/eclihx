@@ -50,7 +50,7 @@ public class ASConfiguration extends AbstractConfiguration {
 		
 		String output = "";
 		
-		output += HaxeConfiguration.GenerateParameter(
+		output += HaxeConfiguration.generateParameter(
 			HaxePreferencesManager.PARAM_PREFIX_ACTION_SCRIPT3_DIRECTORY, 
 			OSUtil.quoteCompoundPath(outputDirectory));
 		

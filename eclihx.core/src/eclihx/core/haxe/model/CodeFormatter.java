@@ -335,21 +335,22 @@ public final class CodeFormatter {
 	
 	/**
 	 * This method multiplies the strings.
-	 * In fact it should throw exceptions but it doesn't because of the only
-	 * local use.
+     *
 	 * @param str the string to multiply.
 	 * @param number number of times to repeat the string. You can get valid
 	 *        result only if number >= 0. In other cases you'll get an 
 	 *        empty string.
+	 *        
 	 * @return Multiplied string.
 	 */
 	static private String multiply(String str, int number) {
-		String newStr = "";
+		
+		StringBuilder newStrBuilder = new StringBuilder();
 		
 		for (int i = 0; i < number; ++i) {
-			newStr += str;
+			newStrBuilder.append(str);
 		}
 		
-		return newStr;
+		return newStrBuilder.toString();
 	}
 }

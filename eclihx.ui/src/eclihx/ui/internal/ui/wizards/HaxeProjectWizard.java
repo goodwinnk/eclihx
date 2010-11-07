@@ -9,8 +9,6 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-import eclihx.core.EclihxCore;
-import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.helper.ProjectCreator;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.wizards.NewHaxeProjectWizardFirstPage;

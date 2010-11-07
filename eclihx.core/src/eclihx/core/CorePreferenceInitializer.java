@@ -3,6 +3,8 @@ package eclihx.core;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 
+import eclihx.core.haxe.os.PathManager;
+
 /**
  * Initializer of the preferences for the core plug-in.
  */
@@ -27,6 +29,8 @@ public final class CorePreferenceInitializer
 	@Override
 	public void initializeDefaultPreferences() {
 		Preferences store = EclihxCore.getDefault().getPluginPreferences();
-		store.setDefault(HAXE_COMPILER_PATH, "");
+		
+		String haxeCompilerPath = PathManager.getHaxeCompiler();
+		store.setDefault(HAXE_COMPILER_PATH, haxeCompilerPath != null ? haxeCompilerPath : "");
 	}
 }

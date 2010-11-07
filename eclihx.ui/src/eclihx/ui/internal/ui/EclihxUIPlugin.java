@@ -42,7 +42,7 @@ public class EclihxUIPlugin extends AbstractUIPlugin {
 	@SuppressWarnings({"deprecation"})
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+				
 		//FIXME 9 remove it from here
 		initializeDefaultPluginPreferences();
 	}
