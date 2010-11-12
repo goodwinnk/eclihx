@@ -1,5 +1,7 @@
 package eclihx.core.haxe.os;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 
@@ -60,11 +62,24 @@ public abstract class PathManager {
 	 * @return haXe compiler path. null if haXe installation hasn't been found.
 	 */
 	public static String getHaxeCompiler() {
-		String haxeDir = getHaxeDirectory();
 		
-		if (haxeDir != null) {
-			return (new Path(haxeDir)).append(HAXE_COMPILER_FILENAME).toOSString();
-		}
+		if (IS_PLATFORM_WIN32) {
+			String haxeDir = getHaxeDirectory();
+			
+			if (haxeDir != null) {
+				return (new Path(haxeDir)).append(HAXE_COMPILER_FILENAME).toOSString();
+			}
+		} else {
+			File execHaxeFile = new File("/usr/local/bin/haxe");
+			if (execHaxeFile.exists() && execHaxeFile.canExecute()) {
+				return execHaxeFile.getPath();
+			}
+			
+			execHaxeFile = new File("/usr/bin/haxe");
+			if (execHaxeFile.exists() && execHaxeFile.canExecute()) {
+				return execHaxeFile.getPath();
+			}			
+		}		
 		
 		return null;			
 	}
