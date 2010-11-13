@@ -113,7 +113,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 */
 	public ICompilerError processErrorLine(String errorLine) {
 		
-		final Matcher matcher = LINE_ERROR_PATTERN.matcher(errorLine);
+		final Matcher matcher = LINE_ERROR_PATTERN.matcher(errorLine.replaceAll("[\r\n]", ""));
 		
 		if (matcher.matches()) {			
 			String filePath = processFileName(matcher.group(1));
@@ -146,13 +146,15 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 			
 			// It's expected that each line contains a error.
 			for (String line : output.split("\n")) {
-				ICompilerError error = processErrorLine(line);
-				if (error != null) {
-					errorsList.add(error);
-				} else {
-					// Error processing failed and we add to the build file
-					errorsList.add(new CompilationError(buildFile, 0, 
-							new Pair<Integer, Integer>(0, 0), line));
+				if (!line.isEmpty()) {
+					ICompilerError error = processErrorLine(line);
+					if (error != null) {
+						errorsList.add(error);
+					} else {
+						// Error processing failed and we add to the build file
+						errorsList.add(new CompilationError(buildFile, 0,
+								new Pair<Integer, Integer>(0, 0), line));
+					}
 				}
 			}
 		}		
