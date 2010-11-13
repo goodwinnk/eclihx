@@ -23,7 +23,7 @@ public interface IHaxeOutputErrorsParser extends IHaxeVersionsInfo {
 	 * Gives the list of compile errors from the compiler output.
 	 * 
 	 * @param output haXe compiler output.
-	 * @param buildFile a build file line. 
+	 * @param buildFile a build file path. 
 	 * @return A list of errors.
 	 */	
 	List<ICompilerError> parseErrors(String output, String buildFile);
