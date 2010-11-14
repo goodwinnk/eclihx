@@ -458,7 +458,7 @@
 	        	label="Rename"
 	       		menubarPath="additions"
 	       		class="eclihx.ui.actions.RenameActionDelegate"	
-           		definitionId="eclihx.ui.actions.RenameActionDelegate.action1"
+           		definitionId="org.eclipse.ui.edit.rename"
 	       		enablesFor="1">
 	    	</action>
 	 	</objectContribution>
@@ -470,8 +470,7 @@
 	    	<action id="eclihx.ui.actions.moveActionDelegate"
 	        	label="Move"
 	       		menubarPath="additions"
-	       		class="eclihx.ui.actions.MoveActionDelegate"	
-           		definitionId="eclihx.ui.actions.MoveActionDelegate.action1"
+	       		class="eclihx.ui.actions.MoveActionDelegate"
 	       		enablesFor="1">
 	    	</action>
 	 	</objectContribution>
