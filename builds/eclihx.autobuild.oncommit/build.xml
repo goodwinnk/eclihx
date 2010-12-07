@@ -38,12 +38,12 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
         <mkdir dir="${buildDirectory}/plugins" />
         <mkdir dir="${buildDirectory}/features" />
         <copy todir="${buildDirectory}/plugins">
-            <fileset dir="../">
+            <fileset dir="../../">
                 <include name="**" />
             </fileset>
         </copy>
         <copy todir="${buildDirectory}/features">
-            <fileset dir="../">
+            <fileset dir="../../">
                 <include name="eclihx.feature/**" />
             </fileset>
         </copy>
