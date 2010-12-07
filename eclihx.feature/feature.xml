@@ -3,7 +3,6 @@
       id="eclihx.feature"
       label="Eclihx Plugin Feature"
       version="0.2.0.qualifier"
-      os="linux,win32"
       nl="en">
 
    <description url="http://code.google.com/p/eclihx/">
