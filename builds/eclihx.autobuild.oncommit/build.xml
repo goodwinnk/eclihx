@@ -39,12 +39,15 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
         <mkdir dir="${buildDirectory}/features" />
         <copy todir="${buildDirectory}/plugins">
             <fileset dir="../../">
-                <include name="**" />
+                <include name="eclihx.*/**" />
+            	<exclude name="**/bin/**"/>
+            	<exclude name="eclihx.feature/**"/>
             </fileset>
         </copy>
         <copy todir="${buildDirectory}/features">
             <fileset dir="../../">
                 <include name="eclihx.feature/**" />
+            	<exclude name="**/bin/**"/>
             </fileset>
         </copy>
     </target>
@@ -59,7 +62,7 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
             <arg value="-application" />
             <arg value="org.eclipse.ant.core.antRunner" />
             <arg value="-buildfile" />
-            <arg value="${eclipseLocation}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/productBuild/productBuild.xml" />
+            <arg value="${eclipseLocation}/plugins/org.eclipse.pde.build_${pdeBuildPluginVersion}/scripts/build.xml" />
             <arg value="-Dtimestamp=${timestamp}" />
             <classpath>
                 <pathelement location="${eclipseLocation}/plugins/org.eclipse.equinox.launcher_${equinoxLauncherPluginVersion}.jar" />
