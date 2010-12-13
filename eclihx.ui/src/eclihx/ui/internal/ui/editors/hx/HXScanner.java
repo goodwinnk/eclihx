@@ -20,11 +20,12 @@ import eclihx.ui.internal.ui.editors.CodeWhitespaceDetector;
  */
 public class HXScanner extends AbstractScanner {
 	
-	private final String[] fDeclareKeyWords = {"var", "function", "new", "delete", "class", "package"};
+	private final String[] fDeclareKeyWords = {"var", "function", "new", "delete", 
+			"class", "package", "default", "interface"};
 	
 	private final String[] fKeyWords = {"import", "extends", "implements", "extern", "private",
 			              "public", "static", "try", "catch", "throw", "cast", "return", "break", "continue",
-	                      "if", "else", "for", "while", "do", "switch", "case", "with"};
+	                      "if", "else", "for", "while", "do", "switch", "case", "with", "never", "this"};
 	
 	private final String[] fTypeWords = {"Void", "Float", "Int"};
 	

@@ -35,7 +35,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 * A very simple context which invalidates information after typing several
 	 * chars.
 	 */
-	private class HaxeContextValidator implements IContextInformationValidator {
+	private static class HaxeContextValidator implements IContextInformationValidator {
 		private int initialOffset;
 		
 		/*
