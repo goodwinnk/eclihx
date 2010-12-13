@@ -10,6 +10,7 @@
 	<import file="${allElementsFile}" />
 	<target name="allElements">
 		<antcall target="allElementsDelegator" />
+		<echo message="${id}"/>
 	</target>
 	
 	<!-- ===================================================================== -->
@@ -150,7 +151,34 @@
 	<!-- Steps to do after the build is done. -->
 	<!-- ===================================================================== -->
 	<target name="postBuild">
+		<property name="UpdateSiteStagingLocation" value="${buildDirectory}/UpdateSite"/>
+		<property name="sitePackagePrefix" value="org.eclihx.updatesite"/>
+		<antcall target="generateUpdateSite"/>
 		<antcall target="gatherLogs" />
+	</target>
+		
+	<target name="generateUpdateSite">
+		<!-- Create the directory structure -->
+		<mkdir dir="${UpdateSiteStagingLocation}"/>
+		<mkdir dir="${UpdateSiteStagingLocation}/features"/>
+		<mkdir dir="${UpdateSiteStagingLocation}/plugins"/>
+		<!-- Build the jar files -->
+		<antcall target="allElements">
+			<param name="genericTargets" value="${builder}/customTargets.xml"/>
+			<param name="target" value="updateSiteExport"/>
+		</antcall>
+		<antcall target="copySiteXml"/>
+	</target>
+	
+	<target name="updateSiteExport">
+	  <ant antfile="build.xml" dir="${buildDirectory}/features/${id}/" target="build.update.jar">
+	    <property name="feature.destination" value="${UpdateSiteStagingLocation}/features"/>
+	    <property name="plugin.destination" value="${UpdateSiteStagingLocation}/plugins"/>
+	  </ant>
+	</target>
+	
+	<target name="copySiteXml">
+		<!-- Should be already copied with build.xml -->
 	</target>
 
 	<!-- ===================================================================== -->

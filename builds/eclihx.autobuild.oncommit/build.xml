@@ -18,7 +18,7 @@ at patrick@rcpquickstart.com.
 Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
 -->
 
-<project name="com.goodwin.eclihx" default="build">
+<project name="org.eclihx" default="build">
     <property file="build.properties" />
 
     <!--
@@ -50,6 +50,11 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
             	<exclude name="**/bin/**"/>
             </fileset>
         </copy>
+    	<copy todir="${buildDirectory}/updatesite">
+    		<fileset dir="../../updates/">
+    			<filename name="site.xml"/>
+    		</fileset>
+    	</copy>
     </target>
 
     <!--
