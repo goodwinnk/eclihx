@@ -13,18 +13,22 @@ public class CompilationError implements ICompilerError {
 	private final int startCharacter;
 	private final int endCharacter;
 	private final String message;
+	private final int startLine;
+	private final int endLine;
 
 	/**
-	 * Constructor.
+	 * Common constructor for both errors defined with line range or characters range.
 	 * 
 	 * @param filePath file path.
 	 * @param lineNumber line number.
 	 * @param startCharacter start error column in the line.
 	 * @param endCharacter end error column in the line.
+	 * @param startLine first line in error range.
+	 * @param endLine last line in error range.
 	 * @param message a error message.
 	 */
-	public CompilationError(String filePath, int lineNumber,
-			int startCharacter, int endCharacter, String message) {
+	private CompilationError(String filePath, int lineNumber,
+			int startCharacter, int endCharacter, int startLine, int endLine, String message) {
 		
 		super();
 		this.filePath = filePath;
@@ -32,21 +36,42 @@ public class CompilationError implements ICompilerError {
 		this.startCharacter = startCharacter;
 		this.endCharacter = endCharacter;
 		this.message = message;
+		this.startLine = startLine;
+		this.endLine = endLine;
 	}
 	
 	/**
-	 * Constructor with the position within the single pair.
+	 * Get the error with defining exact line and characters range.
 	 * 
 	 * @param filePath file path.
 	 * @param lineNumber line number.
-	 * @param characterPair a pair with the start and end column of the error.
+	 * @param charactersRange a pair with the start and end column of the error.
 	 * @param message a error message.
+	 * @return Get the error with defining exact line and characters range.
 	 */
-	public CompilationError(String filePath, int lineNumber,
-			Pair<Integer, Integer> characterPair, String message) {
+	public static ICompilerError getCharRangeError(String filePath, int lineNumber,
+			Pair<Integer, Integer> charactersRange, String message) {
 		
-		this(filePath, lineNumber, characterPair.getFirst(), 
-				characterPair.getSecond(), message);
+		return new CompilationError(filePath, lineNumber, 
+				charactersRange.getFirst(), charactersRange.getSecond(), 
+				lineNumber, lineNumber, message);
+	}
+	
+	/**
+	 * Get the error with defining lines range.
+	 * 
+	 * @param filePath file path.
+	 * @param lineNumber line number.
+	 * @param linesRange a pair with the start and end line of the error.
+	 * @param message a error message.
+	 * @return Get the error with defining lines range.
+	 */
+	public static ICompilerError getLineRangeError(String filePath, int lineNumber,
+			Pair<Integer, Integer> linesRange, String message) {
+		
+		return new CompilationError(filePath, lineNumber, 0, 0, 
+				linesRange.getFirst(), linesRange.getSecond(), 
+				message);
 	}	
 
 	/*
@@ -100,7 +125,17 @@ public class CompilationError implements ICompilerError {
 	 */
 	@Override
 	public String toString() {
-		return String.format("%s:%d: characters %d-%d: %s", filePath, 
-				lineNumber, startCharacter, endCharacter, message);
+		return String.format("%s:%d: characters %d-%d, lines %d-%d: %s", filePath, 
+				lineNumber, startCharacter, endCharacter, startLine, endLine, message);
+	}
+
+	@Override
+	public int getStartLine() {
+		return startLine;
+	}
+
+	@Override
+	public int getEndLine() {
+		return endLine;
 	}
 }

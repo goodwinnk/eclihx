@@ -37,4 +37,18 @@ public interface ICompilerError {
 	 * @return error message.
 	 */
 	String getMessage();
+	
+	/**
+	 * Start line of the error.
+	 * 
+	 * @return error message.
+	 */
+	int getStartLine();
+	
+	/**
+	 * Start line of the error.
+	 * 
+	 * @return error message.
+	 */
+	int getEndLine();
 }
