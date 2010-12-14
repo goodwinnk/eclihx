@@ -35,6 +35,13 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 			"\\s*characters\\s*(\\d+)\\-(\\d+)\\s*");
 	
 	/**
+	 * Regular expression for reading errors lines range.
+	 * lines (first line) - (last line)
+	 */
+	private static final Pattern LINES_RANGE_ERROR_PATTERN = Pattern.compile(
+			"\\s*lines\\s*(\\d+)\\-(\\d+)\\s*");
+	
+	/**
 	 * String which is given in successful build.
 	 */
 	private static final String SUCCESS_BUILD_STRING = "Building complete";
@@ -73,25 +80,24 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	}
 	
 	/**
-	 * Read the start and end column of the error.
+	 * Read the start and end integer pair from the string and regular expression.
 	 * 
-	 * @param charactersPart a substring with the line characters.
-	 * @return a pair with the start and end character.
+	 * @param stringPart a substring with desired integer pair.
+	 * @param pattern a pattern for matching integer pair.
+	 * @return a pair with the start and end character. Null if there are errors in matching.
 	 */
-	protected Pair<Integer, Integer> processCharacters(String charactersPart) {
+	protected Pair<Integer, Integer> processIntPair(String stringPart, Pattern pattern) {
 		
-		final Matcher matcher = CHARACTERS_ERROR_PATTERN.matcher(charactersPart);
+		final Matcher matcher = pattern.matcher(stringPart);
 		
 		if (matcher.matches()) {	
-			
 			try {
-				int startCharPos = Integer.parseInt(matcher.group(1));
-				int endCharPos = Integer.parseInt(matcher.group(2));
+				int firstInt = Integer.parseInt(matcher.group(1));
+				int secondInt = Integer.parseInt(matcher.group(2));
 				
-				return new Pair<Integer, Integer>(startCharPos, endCharPos);
+				return new Pair<Integer, Integer>(firstInt, secondInt);
 			} catch (NumberFormatException numberFormatException) {
-				Assert.isTrue(false);
-				return null;
+				Assert.isTrue(false, "Should be always true because of the matcher expression");
 			}
 		}
 		
@@ -118,13 +124,23 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 		if (matcher.matches()) {			
 			String filePath = processFileName(matcher.group(1));
 			Integer lineNumber = processLineNumber(matcher.group(2));
-			Pair<Integer, Integer> characters = processCharacters(matcher.group(3));
+			Pair<Integer, Integer> charsRange = processIntPair(matcher.group(3), CHARACTERS_ERROR_PATTERN);
+			Pair<Integer, Integer> linesRange = processIntPair(matcher.group(3), LINES_RANGE_ERROR_PATTERN);
 			String message = processMessage(matcher.group(4));
 			
-			if (!(filePath == null || lineNumber == null || characters == null || 
-					message == null)) {
+			if (!(filePath == null || lineNumber == null || message == null)) {
 				
-				return new CompilationError(filePath, lineNumber, characters, message);
+				Assert.isTrue(charsRange == null || linesRange == null, "Could they be both not equal to null?");
+				
+				if (charsRange != null)
+				{
+					return CompilationError.getCharRangeError(filePath, lineNumber, charsRange, message);
+				}
+				
+				if (linesRange != null)
+				{
+					return CompilationError.getLineRangeError(filePath, lineNumber, linesRange, message);
+				}				
 			}			
 		}
 		
@@ -152,7 +168,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 						errorsList.add(error);
 					} else {
 						// Error processing failed and we add to the build file
-						errorsList.add(new CompilationError(buildFile, 0,
+						errorsList.add(CompilationError.getLineRangeError(buildFile, 0,
 								new Pair<Integer, Integer>(0, 0), line));
 					}
 				}

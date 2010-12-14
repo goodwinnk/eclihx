@@ -64,6 +64,16 @@ public class HaxeOutputErrorsParserTest {
 	}
 	
 	@Test
+	public void shouldParseToLines() {
+		String message = "src/graphcore/Graph.hx:24: lines 24-26 : Invalid number of type parameters for graphcore.IVisitor\n";
+		ICompilerError compilerError = errorsParser.processErrorLine(message);
+		
+		Assert.assertNotNull(compilerError);
+		Assert.assertEquals(24, compilerError.getStartLine());
+		Assert.assertEquals(26, compilerError.getEndLine());	
+	}
+	
+	@Test
 	public void shouldIgnoreNewLines() {
 		String message = "Hello.hx:4: \ncharacters 15-33 : Some\n";
 		ICompilerError compilerError = errorsParser.processErrorLine(message);
@@ -79,5 +89,5 @@ public class HaxeOutputErrorsParserTest {
 		
 		List<ICompilerError> parseErrors = errorsParser.parseErrors(message1 + message2, "some.hxml");
 		Assert.assertEquals(2, parseErrors.size());
-	}
+	}	
 }
