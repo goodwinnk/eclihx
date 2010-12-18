@@ -25,7 +25,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * (file) : (line number) : (characters) : message
 	 */
 	private static final Pattern LINE_ERROR_PATTERN = Pattern.compile(
-			"([^:]*)\\:(\\d+):([^:]*):(.*)");
+			"(.*)\\:(\\d+):([^:]*):(.*)");
 	
 	/**
 	 * Regular expression for reading errors characters.
@@ -160,8 +160,11 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 		// Check build is success
 		if (!output.contains(SUCCESS_BUILD_STRING)) {
 			
+			// Sometimes line delimiter is \r, sometimes \n, sometimes \n\r - replace them all to single \n 
+			String outputStr = output.replaceAll("\r", "\n").replaceAll("\n\n", "\n");
+			
 			// It's expected that each line contains a error.
-			for (String line : output.split("\n")) {
+			for (String line : outputStr.split("\n")) {
 				if (!line.isEmpty()) {
 					ICompilerError error = processErrorLine(line);
 					if (error != null) {
@@ -173,7 +176,10 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 					}
 				}
 			}
-		}		
+			
+			// We should find errors, because build wasn't successful.
+			Assert.isTrue(!errorsList.isEmpty());
+		}
 		
 		return errorsList;
 	}
