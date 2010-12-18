@@ -28,6 +28,7 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 		private final String projectName;
 		private final String output;
 		private final String buildFileName;
+		private final Boolean isSuccessful;
 		
 		/**
 		 * Get the name of the project that was launched.
@@ -50,15 +51,25 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 		 */
 		public String getBuildFile() {
 			return buildFileName;
-		}	
+		}
+		
+		/**
+		 * Was launching successful.
+		 * @return launch success
+		 */
+		public Boolean isSuccess() {
+			return isSuccessful;
+		}
 		
 		/**
 		 * Default constructor.
+		 * @param isSuccess was launching successful
 		 * @param output the string of the output.
 		 * @param projectName the name of the project was launched.
 		 * @param buildFileName build file name
 		 */
-		public FinishLaunchInfo(String output, String projectName, String buildFileName) {			
+		public FinishLaunchInfo(Boolean isSuccess, String output, String projectName, String buildFileName) {
+			this.isSuccessful = isSuccess;
 			this.output = output;
 			this.projectName = projectName;
 			this.buildFileName = buildFileName;
@@ -87,20 +98,21 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 	}
 	
 	/**
-	 * Method sends finish notification to UI about the finishing of launching. 
+	 * Method sends finish notification to UI about the finishing of launching.
+	 * @param isSuccess launch success. 
 	 * @param projectName the name of project.
 	 * @param output the output string.
 	 * @param string build file path. 
 	 * @throws CoreException
 	 */
-	private void sendFinishNotification(String projectName, String output, String buildFile) 
+	private void sendFinishNotification(Boolean isSuccess, String projectName, String output, String buildFile) 
 			throws CoreException {
         
 		IStatus status = new Status(IStatus.ERROR, EclihxLauncher.PLUGIN_ID, 112, "", null); 
         IStatusHandler handler = DebugPlugin.getDefault().getStatusHandler(status);
 
         if (handler != null) {
-        	handler.handleStatus(status, new FinishLaunchInfo(output, projectName, buildFile));
+        	handler.handleStatus(status, new FinishLaunchInfo(isSuccess, output, projectName, buildFile));
         }
 	}
 
@@ -139,7 +151,8 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 			String buildFilePath = configuration.getAttribute(
 					IHaxeLaunchConfigurationConstants.BUILD_FILE, (String) null); 
 			
-			sendFinishNotification(projectName, output, buildFilePath);
+			// TODO 4: Change IHaxeRunner for sending information about build success
+			sendFinishNotification(true, projectName, output, buildFilePath);
           
         } catch (CoreException e) {
         
