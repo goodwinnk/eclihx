@@ -67,9 +67,7 @@ public final class BuildParamParser {
 	private String executeFolder = null;	
 	
 	// True if parsing new configuration should continue filling the previous configuration
-	private boolean continueConfig = false;
-	
-	
+	private boolean continueConfig = false;	
 	
 	private class LibraryParam implements IStringValue {
 		public void save(String value) throws ParseError {
@@ -212,7 +210,7 @@ public final class BuildParamParser {
 				new IStringValue() {
 					@Override
 					public void save(String value) throws ParseError {
-						currentConfig.getFlashConfig();
+						currentConfig.getFlashConfig().addLibrary(value);
 					}
 				}),
 			

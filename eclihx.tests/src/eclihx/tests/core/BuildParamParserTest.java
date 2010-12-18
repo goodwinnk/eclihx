@@ -24,13 +24,17 @@ import eclihx.core.util.console.parser.core.ParseError;
 public class BuildParamParserTest {
 
 	private static BuildParamParser parser;
+	private static String executableFolder;
 	
 	/**
 	 * Creating instance of the parser.
+	 * @throws IOException Should never happen
+	 * @throws MalformedURLException Should never happen
 	 */
 	@Before
-	public void testSetup() {
-		parser = new BuildParamParser();
+	public void testSetup() throws MalformedURLException, IOException {
+		parser = new BuildParamParser();		
+		executableFolder = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
 	}	
 
 	/**
@@ -44,10 +48,8 @@ public class BuildParamParserTest {
 	public void testParseFile() throws ParseError, InvalidConfigurationException, MalformedURLException, IOException {
 		String filePath = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/test1.hxml")).getPath();
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
 		
-		HaxeConfigurationList configurationList = parser.parseFile(filePath, directoryPath);
+		HaxeConfigurationList configurationList = parser.parseFile(filePath, executableFolder);
 		HaxeConfiguration configuration = 
 			configurationList.getMainConfiguration();
 		
@@ -70,10 +72,7 @@ public class BuildParamParserTest {
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/testComments.hxml")).getPath();
 		
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
-		parser.parseFile(path, directoryPath);
+		parser.parseFile(path, executableFolder);
 	}
 	
 	/**
@@ -89,10 +88,7 @@ public class BuildParamParserTest {
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/withNext.hxml")).getPath();
 		
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-
-		parser.parseFile(path, directoryPath);
+		parser.parseFile(path, executableFolder);
 	}
 
 	/**
@@ -104,10 +100,7 @@ public class BuildParamParserTest {
 	 */
 	@Test
 	public void debugConfigurationParse() throws ParseError, MalformedURLException, IOException {
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
-		parser.parseString("-debug 	-D fdb -swf Test.swf -swf-version 9", directoryPath);
+		parser.parseString("-debug 	-D fdb -swf Test.swf -swf-version 9", executableFolder);
 	}
 	
 	/**
@@ -119,10 +112,7 @@ public class BuildParamParserTest {
 	 */
 	@Test
 	public void badConfigurationParse() throws ParseError, MalformedURLException, IOException {
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
-		parser.parseString("-debug -D fdb -swf Test.swf -swf-version 9 TestWhile", directoryPath);
+		parser.parseString("-debug -D fdb -swf Test.swf -swf-version 9 TestWhile", executableFolder);
 	}
 	
 	/**
@@ -134,10 +124,7 @@ public class BuildParamParserTest {
 	 */
 	@Test
 	public void testDisplayOption() throws ParseError, MalformedURLException, IOException {		
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
-		parser.parseString("--display hihihihi@1", directoryPath);
+		parser.parseString("--display hihihihi@1", executableFolder);
 	}
 	
 	/**
@@ -153,14 +140,10 @@ public class BuildParamParserTest {
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/part.hxml")).getPath();
 		
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
 		HaxeConfiguration config = 
 			parser.parseString(
-				String.format(
-					"--no-traces --no-output -D fdb -debug %s",
-					path), directoryPath).getMainConfiguration();
+				String.format("--no-traces --no-output -D fdb -debug %s", path), 
+				executableFolder).getMainConfiguration();
 		
 		Assert.assertTrue(config.isDebug());
 		Assert.assertTrue(config.hasCompilationFlags("fdb"));
@@ -183,10 +166,7 @@ public class BuildParamParserTest {
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/separateMain.hxml")).getPath();
 		
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
-		HaxeConfiguration config = parser.parseFile(path, directoryPath).getMainConfiguration();
+		HaxeConfiguration config = parser.parseFile(path, executableFolder).getMainConfiguration();
 		
 		Assert.assertTrue(config.getStartupClass().equals("TestCode"));
 	}
@@ -205,12 +185,19 @@ public class BuildParamParserTest {
 		String path = 
 			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/internalParent.hxml")).getPath();
 		
-		String directoryPath =
-			FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/")).getPath();
-		
-		HaxeConfiguration config = parser.parseFile(path, directoryPath).getMainConfiguration();
+		HaxeConfiguration config = parser.parseFile(path, executableFolder).getMainConfiguration();
 		
 		Assert.assertTrue(config.isDebug());
 		Assert.assertTrue(config.getPlatform() == Platform.Flash);		
 	}
+	
+	@Test
+	public void shouldParseSwfLibFiles() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = parser.parseString("-swf-lib somenew.swf\n TestClass", executableFolder);
+		
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertNotNull(config.getMainConfiguration().getFlashConfig());
+		Assert.assertTrue(config.getMainConfiguration().getFlashConfig().getLibraries().size() == 1);
+	}
+	
 }
