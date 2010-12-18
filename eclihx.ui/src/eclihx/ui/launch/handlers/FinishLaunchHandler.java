@@ -9,8 +9,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.IStatusHandler;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -154,8 +156,10 @@ public final class FinishLaunchHandler implements IStatusHandler {
 
 		for (final ICompilerError error : compileErrors) {
 
-			final IResource fileResource = haxeProject.getProjectBase()
-					.findMember(error.getFilePath());
+			final IPath filePath = new Path(error.getFilePath());
+			final IPath relativePath = 
+				filePath.makeRelativeTo(haxeProject.getProjectBase().getLocation());
+			final IResource fileResource = haxeProject.getProjectBase().findMember(relativePath);
 
 			if (fileResource != null) {
 				final IFile file = (IFile) fileResource;
