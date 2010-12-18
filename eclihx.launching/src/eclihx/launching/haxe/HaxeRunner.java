@@ -87,45 +87,29 @@ public class HaxeRunner implements IHaxeRunner {
         
         HaxeConfigurationList executionList;
         
-        try
-        {
+        try {
         	BuildParamParser parser = new BuildParamParser();
         	
         	executionList = 
         		parser.parseFile(configuration.getBuildFile(), configuration.getWorkingDirectory());
-        }
-        catch (ParseError e) {
+        } catch (ParseError e) {
 			return e.getMessage();
 		}
         
-        for (HaxeConfiguration haxeConfig : executionList)
-        {
+        for (HaxeConfiguration haxeConfig : executionList) {
         	ArrayList<String> configErrors = haxeConfig.validate();
-        	if (!configErrors.isEmpty())
-        	{
+        	if (!configErrors.isEmpty()) {
         		return configErrors.toString();
         	}
         }
         
-        String fullOutput = "";
+        final HaxeLauncher launcher = new HaxeLauncher();
+        launcher.run(configuration.getBuildFile(), launch, configuration.getCompilerPath(), workingDirectory);
         
-        for (HaxeConfiguration haxeConfig : executionList) {
-        	// haxeConfig.addSourceDirectory(configuration.getWorkingDirectory());
-			
-			final HaxeLauncher launcher = new HaxeLauncher();
-			
-			launcher.run(haxeConfig, launch, configuration.getCompilerPath(), workingDirectory);
-			
-			String errorsString = launcher.getErrorString();
-			String outputString = launcher.getOutputString();
-			
-			fullOutput += outputString;
-			
-			if (!errorsString.isEmpty()) {
-				return errorsString;
-			}
-        }
-		
-		return "Building complete.\n" + fullOutput;
+        if (!launcher.getErrorString().isEmpty()) {
+        	return launcher.getErrorString();
+        }        	
+        
+        return "Building complete.\n" + launcher.getOutputString();
 	}
 }

@@ -60,6 +60,24 @@ public class HaxeLauncher {
 							+ e.getMessage()));
 		}
 	}
+	
+	/**
+	 * Runs the given configuration.
+	 * 
+	 * @param buildFilePath buildFilePath
+	 * @param launch launch object
+	 * @param compilerPath the compiler path.
+	 * @param workingDirectory output directory.
+	 */
+	public synchronized void run(String buildFilePath,
+			ILaunch launch, String compilerPath, File workingDirectory) {
+
+		String commandLine = OSUtil.quoteCompoundPath(compilerPath) + " " + OSUtil.quoteCompoundPath(buildFilePath);
+		ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(commandLine, workingDirectory);
+
+		errorsString = execResult.getErrorsString();
+		outputString = execResult.getOutputString();
+	}
 
 	/**
 	 * Get the errors of the execution.
