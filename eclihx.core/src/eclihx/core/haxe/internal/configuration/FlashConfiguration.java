@@ -2,6 +2,7 @@ package eclihx.core.haxe.internal.configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.util.OSUtil;
@@ -101,6 +102,15 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	public void addLibrary(String libraryFileName) {
 		swfLibraries.add(libraryFileName);
 	}
+	
+	/**
+	 * Get the list of flash library paths 
+	 * 
+     * @return the list of flash library paths.
+	 */
+	public Collection<String> getLibraries() {
+		return swfLibraries;		
+	}
 
 	/**
 	 * Prints the configuration.
@@ -123,7 +133,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 				// write version
 				outputBuilder.append(HaxeConfiguration.generateParameter(
 					HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION,
-					new Integer(version).toString()
+					version.toString()
 				));
 			}
 			
