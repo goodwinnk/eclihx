@@ -55,6 +55,13 @@ public class HaxeOutputErrorsParserTest {
 	}
 	
 	@Test
+	public void shouldParseWindowsPathErrorMessage() {
+		String message = "C:\\Program Files\\Motion-Twin\\haxe/std/flash9/Vector.hx:4: characters 0-49 : Unexpected \"The vector class is only available for flash10+\"";
+		ICompilerError compilerError = errorsParser.processErrorLine(message);
+		Assert.assertNotNull(compilerError);
+	}	
+	
+	@Test
 	public void shouldIgnoreCarrigeReturns() {
 		String message = "Hello.hx:4: \rcharacters 15-33 : Some\r";
 		ICompilerError compilerError = errorsParser.processErrorLine(message);
@@ -89,5 +96,14 @@ public class HaxeOutputErrorsParserTest {
 		
 		List<ICompilerError> parseErrors = errorsParser.parseErrors(message1 + message2, "some.hxml");
 		Assert.assertEquals(2, parseErrors.size());
-	}	
+	}
+	
+	@Test
+	public void shouldProcessWithCarrigeReturnDelimiter() {
+		String messageLine1 = "libs\\FlexSDK\\hx\\mx/charts/chartClasses/ChartElement.hx:3: lines 3-23 : Field dataTransform has different type than in mx.charts.chartClasses.IChartElement"; 
+		String messageLien2 = "libs\\FlexSDK\\hx\\mx/charts/chartClasses/ChartElement.hx:3: lines 3-23 : mx.charts.chartClasses.DataTransform should be Void";
+		
+		List<ICompilerError> parseErrors = errorsParser.parseErrors(messageLine1 + '\r' + messageLien2, "test.hxml");
+		Assert.assertEquals(2, parseErrors.size());
+	}
 }
