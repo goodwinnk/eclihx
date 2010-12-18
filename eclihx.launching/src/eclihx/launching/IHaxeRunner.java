@@ -15,7 +15,7 @@ public interface IHaxeRunner {
 	 * @param configuration the configuration of the current launch. 
 	 * @param launch the lunch object.
 	 * @param monitor the progress monitor.
-	 * @return The string that should console should show.
+	 * @return The string that console should show.
 	 * @throws CoreException exception if something will go wrong.
 	 */
 	public String run(
