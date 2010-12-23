@@ -11,8 +11,13 @@
 	<target name="allElements">
 		<antcall target="allElementsDelegator" />
 		<echo message="${id}"/>
+
+		<ant antfile="${genericTargets}" target="${target}" >
+			<property name="type" value="feature" />
+			<property name="id" value="eclihx.feature.tests" />
+		</ant>
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- ===================================================================== -->
 	<target name="getBaseComponents" depends="checkLocalBase" unless="skipBase">
@@ -97,7 +102,7 @@
 	<!-- ===================================================================== -->
 	<target name="postProcessRepos">
 	</target>
-	
+
 	<!-- ===================================================================== -->
 	<!-- Steps to do before generating the build scripts. -->
 	<!-- ===================================================================== -->
@@ -154,29 +159,31 @@
 		<property name="UpdateSiteStagingLocation" value="${buildDirectory}/UpdateSite"/>
 		<property name="sitePackagePrefix" value="org.eclihx.updatesite"/>
 		<antcall target="generateUpdateSite"/>
+		<antcall target="test"/>
 		<antcall target="gatherLogs" />
 	</target>
-		
+
 	<target name="generateUpdateSite">
 		<!-- Create the directory structure -->
 		<mkdir dir="${UpdateSiteStagingLocation}"/>
 		<mkdir dir="${UpdateSiteStagingLocation}/features"/>
 		<mkdir dir="${UpdateSiteStagingLocation}/plugins"/>
 		<!-- Build the jar files -->
+		<echo message="${allElementsFile}"/>
 		<antcall target="allElements">
 			<param name="genericTargets" value="${builder}/customTargets.xml"/>
 			<param name="target" value="updateSiteExport"/>
 		</antcall>
 		<antcall target="copySiteXml"/>
 	</target>
-	
+
 	<target name="updateSiteExport">
-	  <ant antfile="build.xml" dir="${buildDirectory}/features/${id}/" target="build.update.jar">
-	    <property name="feature.destination" value="${UpdateSiteStagingLocation}/features"/>
-	    <property name="plugin.destination" value="${UpdateSiteStagingLocation}/plugins"/>
-	  </ant>
+		<ant antfile="build.xml" dir="${buildDirectory}/features/${id}/" target="build.update.jar">
+			<property name="feature.destination" value="${UpdateSiteStagingLocation}/features"/>
+			<property name="plugin.destination" value="${UpdateSiteStagingLocation}/plugins"/>
+		</ant>
 	</target>
-	
+
 	<target name="copySiteXml">
 		<!-- Should be already copied with build.xml -->
 	</target>
@@ -185,6 +192,46 @@
 	<!-- Steps to do to test the build results -->
 	<!-- ===================================================================== -->
 	<target name="test">
+		<echo message="Setting up tests in ${eclipseAutomatedTestHome}" />
+		
+		<delete dir="${eclipseAutomatedTestHome}"/>
+		<mkdir dir="${eclipseAutomatedTestHome}"/>
+
+		<property name="eclihxFeaturePath" value="${eclipseAutomatedTestHome}/eclipse.feature.zip" />
+		<property name="eclihxFeatureTestsPath" value="${eclipseAutomatedTestHome}/eclipse.feature.tests.zip" />
+		
+		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature-${buildId}.zip" tofile="${eclihxFeaturePath}" />
+		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature.tests-${buildId}.zip" tofile="${eclihxFeatureTestsPath}" />
+		
+		<echo message="Unpack testing environment and installing features" />
+		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclipseEnvironmentZipPath}"/>
+		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclipseTestingFrameworkZipPath}"/>
+		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclihxFeaturePath}"/>
+		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclihxFeatureTestsPath}"/>
+		
+		<property name="testEclipseFolder" value="${eclipseAutomatedTestHome}/tested_eclipse/eclipse" />		
+		<property name="library-file" value="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/plugins/${eclipseTestPluginFolderName}/library.xml" />
+		
+		<antcall target="run-ui-test">
+			<param name="test.library-ant-path" value="${library-file}" />
+			<param name="test.eclipse-folder" value="${testEclipseFolder}" />
+            <param name="test.plugin" value="eclihx.tests" />
+            <param name="test.classname" value="eclihx.tests.AllTests" />
+			<param name="test.timeout" value="60000" />
+        </antcall>
+	</target>
+	
+	<target name="run-ui-test">
+		<ant target="ui-test" antfile="${test.library-ant-path}" dir="${test.eclipse-folder}">
+	        <property name="timeout" value="${test.timeout}" />
+	        <property name="os" value="${baseos}" />
+	        <property name="ws" value="${basews}" />
+	        <property name="arch" value="${basearch}" />
+	        <property name="eclipse-home" value="${test.eclipse-folder}" />
+	        <property name="data-dir" value="${test.eclipse-folder}/junit-workspace -clean" />
+	        <property name="plugin-name" value="${test.plugin}" />
+	        <property name="classname" value="${test.classname}" />
+		</ant>
 	</target>
 
 	<!-- ===================================================================== -->

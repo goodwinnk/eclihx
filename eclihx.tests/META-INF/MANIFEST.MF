@@ -16,3 +16,10 @@ Bundle-ClassPath: .,
 Import-Package: org.eclipse.core.runtime,
  org.eclipse.jface.text.rules
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: eclihx.core.haxe.model,
+ eclihx.tests,
+ eclihx.tests.core,
+ eclihx.tests.core.haxe.internal,
+ eclihx.ui,
+ eclihx.ui.internal.ui.views,
+ eclihx.ui.wizards

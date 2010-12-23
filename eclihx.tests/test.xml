@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="testsuite" default="run" basedir=".">
-	<!-- The property ${eclipse-home} should be passed into this script -->
-	<!-- Set a meaningful default value for when it is not. -->
-	<property name="eclipse-home" value="F:\Programs\haXe\hudson_build\eclihx_testing_temp\tested_eclipse\eclipse"/>
-
-	<!-- sets the properties eclipse-home, and library-file -->
-	<property name="plugin-name" value="eclihx.tests"/>
-	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.3.0/library.xml"/>
-	
-	<property name="eclihx-tests-workspace" value="${eclipse-home}/test-workspace"/>
-
 	<!-- This target holds all initialization code that needs to be done for -->
 	<!-- all tests that are to be run. Initialization for individual tests -->
 	<!-- should be done within the body of the suite target. -->
 	<target name="init">
 		<tstamp/>
+		
+		<property name="plugin-name" value="eclihx.tests"/>	
+		<property name="classname" value="eclihx.tests.AllTests" />
+	
+		<!-- Properties that must be defined by the caller script -->
+		<property name="eclipse-home" value="F:\Programs\haXe\hudson_build\eclihx_testing_temp\tested_eclipse\eclipse"/>
+		<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.3.0/library.xml"/>
+		<property name="baseos" value="win32" />
+		<property name="basews" value="win32" />
+		<property name="basearch" value="x86" />
+		<property name="timeout" value="60000" />
+        <property name="data-dir" value="${eclipse-home}/junit-workspace -clean" />
+        		
 		<delete>
 			<fileset dir="${eclipse-home}" includes="org*.xml"/>
 		</delete>
@@ -25,9 +28,13 @@
 	<target name="suite">
 		<delete dir="${eclihx-tests-workspace}" quiet="true"/>
 		<ant target="ui-test" antfile="${library-file}" dir="${eclipse-home}">
+			<property name="os" value="${baseos}"/>
+			<property name="ws" value="${basews}"/>
+			<property name="arch" value="${basearch}"/>
+
 			<property name="data-dir" value="${eclihx-tests-workspace}"/>
 			<property name="plugin-name" value="${plugin-name}"/>
-			<property name="classname" value="eclihx.tests.AllTests"/>
+			<property name="classname" value="${classname}"/>
 		</ant>
 	</target>
 	
