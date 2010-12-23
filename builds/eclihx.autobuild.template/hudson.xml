@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- File is planned to be used from hudson. -->
+<project name="hudson" default="run" basedir=".">
+	
+	<target name="init">
+		<!-- Here you can prepare any properties for building -->
+	</target>
+	
+	<target name="build">
+		<ant antfile="build.xml"/>
+	</target>
+	
+	<target name="run" depends="init, build">
+		<!-- Here you can process building output results -->
+	</target>	
+</project>
