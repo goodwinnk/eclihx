@@ -5,6 +5,8 @@
 	
 	<target name="init">
 		<!-- Here you can prepare any properties for building -->
+		<property environment="env"/>
+		<property name="allBuildOutputDirectory" value="${env.WORKSPACE}/output" />
 	</target>
 	
 	<target name="build">
@@ -13,5 +15,6 @@
 	
 	<target name="run" depends="init, build">
 		<!-- Here you can process building output results -->
+		<delete dir="${env.WORKSPACE}/repository" />
 	</target>	
 </project>
