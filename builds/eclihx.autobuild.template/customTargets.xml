@@ -161,6 +161,7 @@
 		<antcall target="generateUpdateSite"/>
 		<antcall target="test"/>
 		<antcall target="gatherLogs" />
+		<antcall target="publish" />
 	</target>
 
 	<target name="generateUpdateSite">
@@ -210,7 +211,7 @@
 		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclihxFeatureTestsPath}"/>
 		
 		<property name="testEclipseFolder" value="${eclipseAutomatedTestHome}/tested_eclipse/eclipse" />		
-		<property name="library-file" value="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/plugins/${eclipseTestPluginFolderName}/library.xml" />
+		<property name="library-file" value="${testEclipseFolder}/plugins/${eclipseTestPluginFolderName}/library.xml" />
 		
 		<antcall target="run-ui-test">
 			<param name="test.library-ant-path" value="${library-file}" />
@@ -219,6 +220,12 @@
             <param name="test.classname" value="eclihx.tests.AllTests" />
 			<param name="test.timeout" value="60000" />
         </antcall>
+		
+		<!-- Do the transformation outself. library.xml uses dropins folder and invalid include pattern -->
+		<xslt style="${testEclipseFolder}\plugins\${eclipseTestPluginFolderName}\JUNIT.XSL"
+			  basedir="${testEclipseFolder}\results"
+			  includes="eclihx.**.xml"
+			  destdir="${testEclipseFolder}\results"/>
 	</target>
 	
 	<target name="run-ui-test">
@@ -238,6 +245,14 @@
 	<!-- Steps to do to publish the build results -->
 	<!-- ===================================================================== -->
 	<target name="publish">
+		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature-${buildId}.zip" todir="${allBuildOutputDirectory}" />
+		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature.tests-${buildId}.zip" todir="${allBuildOutputDirectory}" />
+		
+		<copydir src="${buildDirectory}/updatesite" dest="${allBuildOutputDirectory}/updatesite" />
+		
+		<copy todir="${allBuildOutputDirectory}">
+			<fileset dir="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/results" includes="**.html"/>
+		</copy>
 	</target>
 
 	<!-- ===================================================================== -->

@@ -321,24 +321,6 @@
            </possibleDropTargets>
         </dropAssistant>     
       </navigatorContent>
-      <commonFilter
-            activeByDefault="true"
-            id="eclihx.ui.internal.ui.views.filter.hideNonHaxeProjects"
-            name="Hide non-haXe projects">
-         <filterExpression>
-            <and>
-               <instanceof
-                     value="org.eclipse.core.resources.IProject">
-               </instanceof>
-               <not>
-                  <test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="eclihx.core.haxenature">
-                  </test>
-               </not>
-            </and>
-         </filterExpression>
-      </commonFilter>
       <actionProvider
             class="eclihx.ui.internal.navigator.actions.HaxeNavigatorActionProvider"
             id="eclihx.ui.internal.navigator.actions.HaxeEditActionProvider"
@@ -374,13 +356,12 @@
             wizardId="eclihx.ui.internal.ui.wizards.HaxeBuildFileWizard">
          <enablement>
             <or>
-               <adapt
-                     type="org.eclipse.core.resources.IProject">
-                  <test
-                        property="org.eclipse.core.resources.projectNature"
-                        value="eclihx.core.haxenature">
-                  </test>
-               </adapt>
+               <instanceof
+                     value="eclihx.core.haxe.model.core.IHaxePackage">
+               </instanceof>
+               <instanceof
+                     value="eclihx.core.haxe.model.core.IHaxeProject">
+               </instanceof>
             </or></enablement>
       </commonWizard>
       <commonWizard
