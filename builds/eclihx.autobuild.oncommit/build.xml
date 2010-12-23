@@ -34,6 +34,7 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
         into the appropriate build directory folders.
     -->
     <target name="init">
+    	<delete dir="${buildDirectory}" />
         <mkdir dir="${buildDirectory}" />
         <mkdir dir="${buildDirectory}/plugins" />
         <mkdir dir="${buildDirectory}/features" />
@@ -41,12 +42,12 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
             <fileset dir="../../">
                 <include name="eclihx.*/**" />
             	<exclude name="**/bin/**"/>
-            	<exclude name="eclihx.feature/**"/>
+            	<exclude name="eclihx.feature*/**"/>
             </fileset>
         </copy>
         <copy todir="${buildDirectory}/features">
             <fileset dir="../../">
-                <include name="eclihx.feature/**" />
+                <include name="eclihx.feature*/**" />
             	<exclude name="**/bin/**"/>
             </fileset>
         </copy>
