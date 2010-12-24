@@ -6,14 +6,20 @@
 	<target name="init">
 		<!-- Here you can prepare any properties for building -->
 		<property environment="env"/>
-		<property name="allBuildOutputDirectory" value="${env.WORKSPACE}/output" />
+		<property name="hudsonOutput" value="${env.WORKSPACE}/output" />
 	</target>
 	
 	<target name="build">
-		<ant antfile="build.xml"/>
+		<ant antfile="build.xml" />
 	</target>
 	
 	<target name="run" depends="init, build">
 		<!-- Here you can process building output results -->
+		<property file="build.properties" />
+		
+		<delete dir="${hudsonOutput}" />
+		<copydir dest="${hudsonOutput}" src="${allBuildOutputDirectory}"/>
+		
+		<copydir dest="${env.WORKSPACE}\archive\${env.BUILD_TAG}" src="${allBuildOutputDirectory}"></copydir>
 	</target>	
 </project>

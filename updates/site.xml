@@ -2,7 +2,7 @@
 <site>
    <description name="EclihX Plugin - haXe development with Eclipse" url="http://eclihx.googlecode.com/svn/trunk/updates/">
       EclihX is a plugin for developing in haXe language within the Eclipse IDE.
-It supports Eclipse 3.4 and above.
+It supports Eclipse 3.5 and above.
    </description>
    <feature url="features/eclihx.feature_0.2.0.201012122240.jar" id="eclihx.feature" version="0.2.0.201012122240">
       <category name="EclihX"/>
