@@ -244,7 +244,10 @@
 	<!-- ===================================================================== -->
 	<!-- Steps to do to publish the build results -->
 	<!-- ===================================================================== -->
-	<target name="publish">
+	<target name="publish">		
+		<delete dir="${allBuildOutputDirectory}" />
+		<mkdir dir="${allBuildOutputDirectory}"/>
+		
 		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature-${buildId}.zip" todir="${allBuildOutputDirectory}" />
 		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature.tests-${buildId}.zip" todir="${allBuildOutputDirectory}" />
 		

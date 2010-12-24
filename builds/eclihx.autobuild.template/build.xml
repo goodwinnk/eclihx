@@ -19,8 +19,6 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
 -->
 
 <project name="org.eclihx" default="build">
-    <property file="build.properties" />
-
     <!--
         PDE Build expects that the build directory contains a "plugins" 
         directory and a "features" directory. These directories should contain
@@ -34,6 +32,9 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
         into the appropriate build directory folders.
     -->
     <target name="init">
+    	
+    	<property file="build.properties" />
+    	
     	<delete dir="${buildDirectory}" />
         <mkdir dir="${buildDirectory}" />
         <mkdir dir="${buildDirectory}/plugins" />
