@@ -3,7 +3,6 @@ package eclihx.core.util;
 import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import eclihx.core.EclihxCore;

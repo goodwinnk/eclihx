@@ -1,7 +1,6 @@
 package eclihx.core.haxe.internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +8,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Assert;
 
 import eclihx.core.haxe.internal.configuration.CompilationError;
+import eclihx.core.haxe.internal.versioning.VersionInfo;
 import eclihx.core.util.language.Pair;
 
 /**
@@ -18,7 +18,7 @@ import eclihx.core.util.language.Pair;
  */
 public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 
-	private static final String SUPPORTED_VERSIONS[] = { ">=2.0" };
+	private static final VersionInfo SUPPORTED_VERSIONS_INFO = VersionInfo.above("2.0");
 	
 	/**
 	 * Regular expression for splitting haXe error to groups.
@@ -45,15 +45,6 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * String which is given in successful build.
 	 */
 	private static final String SUCCESS_BUILD_STRING = "Building complete";
-	
-	/*
-	 * (non-Javadoc)
-	 * @see eclihx.core.haxe.internal.IHaxeVersionsInfo#getSupportedVersions()
-	 */
-	@Override
-	public final List<String> getSupportedVersions() {
-		return Arrays.asList(SUPPORTED_VERSIONS);
-	}
 	
 	/**
 	 * Read the file name for the error file part.
@@ -182,5 +173,10 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 		}
 		
 		return errorsList;
+	}
+
+	@Override
+	public VersionInfo getVersionInfo() {
+		return SUPPORTED_VERSIONS_INFO;
 	}
 }

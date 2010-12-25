@@ -2,11 +2,13 @@ package eclihx.core.haxe.internal;
 
 import java.util.List;
 
+import eclihx.core.haxe.internal.versioning.IVersionated;
+
 /**
  * Interface for the parser of the haXe compiler output which is aimed to
  * getting compile errors.
  */
-public interface IHaxeOutputErrorsParser extends IHaxeVersionsInfo {
+public interface IHaxeOutputErrorsParser extends IVersionated {
 	
 	/**
 	 * Method processes a line with the compile error.

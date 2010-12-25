@@ -359,21 +359,23 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		if (offset != 0) {
 			char previousChar = viewer.getDocument().get().charAt(offset - 1);
 			
-			if (previousChar == ',') {
-				// TODO 6: add context info for function parameters.
-			}
-			
-			if (previousChar == '(') {
-				// In current version we count informations only for the open bracket				
-				List<ContentInfo> contextInfos = getContentInfoForce(viewer, offset);
-				
-				List<IContextInformation> resultInfos = new ArrayList<IContextInformation>();
-				for (ContentInfo contextInfo : contextInfos) {
-					resultInfos.add(new ContextInformation(contextInfo.getName(), 
-							contextInfo.getType()));
-				}
-				
-				return resultInfos.toArray(new IContextInformation[0]);
+			switch (previousChar) {
+				case ',':
+					// TODO 6: add context info for function parameters.
+					break;
+				case '(':
+					// In current version we count informations only for the open bracket				
+					List<ContentInfo> contextInfos = getContentInfoForce(viewer, offset);
+					
+					List<IContextInformation> resultInfos = new ArrayList<IContextInformation>();
+					for (ContentInfo contextInfo : contextInfos) {
+						resultInfos.add(new ContextInformation(contextInfo.getName(), 
+								contextInfo.getType()));
+					}
+					
+					return resultInfos.toArray(new IContextInformation[0]);
+				default:					
+					break;
 			}
 		}
 		
