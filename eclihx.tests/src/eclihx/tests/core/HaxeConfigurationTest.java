@@ -199,5 +199,12 @@ public class HaxeConfigurationTest {
 		Assert.assertTrue(errors.size() == 1);
 		Assert.assertTrue(errors.get(0).equals(IConfiguration.EMPTY_CONFIGURATION_ERROR));
 	}
+	
+	@Test
+	public void shouldPrintHelpConfiguration() throws InvalidConfigurationException {
+		configuration.enableHelp();
+		Assert.assertEquals("-help", configuration.printConfiguration());
+	}
+
 
 }

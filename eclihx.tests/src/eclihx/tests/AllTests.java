@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses( { 
 	eclihx.core.haxe.model.AllTests.class,
 	eclihx.tests.core.AllTests.class,
-	eclihx.tests.core.haxe.internal.AllTests.class, 
+	eclihx.tests.core.haxe.AllTests.class, 
 	eclihx.ui.AllTests.class,
 	eclihx.ui.internal.ui.views.AllTests.class,
 	eclihx.ui.wizards.AllTests.class })

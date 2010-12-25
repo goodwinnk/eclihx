@@ -611,8 +611,11 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		return printWithoutCheck();
 	}
 	
-	protected String printWithoutCheck()
-	{
+	protected String printWithoutCheck() {
+		if (helpMode) {
+			return HaxePreferencesManager.PARAM_PREFIX_HELP1_FLAG;
+		}	
+		
 		StringBuilder outputBuilder = new StringBuilder();
 
 		// Startup class

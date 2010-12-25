@@ -132,6 +132,12 @@ public class HXEditor extends TextEditor {
 
 		return false;
 	}
+	
+	@Override
+	protected void editorSaved() {
+		// TODO 9: Update errors for this file
+		EclihxUIPlugin.getLogHelper().logInfo("Should be update");
+	}
 
 	/*
 	 * (non-Javadoc)
