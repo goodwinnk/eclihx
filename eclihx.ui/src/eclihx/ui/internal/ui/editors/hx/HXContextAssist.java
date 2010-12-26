@@ -21,6 +21,7 @@ import org.eclipse.ui.IFileEditorInput;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.ContentInfo;
 import eclihx.core.haxe.internal.HaxeContextAssistManager;
+import eclihx.core.haxe.internal.KeywordManager;
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.ui.PluginImages;
@@ -37,20 +38,12 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 */
 	private static class HaxeContextValidator implements IContextInformationValidator {
 		private int initialOffset;
-		
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.IContextInformationValidator#install(org.eclipse.jface.text.contentassist.IContextInformation, org.eclipse.jface.text.ITextViewer, int)
-		 */
+
 		@Override
 		public void install(IContextInformation info, ITextViewer viewer, int offset) {
 			this.initialOffset = offset;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.IContextInformationValidator#isContextInformationValid(int)
-		 */
 		@Override
 		public boolean isContextInformationValid(int offset) {
 			return Math.abs(initialOffset - offset) < 1;
@@ -61,14 +54,8 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 * Characters for auto activation proposal computation.
 	 */
 	private static final char[] VALID_HAXE_PROPOSALS_CHARS = new char[] { '.' };
-	
 	private static final char[] VALID_HAXE_INFO_CHARS = new char[] { '(' };
 	
-	/**
-	 * Keyword proposals.
-	 */
-	// private static final List<ContentInfo> keywordProposals = 
-	//		new ArrayList<ContentInfo>();
 	
 	/**
 	 * Stores cached information from haXe compiler.
@@ -220,19 +207,18 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 * @param infos a list with content informations.
 	 * @return list with proposals.
 	 */
-	private ICompletionProposal[] generateProposalsList(final int offsetStart, final int offsetEnd, 
+	private List<ICompletionProposal> generateProposalsList(final int offsetStart, final int offsetEnd, 
 			List<ContentInfo> infos) {
 		
 		final ArrayList<ICompletionProposal> resultProposals = new ArrayList<ICompletionProposal>();
 		for (ContentInfo contentInfo : infos) {
 			ICompletionProposal proposal = generateProposal(offsetStart, offsetEnd, contentInfo);
-			
 			if (proposal != null) {
 				resultProposals.add(proposal);
 			}
 		}
 		
-		return resultProposals.toArray(new ICompletionProposal[0]);		
+		return resultProposals;		
 	}
 	
 	/**
@@ -244,8 +230,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 */
 	private IHaxeSourceFile getHaxeSourceFile(IEditorInput input) {
 		if (input instanceof IFileEditorInput) {
-			IHaxeElement haxeElement = EclihxCore.getDefault()
-					.getHaxeWorkspace().getHaxeElement(
+			IHaxeElement haxeElement = EclihxCore.getDefault().getHaxeWorkspace().getHaxeElement(
 							((IFileEditorInput) input).getFile());
 
 			if (haxeElement instanceof IHaxeSourceFile) {
@@ -301,13 +286,27 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		return HaxeContextAssistManager.getTips(haxeFile, offset);
 	}
 	
+	private List<ICompletionProposal> generateKeywordProposals(ITextViewer viewer, 
+			int identOffset, int offset, String identifierPart) {
+		
+		// TODO 8: Take information about context and filter keywords. For example - global scope, class scope, function scope 
+		
+		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		
+		if (!identifierPart.isEmpty()) {
+			if (identOffset == 0 || Character.isWhitespace(viewer.getDocument().get().charAt(identOffset - 1))) {
+				for (String keyword : KeywordManager.getAllKeywords()) {
+					if (keyword.startsWith(identifierPart)) {
+						proposals.add(new CompletionProposal(keyword, identOffset, offset - identOffset, keyword.length()));
+					}
+				}
+			}
+		}
+		
+		return proposals;
+	}
+	
 	/*================== Begin IContentAssistProcessor methods ===================================*/
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.jface.text.contentassist.IContentAssistProcessor#
-	 * computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
-	 */
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		
@@ -326,33 +325,25 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		Assert.isTrue(infosCache.isValid());
 		
 		final String identifierPart = fileText.substring(identOffset, offset);
-		return generateProposalsList(identOffset, offset, 
-				infosCache.getFilteredInfos(identifierPart));
+		
+		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		proposals.addAll(generateKeywordProposals(viewer, identOffset, offset, identifierPart));
+		proposals.addAll(generateProposalsList(identOffset, offset, infosCache.getFilteredInfos(identifierPart)));
+		
+		return proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
-	 */
 	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return VALID_HAXE_PROPOSALS_CHARS;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getErrorMessage()
-	 */
 	@Override
 	public String getErrorMessage() {
 		// It looks like in current version of Eclipse user won't see this message anyway
 		return null; 
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(org.eclipse.jface.text.ITextViewer, int)
-	 */
 	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		
@@ -382,19 +373,11 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		return null;		
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationValidator()
-	 */
 	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		return new HaxeContextValidator();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
-	 */
 	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return VALID_HAXE_INFO_CHARS;
@@ -412,10 +395,6 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		infosCache.invalidate();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.ICompletionListener#assistSessionStarted(org.eclipse.jface.text.contentassist.ContentAssistEvent)
-	 */
 	@Override
 	public void assistSessionStarted(ContentAssistEvent event) {
 		// do nothing
