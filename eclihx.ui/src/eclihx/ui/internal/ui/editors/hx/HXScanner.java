@@ -8,6 +8,7 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
+import eclihx.core.haxe.internal.KeywordManager;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
 import eclihx.ui.internal.ui.editors.AdvancedNumberRule;
@@ -19,20 +20,6 @@ import eclihx.ui.internal.ui.editors.CodeWhitespaceDetector;
  * Scanner for haxe keywords and brackets.
  */
 public class HXScanner extends AbstractScanner {
-	
-	private final String[] fDeclareKeyWords = {
-			"var", "function", "new", "delete", 
-			"class", "package", "default", "interface"};
-	
-	private final String[] fKeyWords = {
-			              "import", "extends", "implements", "extern", "private",
-			              "public", "static", "try", "catch", "throw", "cast", "return", "break", "continue",
-	                      "if", "in", "super", "else", "for", "while", "do", "switch", 
-	                      "case", "with", "never", "this"};
-	
-	private final String[] fTypeWords = {"Void", "Float", "Int"};
-	
-	private final String[] fTypeConstants = {"null", "undefined", "true", "false"};
 	
 	@Override
 	protected TextAttributesKey[] getAttributesKeys() {
@@ -119,23 +106,23 @@ public class HXScanner extends AbstractScanner {
 			WordRule wr = new WordRule(new WordDetector(), wordToken);
 			
 			IToken keyWordToken = getToken(PreferenceConstants.HX_EDITOR_KEYWORDS_COLOR);
-			for (int i = 0; i < fKeyWords.length; i++) {
-				wr.addWord(fKeyWords[i], keyWordToken);
+			for (String keyword : KeywordManager.getNonDeclareKeywords()) {
+				wr.addWord(keyword, keyWordToken);
 			}
 			
 			IToken declareWordToken = getToken(PreferenceConstants.HX_EDITOR_DECLARE_KEYWORDS_COLOR);
-			for (int i = 0; i < fDeclareKeyWords.length; i++) {
-				wr.addWord(fDeclareKeyWords[i], declareWordToken);
+			for (String declareKeyword : KeywordManager.getDeclareKeywords()) {
+				wr.addWord(declareKeyword, declareWordToken);
 			}
 			
 			IToken typeConstatToken = getToken(PreferenceConstants.HX_EDITOR_NUMBER_COLOR);
-			for (int i = 0; i < fTypeConstants.length; i++) {
-				wr.addWord(fTypeConstants[i], typeConstatToken);
+			for (String typeConstantKeyword : KeywordManager.getConstantKeywords()) {
+				wr.addWord(typeConstantKeyword, typeConstatToken);
 			}
 			
 			IToken typeWordToken = getToken(PreferenceConstants.HX_EDITOR_TYPE_COLOR);
-			for (int i = 0; i < fTypeWords.length; i++) {
-				wr.addWord(fTypeWords[i], typeWordToken);
+			for (String typeWord: KeywordManager.getTypeKeywords()) {
+				wr.addWord(typeWord, typeWordToken);
 			}
 	
 			rules.add(wr);
