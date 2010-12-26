@@ -111,6 +111,10 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * Flag for displaying code tips (--display).
 	 */
 	private boolean displayTips;
+	
+	private boolean displayClassTips;
+	
+	private boolean displayKeywords;
 
 	/**
 	 * The name of the file for the code tip.
@@ -472,6 +476,20 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		tipFileName = fileName;
 		tipFilePosition = position;
 	}
+	
+	/**
+	 * Enable showing class tips.
+	 */
+	public void enableClassTips() {
+		displayClassTips = true;
+	}
+	
+	/**
+	 * Enable showing keyword tips.
+	 */
+	public void enableKeywordTips() {
+		displayKeywords = true;
+	}
 
 	/**
 	 * Returns help mode status.
@@ -612,12 +630,8 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	}
 	
 	protected String printWithoutCheck() {
-		if (helpMode) {
-			return HaxePreferencesManager.PARAM_PREFIX_HELP1_FLAG;
-		}	
-		
 		StringBuilder outputBuilder = new StringBuilder();
-
+		
 		// Startup class
 		if (startupClass != null) {
 			outputBuilder.append(generateParameter(
@@ -660,6 +674,16 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 					HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG, tipsParamStr));
 		}
 		
+		if (displayClassTips) {
+			outputBuilder.append(
+					generateParameter(HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG, "classes"));
+		}
+		
+		if (displayKeywords) {
+			outputBuilder.append(
+					generateParameter(HaxePreferencesManager.PARAM_PREFIX_CODE_TIPS_FLAG, "keywords"));
+		}
+		
 		// No output
 		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_NO_OUTPUT_FLAG,
@@ -679,6 +703,9 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_TIME_MESURE_FLAG,
 				timeMesureMode));
+		
+		outputBuilder.append(generateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_HELP1_FLAG, helpMode));
 
 		// Resources
 		for (String resourceFile : resourceFiles) {
