@@ -203,8 +203,18 @@ public class HaxeConfigurationTest {
 	@Test
 	public void shouldPrintHelpConfiguration() throws InvalidConfigurationException {
 		configuration.enableHelp();
-		Assert.assertEquals("-help", configuration.printConfiguration());
+		Assert.assertEquals("-help ", configuration.printConfiguration());
 	}
-
-
+	
+	@Test
+	public void shouldPrintClassesTipsConfiguration() throws InvalidConfigurationException {
+		configuration.enableClassTips();
+		Assert.assertEquals("--display classes ", configuration.printConfiguration());
+	}
+	
+	@Test
+	public void shouldPrintKeywordTipsConfiguration() throws InvalidConfigurationException {
+		configuration.enableKeywordTips();
+		Assert.assertEquals("--display keywords ", configuration.printConfiguration());
+	}
 }
