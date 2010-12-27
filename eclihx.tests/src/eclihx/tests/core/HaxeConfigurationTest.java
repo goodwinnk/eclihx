@@ -217,4 +217,28 @@ public class HaxeConfigurationTest {
 		configuration.enableKeywordTips();
 		Assert.assertEquals("--display keywords ", configuration.printConfiguration());
 	}
+	
+	@Test
+	public void shouldProcessNoOptimizationOption() throws InvalidConfigurationException {
+		configuration.enableNoOptimizationMode();
+		Assert.assertEquals("--no-opt ", configuration.printConfiguration());
+	}
+	
+	@Test
+	public void shouldValidateSimpleCPPConfiguration() {
+		configuration.setStartupClass("Main");
+		configuration.setPlatform(Platform.CPP);
+		configuration.getCPPConfig().setOutputDirectory("output");
+		
+		Assert.assertTrue(configuration.isValid());
+	}
+	
+	@Test
+	public void shouldValidateSimplePHPConfiguration() {
+		configuration.setStartupClass("PHPMain");
+		configuration.setPlatform(Platform.PHP);
+		configuration.getPHPConfig().setOutputDirectory("some/other folder/php/output");
+		
+		Assert.assertTrue(configuration.isValid());
+	}
 }

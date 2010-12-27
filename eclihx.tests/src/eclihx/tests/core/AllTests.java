@@ -15,7 +15,8 @@ import org.junit.runners.Suite;
 	// HaxeLauncherTest.class,
 	JSConfigurationTest.class,
 	NekoConfigurationTest.class,
-	PHPConfigurationTest.class })
+	PHPConfigurationTest.class,
+	CPPConfigurationTest.class })
 public class AllTests {
 	
 }
