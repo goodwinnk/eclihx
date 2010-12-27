@@ -21,6 +21,7 @@ import org.eclipse.ui.IFileEditorInput;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.ContentInfo;
 import eclihx.core.haxe.internal.HaxeContextAssistManager;
+import eclihx.core.haxe.internal.HaxeContextAssistManager.TipsEvaluationException;
 import eclihx.core.haxe.internal.KeywordManager;
 import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
@@ -46,6 +47,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 
 		@Override
 		public boolean isContextInformationValid(int offset) {
+			EclihxUIPlugin.getLogHelper().logInfo(String.format("Offset=%d, InitialOffset=%d", offset, initialOffset));
 			return Math.abs(initialOffset - offset) < 1;
 		}		
 	}
@@ -279,11 +281,22 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		
 		IHaxeSourceFile haxeFile = getHaxeSourceFile(editor.getEditorInput());
 		
-		if (haxeFile == null) {
-			return new ArrayList<ContentInfo>();
+		List<ContentInfo> tips = new ArrayList<ContentInfo>();
+		
+		if (haxeFile != null) {
+			try {
+				tips.addAll(HaxeContextAssistManager.getTips(haxeFile, offset));
+				
+				if (offset == 0 || Character.isWhitespace(viewer.getDocument().get().charAt(offset - 1))) {
+					tips.addAll(HaxeContextAssistManager.getClassTips(haxeFile.getPackage()));
+				}
+			} catch (TipsEvaluationException e) {
+				EclihxUIPlugin.getLogHelper().logError(e);
+				Assert.isTrue(false);
+			}
 		}
 		
-		return HaxeContextAssistManager.getTips(haxeFile, offset);
+		return tips;
 	}
 	
 	private List<ICompletionProposal> generateKeywordProposals(ITextViewer viewer, 
@@ -383,7 +396,6 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		return VALID_HAXE_INFO_CHARS;
 	}
 	/*================== end IContentAssistProcessor methods =====================================*/
-
 	
 	/*================== begin ICompletionListener methods =======================================*/
 	/**
@@ -403,6 +415,6 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	@Override
 	public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
 		// do nothing
-	}
+	}	
 	/*================== end ICompletionListener methods =========================================*/	
 }

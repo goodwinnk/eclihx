@@ -30,8 +30,7 @@ public class HaxeCompilerExecution {
 	 * @throws UnknownVersionException if request failed for some reason.
 	 */
 	public static HaxeVersion getVersion(String compilerPath) throws UnknownVersionException {
-		try
-		{
+		try {
 			HaxeLauncher launcher = new HaxeLauncher();
 			HaxeConfiguration haxeConfiguration = new HaxeConfiguration();
 			haxeConfiguration.enableHelp();
