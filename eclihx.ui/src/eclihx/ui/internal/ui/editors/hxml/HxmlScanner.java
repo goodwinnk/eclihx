@@ -75,8 +75,7 @@ public class HxmlScanner extends AbstractScanner {
 		BuildParamParser hxmlParser = new BuildParamParser();		
 		Iterable<String> paramsKeys = hxmlParser.getParametersKeys();		
 		
-		for (String paramKey : paramsKeys)
-		{
+		for (String paramKey : paramsKeys) {
 			wr.addWord(paramKey, keyWordToken);
 		}
 		

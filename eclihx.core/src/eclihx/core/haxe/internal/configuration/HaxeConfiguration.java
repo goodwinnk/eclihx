@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import org.eclipse.core.runtime.Assert;
+
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.util.OSUtil;
 
@@ -20,12 +22,11 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		/**
 		 * Flash platform.
 		 */
-
 		Flash,
+		
 		/**
 		 * ActionScript platform.
 		 */
-
 		ActionScript,
 
 		/**
@@ -42,6 +43,11 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		 * PHP platform.
 		 */
 		PHP,
+		
+		/**
+		 * CPP platform.
+		 */
+		CPP,
 
 		/**
 		 * No target platform which is equal to no output at all.
@@ -72,6 +78,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	private final ASConfiguration asConfig = new ASConfiguration();
 	private final NekoConfiguration nekoConfig = new NekoConfiguration();
 	private final JSConfiguration jsConfig = new JSConfiguration();
+	private final CPPConfiguration cppConfig = new CPPConfiguration();
 	
 	// Common haXe configuration options.
 	
@@ -145,6 +152,9 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * No-inline mode state.
 	 */
 	private boolean noInlineMode;
+	
+	// --no-opt : disable code optimizations
+	private boolean noOptimizedMode;
 
 	/**
 	 * Output file for xml-description.
@@ -315,6 +325,15 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 */
 	public PHPConfiguration getPHPConfig() {
 		return phpConfig;
+	}
+	
+	/**
+	 * Returns the CPP target platform options container.
+	 * 
+	 * @return the CPP options container. Not-null.
+	 */
+	public CPPConfiguration getCPPConfig() {
+		return cppConfig;
 	}
 
 	/**
@@ -527,6 +546,13 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	public void enableNoInlineMode() {
 		noInlineMode = true;
 	}
+	
+	/**
+	 * Disable code optimization.
+	 */
+	public void enableNoOptimizationMode() {
+		noOptimizedMode = true;
+	}
 
 	/**
 	 * Output file for xml-description.
@@ -698,6 +724,10 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		outputBuilder.append(generateFlagParameter(
 				HaxePreferencesManager.PARAM_PREFIX_NO_INLINE_FLAG,
 				noInlineMode));
+		
+		outputBuilder.append(generateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_NO_OPTIMIZATION_FLAG, 
+				noOptimizedMode));
 
 		// Time measure mode
 		outputBuilder.append(generateFlagParameter(
@@ -821,16 +851,22 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * Get the selected target configuration.
 	 */
 	private IConfiguration getTargetConfiguration() {
-		if (platform == Platform.Flash) {
-			return flashConfig;
-		} else if (platform == Platform.JavaScript) {
-			return jsConfig;
-		} else if (platform == Platform.ActionScript) {
-			return asConfig;
-		} else if (platform == Platform.Neko) {
-			return nekoConfig;
+		switch (platform) {
+			case Flash:
+				return flashConfig;
+			case JavaScript:
+				return jsConfig;
+			case ActionScript:
+				return asConfig;
+			case Neko:
+				return nekoConfig;
+			case PHP:
+				return phpConfig;
+			case CPP:
+				return cppConfig;
 		}
 		
+		Assert.isTrue(false);
 		return null;
 	}
 }

@@ -77,9 +77,11 @@ public class PHPConfiguration extends AbstractConfiguration {
 			HaxePreferencesManager.PARAM_PREFIX_PHP_DIRECTORY, 
 			OSUtil.quoteCompoundPath(outputDirectory));
 		
-		output += HaxeConfiguration.generateParameter(
-			HaxePreferencesManager.PARAM_PREFIX_PHP_FRONT_FILE, 
-			OSUtil.quoteCompoundPath(frontFile));
+		if (frontFile != null) {
+			output += HaxeConfiguration.generateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_PHP_FRONT_FILE, 
+					OSUtil.quoteCompoundPath(frontFile));
+		}
 		
 		return output;
 	}	

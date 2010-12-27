@@ -24,7 +24,7 @@ import eclihx.core.util.console.parser.core.Parser;
  */
 public final class BuildParamParser {
 	
-	private final class MultiParameterRestrictor {
+	private final static class MultiParameterRestrictor {
 		
 		private int counter = 0;
 		private final String errorMessage;
@@ -230,6 +230,18 @@ public final class BuildParamParser {
 						currentConfig.getPHPConfig().setOutputDirectory(value);
 					}
 				}),
+			
+			// -cpp <directory> : generate C++ code into target directory
+			Builder.createStringParam(
+					HaxePreferencesManager.PARAM_PREFIX_CPP_DIRECTORY, 
+					new IStringValue() {
+						@Override
+						public void save(String value) throws ParseError {
+							platformParam.check();
+							currentConfig.setPlatform(Platform.CPP);
+							currentConfig.getCPPConfig().setOutputDirectory(value);
+						}
+					}),
 			
 			// -x <file> : shortcut for compiling and executing a neko file
 			Builder.createStringParam(
@@ -445,6 +457,18 @@ public final class BuildParamParser {
 					public void save(boolean exist) throws ParseError {
 						if (exist) {
 							currentConfig.enableNoInlineMode();
+						}						
+					}
+				}),
+				
+			//  --no-opt : disable code optimizations
+			Builder.createFlagParam(
+				HaxePreferencesManager.PARAM_PREFIX_NO_OPTIMIZATION_FLAG, 
+				new IParamExistense() {
+					@Override
+					public void save(boolean exist) throws ParseError {
+						if (exist) {
+							currentConfig.enableNoOptimizationMode();
 						}						
 					}
 				}),
