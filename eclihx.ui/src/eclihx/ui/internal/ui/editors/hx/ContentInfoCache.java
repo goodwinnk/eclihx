@@ -83,7 +83,7 @@ public class ContentInfoCache {
 	 * @param newOffset current offset for checking the state.
 	 */
 	void updateState(final int newOffset) {
-		if (newOffset < cachedOffset) {
+		if (newOffset != cachedOffset) {
 			invalidate();
 		}
 	}
