@@ -200,4 +200,20 @@ public class BuildParamParserTest {
 		Assert.assertTrue(config.getMainConfiguration().getFlashConfig().getLibraries().size() == 1);
 	}
 	
+	@Test
+	public void shouldParseRealExampleConfiguration() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
+		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/functional/exampleConfig.hxml")).getPath();
+		
+		HaxeConfiguration config = parser.parseFile(path, executableFolder).getMainConfiguration();
+		/*
+		 * -cp src
+		 * -main Main
+		 * -swf9 main.swf
+		 * -swf-version 9
+		 * -D network-sandbox
+		 * -swf-lib asset_lib.swf
+		 */
+		Assert.assertEquals("-main Main -D network-sandbox -cp src -debug -swf9 main.swf -swf-lib asset_lib.swf ", config.printConfiguration());	
+	}
+	
 }
