@@ -10,10 +10,17 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.HaxeElementValidator;
@@ -36,7 +43,7 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 	/**
 	 * For to store project paths
 	 */
-	IProjectPathManager fPathManager; 
+	IProjectPathManager fPathManager;
 
 	/**
 	 * Create the haXe project on the base of the IProject.
@@ -70,6 +77,12 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 		// TODO 7 Make properties change listener
 		if (fPathManager != null) {
 			fPathManager.store();
+		}
+		
+		try {
+			new ProjectScope(fProject).getNode(EclihxCore.PLUGIN_ID).flush();
+		} catch (BackingStoreException e) {
+			EclihxCore.getLogHelper().logError(e);
 		}
 	}
 	
@@ -165,8 +178,7 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 		IFile buildFile = fProject.getFile(fileName);
 		buildFile.create(stream, true, monitor);
 		
-		HaxeBuildFile haxeBuildFile = new HaxeBuildFile(this, buildFile);
-					
+		HaxeBuildFile haxeBuildFile = new HaxeBuildFile(this, buildFile);					
 		return haxeBuildFile;
 	}
 	
@@ -378,5 +390,51 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 		getPathManager().store();
 
 		return new HaxeSourceFolder(this, folder);
+	}
+
+	@Override
+	public void setContentAssistBuildFile(String absolutePath) throws InvalidBuildFileNameException {
+		IEclipsePreferences scope = new ProjectScope(fProject).getNode(EclihxCore.PLUGIN_ID);
+		Preferences contentAssistNode = scope.node("contentassist");
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			try {
+				contentAssistNode.clear();
+			} catch (BackingStoreException e) {
+				EclihxCore.getLogHelper().logError(e);
+			}
+		} else {
+			IPath path = new Path(absolutePath);
+
+			if (!path.isAbsolute()) {
+				throw new InvalidBuildFileNameException("Path should be absolute");
+			}
+			
+			if (!fProject.getLocation().isPrefixOf(path)) {
+				throw new InvalidBuildFileNameException("Should be relative to the project");
+			}
+			
+			IPath thisProjectRelative = path.makeRelativeTo(fProject.getLocation());
+			
+			if (!fProject.getFile(thisProjectRelative).exists()) {
+				throw new InvalidBuildFileNameException("File should exist");
+			}			
+			
+			Assert.isTrue(path != thisProjectRelative);			
+			contentAssistNode.put("buildfile", thisProjectRelative.toOSString());
+		}		
+	}
+
+	@Override
+	public String getContentAssistBuildFileAbsulute() {
+		IEclipsePreferences scope = new ProjectScope(fProject).getNode(EclihxCore.PLUGIN_ID);
+		Preferences contentAssistNode = scope.node("contentassist");
+		String buildPath = contentAssistNode.get("buildfile", null);
+		
+		if (buildPath != null && !buildPath.isEmpty()) {
+			return fProject.getFile(new Path(buildPath)).getLocation().toOSString();
+		}
+		
+		return null;
 	}
 }

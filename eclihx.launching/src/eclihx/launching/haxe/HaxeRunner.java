@@ -11,10 +11,12 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.IStatusHandler;
 
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.HaxeLauncher;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.parser.BuildParamParser;
+import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.util.OSUtil;
 import eclihx.core.util.console.parser.core.ParseError;
 import eclihx.launching.EclihxLauncher;
@@ -26,13 +28,6 @@ import eclihx.launching.IHaxeRunner;
  */
 public class HaxeRunner implements IHaxeRunner {
 	
-	/**
-	 * 
-	 * @param severity
-	 * @param code
-	 * @param message
-	 * @throws CoreException
-	 */
 	private void throwState(int severity, int code, String message) 
 			throws CoreException {
 		
@@ -108,7 +103,7 @@ public class HaxeRunner implements IHaxeRunner {
         
         if (!launcher.getErrorString().isEmpty()) {
         	return launcher.getErrorString();
-        }        	
+        }        
         
         return "Building complete.\n" + launcher.getOutputString();
 	}

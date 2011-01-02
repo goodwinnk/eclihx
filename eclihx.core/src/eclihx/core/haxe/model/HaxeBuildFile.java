@@ -37,8 +37,7 @@ public class HaxeBuildFile extends HaxeElement implements IHaxeBuildFile {
 		}				
 		
 		fFile = file;
-		fHaxeProject = project;
-		
+		fHaxeProject = project;		
 	}
 	
 	/*

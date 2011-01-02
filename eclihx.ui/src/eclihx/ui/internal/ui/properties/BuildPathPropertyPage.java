@@ -5,12 +5,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 
+/**
+ * Page for setting up project specific haXe compiler.
+ */
 public class BuildPathPropertyPage extends PropertyPage implements
 		IWorkbenchPropertyPage {
-
-	public BuildPathPropertyPage() {
-		// TODO 4 Implement
-	}
 
 	@Override
 	protected Control createContents(Composite parent) {

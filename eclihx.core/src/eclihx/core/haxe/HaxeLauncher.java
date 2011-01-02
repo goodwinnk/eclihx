@@ -45,7 +45,7 @@ public class HaxeLauncher {
 
 			String commandLine = OSUtil.quoteCompoundPath(compilerPath) + " "
 					+ configuration.printConfiguration();
-
+			
 			ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(commandLine, workingDirectory);
 
 			errorsString = execResult.getErrorsString();
