@@ -9,13 +9,20 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.eclipse.core.runtime.CoreException;
+
 import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.HaxeLauncher;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
+import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
+import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
+import eclihx.core.haxe.internal.parser.BuildParamParser;
 import eclihx.core.haxe.model.core.IHaxePackage;
+import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
+import eclihx.core.util.console.parser.core.ParseError;
 
 /**
  * This class will generate content tips for the particular 
@@ -45,8 +52,7 @@ public class HaxeContextAssistManager {
 		
 	
 	/**
-	 * Get the tips for the defined position in file and 
-	 * selected configuration.
+	 * Get the tips for the defined position.
 	 * 
 	 * @param haxeFile the haXe file for getting tip. 
 	 * @param position offset in file where tip should be got.
@@ -55,26 +61,78 @@ public class HaxeContextAssistManager {
 	 */
 	static public List<ContentInfo> getTips(IHaxeSourceFile haxeFile, int position) throws TipsEvaluationException {
 
-		HaxeConfiguration configuration = new HaxeConfiguration();
-		
-		configuration.addClassName(haxeFile.getDefaultClassName());
-		configuration.setExplicitNoOutput();
-		configuration.enableTips(haxeFile.getBaseFile().getLocation().toOSString(),	position);
-		
-		IHaxeSourceFolder[] sourceFolders = haxeFile.getHaxeProject().getSourceFolders();
-		
-		if (sourceFolders.length == 0) {
-			EclihxCore.getLogHelper().logError(
-					String.format(
-							"Tips: There're no source folders in '%s' project",
-							haxeFile.getHaxeProject().getName()));
+		IHaxeProject project = haxeFile.getHaxeProject();
+		if (project == null) {
 			return new ArrayList<ContentInfo>();
 		}
+		
+		HaxeConfiguration projectConfiguration = prepareProjectTipsConfiguration(haxeFile, position);
+		if (projectConfiguration != null) {
+			EclihxCore.getLogHelper().logInfo("Use project tips configuration");
+			List<ContentInfo> tips = getTips(projectConfiguration, haxeFile);
+			if (!tips.isEmpty()) {
+				// Haxe configuration has successfully got proposals.
+				return tips;
+			}
+		}
+		
+		// There is no project configuration or project configuration hasn't found any tips.
+		EclihxCore.getLogHelper().logInfo("Use standard tips configuration");	
+		HaxeConfiguration standardConfiguration = getStandardTipsConfiguration(haxeFile, position);
+		return getTips(standardConfiguration, haxeFile);
+	}
+	
+	private static HaxeConfiguration getProjectTipsConfiguration(IHaxeProject project) {
+		String absoluteContentAssistFilePath = project.getContentAssistBuildFileAbsulute();
+		
+		if (absoluteContentAssistFilePath != null) {
+			
+			BuildParamParser buildParamParser = new BuildParamParser();
+			
+			HaxeConfigurationList configurations;
+			try {
+				HaxeConfiguration configuration;
+				configurations = buildParamParser.parseFile(absoluteContentAssistFilePath, 
+						project.getBaseResource().getLocation().toOSString());
+				configuration = configurations.getMainConfiguration();
+				
+				return configuration;
+			} catch (Exception e) {
+				EclihxCore.getLogHelper().logError(e);
+			}
+		}
+		
+		return null;
+	}
+
+	private static HaxeConfiguration prepareProjectTipsConfiguration(IHaxeSourceFile haxeFile, int position) {
+		
+		IHaxeProject project = haxeFile.getHaxeProject();
+		HaxeConfiguration haxeConfiguration = getProjectTipsConfiguration(project);
+		if (haxeConfiguration != null) {
+			haxeConfiguration.setExplicitNoOutput();
+			haxeConfiguration.enableTips(haxeFile.getBaseFile().getLocation().toOSString(),	position);
+		}
+		
+		return haxeConfiguration;
+	}
+	
+	private static HaxeConfiguration getStandardTipsConfiguration(IHaxeSourceFile haxeFile, int position) {
+		HaxeConfiguration configuration = new HaxeConfiguration();
+		IHaxeSourceFolder[] sourceFolders = haxeFile.getHaxeProject().getSourceFolders();
 		
 		for (IHaxeSourceFolder sourceFolder : sourceFolders) {
 			configuration.addSourceDirectory(sourceFolder.getBaseFolder().getLocation().toOSString());
 		}
+			
+		configuration.addClassName(haxeFile.getDefaultClassName());
+		configuration.setExplicitNoOutput();
+		configuration.enableTips(haxeFile.getBaseFile().getLocation().toOSString(),	position);
 		
+		return configuration;
+	}
+	
+	static private List<ContentInfo> getTips(HaxeConfiguration configuration, IHaxeSourceFile haxeFile) throws TipsEvaluationException {
 		try {
 			// TODO 9 need a warning here if preference hasn't been set. 
 			final String haxePath = 
@@ -126,30 +184,55 @@ public class HaxeContextAssistManager {
 	 * @throws TipsEvaluationException if there were errors in tips execution.
 	 */
 	public static List<ContentInfo> getClassTips(IHaxePackage haxePackage) throws TipsEvaluationException {
-		try {
+		try {			
+			
+			HaxeConfiguration projectTipsConfiguration = getProjectTipsConfiguration(
+					haxePackage.getSourceFolder().getHaxeProject());
+			
+			if (projectTipsConfiguration != null) {
+				EclihxCore.getLogHelper().logInfo("Using project configuration for class tips");
+				projectTipsConfiguration.setExplicitNoOutput();
+				projectTipsConfiguration.enableClassTips();
+				
+				List<ContentInfo> classTips = getClassTips(projectTipsConfiguration, haxePackage);
+				if (!classTips.isEmpty()) {
+					return classTips;
+				}
+			}
+			
+			EclihxCore.getLogHelper().logInfo("Using default configuration for class tips");
 			HaxeConfiguration haxeConfiguration = new HaxeConfiguration();
 			haxeConfiguration.enableClassTips();
 			
-			final String haxeCompilerPath = EclihxCore.getDefault().getPluginPreferences().getString(
-					CorePreferenceInitializer.HAXE_COMPILER_PATH);
+			return getClassTips(haxeConfiguration, haxePackage);
 			
-			HaxeLauncher launcher = new HaxeLauncher();
-			launcher.run(haxeConfiguration, null, haxeCompilerPath, new File(haxePackage.getBaseFolder().getLocation().toOSString()));
-			
-			String errors = launcher.getErrorString();
-			
-			{
-				// Read type content assist info.
-				int startInfoListIndex = errors.indexOf(OPEN_LIST_TAG);
-				int endInfoListIndex = errors.indexOf(CLOSE_LIST_TAG);
-				
-				if (startInfoListIndex != -1 && endInfoListIndex != -1) {
-					final String typeTips = errors.substring(startInfoListIndex, endInfoListIndex + CLOSE_LIST_TAG.length());
-					return processTypeTips(typeTips);
-				}
-			}			
 		} catch (Exception e) {
 			throw new TipsEvaluationException(e);
+		}
+	}
+
+	private static List<ContentInfo> getClassTips(HaxeConfiguration haxeConfiguration, 
+			IHaxePackage haxePackage) throws CoreException, JAXBException {
+		
+		final String haxeCompilerPath = EclihxCore.getDefault().getPluginPreferences().getString(
+				CorePreferenceInitializer.HAXE_COMPILER_PATH);
+		
+		IHaxeProject haxeProject = haxePackage.getSourceFolder().getHaxeProject();
+		
+		HaxeLauncher launcher = new HaxeLauncher();
+		launcher.run(haxeConfiguration, null, haxeCompilerPath, new File(haxeProject.getProjectBase().getLocation().toOSString()));
+		
+		String errors = launcher.getErrorString();
+		
+		{
+			// Read type content assist info.
+			int startInfoListIndex = errors.indexOf(OPEN_LIST_TAG);
+			int endInfoListIndex = errors.indexOf(CLOSE_LIST_TAG);
+			
+			if (startInfoListIndex != -1 && endInfoListIndex != -1) {
+				final String typeTips = errors.substring(startInfoListIndex, endInfoListIndex + CLOSE_LIST_TAG.length());
+				return processTypeTips(typeTips);
+			}
 		}
 		
 		return new ArrayList<ContentInfo>();

@@ -88,10 +88,8 @@ public class HaxeLaunchDelegate extends LaunchConfigurationDelegate{
 			// TODO 9 Check that this is a flash runner
 			return new FlashDebugRunner();
 			
-		} else if (ILaunchManager.RUN_MODE.equals(mode)) {
-			
-			return new HaxeRunner();
-			
+		} else if (ILaunchManager.RUN_MODE.equals(mode)) {			
+			return new HaxeRunner();			
 		}
 		
 		return null;

@@ -71,7 +71,7 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 
 		indentWidthTextField = new Text(middle, SWT.SINGLE);
 		indentWidthTextField.setTextLimit(1);
-		(new Label(middle,SWT.CHECK)).setText(INDENT_WIDTH);
+		(new Label(middle, SWT.CHECK)).setText(INDENT_WIDTH);
 		
 		initializeValues();
 		bracketNewLineCheck.addSelectionListener(

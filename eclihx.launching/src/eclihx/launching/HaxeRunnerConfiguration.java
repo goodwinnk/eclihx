@@ -8,10 +8,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
  */
 public class HaxeRunnerConfiguration {
 	
-	private String[] fArguments;
-	private String fWorkingDirectory;
-	private String fBuildFile;
-	private String fCompilerPath;
+	private String[] arguments;
+	private String workingDirectory;
+	private String buildFile;
+	private String compilerPath;
+	private String projectName;
 	
 	/**
 	 * Simple constructor. Main functionality moved to <code>load</code> method 
@@ -30,10 +31,8 @@ public class HaxeRunnerConfiguration {
 	 */
 	public void load(ILaunchConfiguration configuration) throws CoreException {
 
-		setCompilerPath(
-				configuration.getAttribute( 
-						IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, 
-						""));
+		setCompilerPath(configuration.getAttribute( 
+				IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, ""));
         
 		setBuildFile(configuration.getAttribute(
 				IHaxeLaunchConfigurationConstants.BUILD_FILE, 
@@ -42,7 +41,11 @@ public class HaxeRunnerConfiguration {
 		setWorkingDirectory(configuration.getAttribute(
 				IHaxeLaunchConfigurationConstants.WORKING_DIRECTORY, 
 				(String) null));
-        
+		
+		setProjectName(configuration.getAttribute(
+				IHaxeLaunchConfigurationConstants.PROJECT_NAME, 
+				(String) null));
+		
         // TODO 8 get attributes
         setArguments(null);
 	}
@@ -52,7 +55,7 @@ public class HaxeRunnerConfiguration {
 	 * @return an array with arguments.
 	 */
 	public String[] getArguments() {
-		return fArguments;
+		return arguments;
 	}
 
 	/**
@@ -60,7 +63,7 @@ public class HaxeRunnerConfiguration {
 	 * @param arguments array with arguments.
 	 */
 	public void setArguments(String[] arguments) {
-		fArguments = arguments;
+		this.arguments = arguments;
 	}
 
 	/**
@@ -68,7 +71,7 @@ public class HaxeRunnerConfiguration {
 	 * @return The working directory string. 
 	 */
 	public String getWorkingDirectory() {
-		return fWorkingDirectory;
+		return workingDirectory;
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class HaxeRunnerConfiguration {
 	 * @param workingDirectory the 
 	 */
 	public void setWorkingDirectory(String workingDirectory) {
-		fWorkingDirectory = workingDirectory;
+		this.workingDirectory = workingDirectory;
 	}
 
 	/**
@@ -84,7 +87,7 @@ public class HaxeRunnerConfiguration {
 	 * @return the build file string.
 	 */
 	public String getBuildFile() {
-		return fBuildFile;
+		return buildFile;
 	}
 
 	/**
@@ -92,7 +95,7 @@ public class HaxeRunnerConfiguration {
 	 * @param buildFile the build file string.
 	 */
 	public void setBuildFile(String buildFile) {
-		fBuildFile = buildFile;
+		this.buildFile = buildFile;
 	}
 
 	/**
@@ -100,7 +103,7 @@ public class HaxeRunnerConfiguration {
 	 * @return the compiler path.
 	 */
 	public String getCompilerPath() {
-		return fCompilerPath;
+		return compilerPath;
 	}
 
 	/**
@@ -108,6 +111,22 @@ public class HaxeRunnerConfiguration {
 	 * @param compilePath the compiler path.
 	 */
 	public void setCompilerPath(String compilePath) {
-		fCompilerPath = compilePath;
+		compilerPath = compilePath;
+	}
+	
+	/**
+	 * Get the project name.
+	 * @return the project name.
+	 */
+	public String getProjectName() {
+		return projectName;
+	}
+
+	/**
+	 * Set the project name.
+	 * @param projectName project name.
+	 */
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 }

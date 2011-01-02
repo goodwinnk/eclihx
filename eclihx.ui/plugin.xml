@@ -146,8 +146,19 @@
        point="org.eclipse.ui.propertyPages">
     <page
           class="eclihx.ui.internal.ui.properties.BuildPathPropertyPage"
-          id="eclihx.ui.page1"
+          id="eclihx.ui.projectpage.buildPath"
           name="%projectBuildPathPage.name">
+       <enabledWhen>
+          <test
+                property="org.eclipse.core.resources.projectNature"
+                value="eclihx.core.haxenature">
+          </test>
+       </enabledWhen>
+    </page>
+    <page
+          class="eclihx.ui.internal.ui.properties.ProjectContentAssistPage"
+          id="eclihx.ui.projectpage.contentAssist"
+          name="%projectContentAssistPage.name">
        <enabledWhen>
           <test
                 property="org.eclipse.core.resources.projectNature"

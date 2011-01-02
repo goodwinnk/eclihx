@@ -185,7 +185,7 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 		buildFileNameText.setText("");
 		buildFileNameText.addModifyListener(fModifyListener);
 
-		projectBuildButton = createPushButton(buildFileGroup, "Build file...",
+		projectBuildButton = createPushButton(buildFileGroup, "Build file...", 
 				null);
 		projectBuildButton.addSelectionListener(new SelectionAdapter() {
 			@Override

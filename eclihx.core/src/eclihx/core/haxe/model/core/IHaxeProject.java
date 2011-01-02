@@ -7,6 +7,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
+import eclihx.core.haxe.model.InvalidBuildFileNameException;
+
 /**
  * Interface for the haXe project.
  */
@@ -173,4 +176,18 @@ public interface IHaxeProject extends IHaxeElement {
 	 * @return the project name.
 	 */
 	String getName();
+	
+	/**
+	 * Set the content assist absolute path.
+	 * @param absolutePath New content assist absolute path. Expected to be in current project and exists.
+	 * 		If null or empty the property will be unset. 
+	 * @throws InvalidBuildFileNameException If file not absolute, not relative to the project or doesn't exists.
+	 */
+	void setContentAssistBuildFile(String absolutePath) throws InvalidBuildFileNameException;
+	
+	/**
+	 * Get the absolute build file path that should be used for content assist.
+	 * @return Absolute build file path should be used for content assist. Could be null if file wasn't set.
+	 */
+	String getContentAssistBuildFileAbsulute();
 }
