@@ -34,7 +34,7 @@ public final class EclihxLogger implements IPluginLogger {
 	 * methods up on stack. The value of offset depends of number of utility
 	 * methods called for logging.
 	 */
-	private final int STACK_OFFSET = 4;
+	private static final int STACK_OFFSET = 4;
 	
 	/**
 	 * Line of the error.

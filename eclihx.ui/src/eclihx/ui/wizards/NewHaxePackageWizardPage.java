@@ -152,30 +152,26 @@ public final class NewHaxePackageWizardPage extends AbstractSelectionPage {
 		
 		// Examine selection.
 		if (!(selection == null || selection.isEmpty())) {
+			IStructuredSelection structedSelection = selection;
 			
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection structedSelection = 
-						selection;
+			// For the case when single element was selected
+			if (structedSelection.size() == 1) {
 				
-				// For the case when single element was selected
-				if (structedSelection.size() == 1) {
-					
-					Object selectedElement = 
-						structedSelection.getFirstElement();
-					
-					updateSourceFolderField(
-							SelectionUtils.getHaxeSourceFolderFromSelection(
-									selectedElement));
-					
-					IHaxePackage haxePackage = 
-							SelectionUtils.getHaxePackageFromSelection(
-									selectedElement);
-					
-					if (haxePackage != null && !haxePackage.isDefault()) {
-						packageText.setText(haxePackage.getName());
-					}					
-				}	
-			}			
+				Object selectedElement = 
+					structedSelection.getFirstElement();
+				
+				updateSourceFolderField(
+						SelectionUtils.getHaxeSourceFolderFromSelection(
+								selectedElement));
+				
+				IHaxePackage haxePackage = 
+						SelectionUtils.getHaxePackageFromSelection(
+								selectedElement);
+				
+				if (haxePackage != null && !haxePackage.isDefault()) {
+					packageText.setText(haxePackage.getName());
+				}					
+			}	
 		}
 	}
 

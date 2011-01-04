@@ -42,7 +42,7 @@ public class HaxeColorPreferencePage extends PreferencePage implements IWorkbenc
 	 * Class for storing controls for managing syntax setting and
 	 * providing restricted API for their manipulation
 	 */
-	private final class SyntaxEditorsGroup {
+	private static final class SyntaxEditorsGroup {
 		
 		private final ColorSelector colorSelector;
 		private final Button boldCheck;

@@ -209,25 +209,21 @@ public class NewHaxeFileWizardPage extends AbstractSelectionPage {
 		// Examine selection.
 		if (!(selection == null || selection.isEmpty())) {
 			
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection structedSelection = 
-						selection;
+			IStructuredSelection structedSelection = selection;
+			
+			// For the case when single element was selected
+			if (structedSelection.size() == 1) {
 				
-				// For the case when single element was selected
-				if (structedSelection.size() == 1) {
-					
-					Object selectedElement = 
-						structedSelection.getFirstElement();
-					
-					updateSourceFolderField(
-							SelectionUtils.getHaxeSourceFolderFromSelection(
-									selectedElement));
-							
-					updatePackageField(
-							SelectionUtils.getHaxePackageFromSelection(
-									selectedElement));
-				}	
-			}			
+				Object selectedElement = structedSelection.getFirstElement();
+				
+				updateSourceFolderField(
+						SelectionUtils.getHaxeSourceFolderFromSelection(
+								selectedElement));
+						
+				updatePackageField(
+						SelectionUtils.getHaxePackageFromSelection(
+								selectedElement));
+			}	
 		}
 	}
 

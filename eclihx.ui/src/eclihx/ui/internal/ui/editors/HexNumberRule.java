@@ -16,7 +16,7 @@ public final class HexNumberRule implements IRule {
 	/**
 	 * Word detector for hex number words.
 	 */
-	private class HexNumberDetector implements IWordDetector {
+	private static class HexNumberDetector implements IWordDetector {
 		
 		private final TreeSet<Character> hexChars;
 

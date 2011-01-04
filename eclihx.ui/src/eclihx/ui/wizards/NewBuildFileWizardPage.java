@@ -122,20 +122,17 @@ public final class NewBuildFileWizardPage extends AbstractSelectionPage {
 
 		// Examine selection.
 		if (!(selection == null || selection.isEmpty())) {
+			IStructuredSelection structedSelection = selection;
 
-			if (selection instanceof IStructuredSelection) {
-				IStructuredSelection structedSelection = selection;
+			// For the case when single element was selected
+			if (structedSelection.size() == 1) {
 
-				// For the case when single element was selected
-				if (structedSelection.size() == 1) {
+				Object selectedElement = structedSelection
+						.getFirstElement();
 
-					Object selectedElement = structedSelection
-							.getFirstElement();
-
-					updateHaxeProject(
-							SelectionUtils.getHaxeProjectFromSelection(
-									selectedElement));
-				}
+				updateHaxeProject(
+						SelectionUtils.getHaxeProjectFromSelection(
+								selectedElement));
 			}
 		}
 	}

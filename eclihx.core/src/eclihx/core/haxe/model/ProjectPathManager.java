@@ -13,6 +13,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 import eclihx.core.EclihxCore;
@@ -227,7 +228,7 @@ public class ProjectPathManager implements IProjectPathManager {
 	 * @param folder the folder to add. 
 	 */
 	public void addLibFolder(IFolder folder) {
-		assert(folder.getProject().equals(fProject));
+		Assert.isTrue(folder.getProject().equals(fProject.getProjectBase()));
 		
 		libFolders.add(folder);
 	}
@@ -238,7 +239,7 @@ public class ProjectPathManager implements IProjectPathManager {
 	 * @param folder the folder to add.
 	 */
 	public void addSourceFolder(IFolder folder) {
-		assert(folder.getProject().equals(fProject));
+		Assert.isTrue(folder.getProject().equals(fProject.getProjectBase()));
 		
 		sourceFolders.add(folder);
 		
