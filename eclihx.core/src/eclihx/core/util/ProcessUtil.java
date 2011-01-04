@@ -121,7 +121,9 @@ public class ProcessUtil {
      */
     public static ProcessExecResult executeProcess(String commandLine, File workingDirectory) {
     	
-    	EclihxCore.getLogHelper().logInfo(commandLine);
+    	EclihxCore.getLogHelper().logInfo(
+    			String.format("Eclihx ExecuteProcess. WorkingDirectory: \"%s\". CommandLine: \"%s\".",
+    					workingDirectory, commandLine));
     	
     	try {
 	    	Process process = Runtime.getRuntime().exec(commandLine, null, workingDirectory);
