@@ -149,10 +149,20 @@
           id="eclihx.ui.projectpage.buildPath"
           name="%projectBuildPathPage.name">
        <enabledWhen>
-          <test
-                property="org.eclipse.core.resources.projectNature"
-                value="eclihx.core.haxenature">
-          </test>
+          <or>
+             <and>
+                <test
+                      property="org.eclipse.core.resources.projectNature"
+                      value="eclihx.core.haxenature">
+                </test>
+                <instanceof
+                      value="org.eclipse.core.resources.IProject">
+                </instanceof>
+             </and>
+             <instanceof
+                   value="eclihx.core.haxe.model.core.IHaxeProject">
+             </instanceof>
+          </or>
        </enabledWhen>
     </page>
     <page
@@ -160,10 +170,19 @@
           id="eclihx.ui.projectpage.contentAssist"
           name="%projectContentAssistPage.name">
        <enabledWhen>
-          <test
-                property="org.eclipse.core.resources.projectNature"
-                value="eclihx.core.haxenature">
-          </test>
+          <or>
+             <instanceof
+                   value="eclihx.core.haxe.model.core.IHaxeProject">
+             </instanceof>
+             <and>
+                <instanceof
+                      value="org.eclipse.core.resources.IProject">
+                </instanceof>
+                <test
+                      property="org.eclipse.core.resources.projectNature"
+                      value="eclihx.core.haxenature">
+                </test></and>
+          </or>
        </enabledWhen>
     </page>
  </extension>
