@@ -151,13 +151,13 @@
        <enabledWhen>
           <or>
              <and>
+                <instanceof
+                      value="org.eclipse.core.resources.IProject">
+                </instanceof>
                 <test
                       property="org.eclipse.core.resources.projectNature"
                       value="eclihx.core.haxenature">
                 </test>
-                <instanceof
-                      value="org.eclipse.core.resources.IProject">
-                </instanceof>
              </and>
              <instanceof
                    value="eclihx.core.haxe.model.core.IHaxeProject">
