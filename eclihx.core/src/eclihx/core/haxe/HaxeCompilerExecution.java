@@ -38,6 +38,9 @@ public class HaxeCompilerExecution {
 			launcher.run(haxeConfiguration, null, compilerPath, new File(System.getProperty("java.io.tmpdir")));
 			
 			String outputString = launcher.getOutputString();
+			
+			String other = outputString;
+			
 			Pattern pattern = Pattern.compile(".*Compiler\\s([^\\s]*).*", Pattern.DOTALL);
 			Matcher matcher = pattern.matcher(outputString);
 			if (!matcher.matches()) {

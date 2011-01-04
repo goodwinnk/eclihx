@@ -47,7 +47,7 @@ public class HaxeLauncher {
 					+ configuration.printConfiguration();
 			
 			ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(commandLine, workingDirectory);
-
+			
 			errorsString = execResult.getErrorsString();
 			outputString = execResult.getOutputString();
 
