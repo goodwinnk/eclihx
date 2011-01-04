@@ -26,7 +26,7 @@ public class RegexRule implements IRule {
 	 * Pairs class of regular expression and token to return if matching is
 	 * successful.
 	 */
-	private class TokenPair {
+	private static class TokenPair {
 		
 		/**
 		 * Token.

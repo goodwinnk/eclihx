@@ -193,7 +193,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 				// Element wan't found.
 				errorMessages.add(
 					"Illegal flash version. Valid versions are: " +  
-					HaxePreferencesManager.SUPPORTED_VERSIONS.toString()
+					Arrays.toString(HaxePreferencesManager.SUPPORTED_VERSIONS)
 				); 
 			}			
 		}

@@ -11,7 +11,7 @@ import org.eclipse.jface.text.rules.Token;
  */
 public final class BracketRule implements IRule {
 
-	private final class BracketPair {
+	private static final class BracketPair {
 		public BracketPair(char openBracket, char closeBracket) {
 			this.open = openBracket;
 			this.close = closeBracket;
