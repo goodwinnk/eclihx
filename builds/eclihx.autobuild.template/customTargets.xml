@@ -197,18 +197,16 @@
 		
 		<delete dir="${eclipseAutomatedTestHome}"/>
 		<mkdir dir="${eclipseAutomatedTestHome}"/>
-
-		<property name="eclihxFeaturePath" value="${eclipseAutomatedTestHome}/eclipse.feature.zip" />
-		<property name="eclihxFeatureTestsPath" value="${eclipseAutomatedTestHome}/eclipse.feature.tests.zip" />
-		
-		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature-${buildId}.zip" tofile="${eclihxFeaturePath}" />
-		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature.tests-${buildId}.zip" tofile="${eclihxFeatureTestsPath}" />
 		
 		<echo message="Unpack testing environment and installing features" />
 		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclipseEnvironmentZipPath}"/>
 		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclipseTestingFrameworkZipPath}"/>
-		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclihxFeaturePath}"/>
-		<unzip dest="${eclipseAutomatedTestHome}/tested_eclipse" src="${eclihxFeatureTestsPath}"/>
+		
+		<echo message="Copy update site" />
+		<copydir dest="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/dropins/eclipse/plugins" 
+				 src="${buildDirectory}/updatesite/plugins"/>
+		<copydir dest="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/dropins/eclipse/features" 
+				 src="${buildDirectory}/updatesite/features"/>
 		
 		<property name="testEclipseFolder" value="${eclipseAutomatedTestHome}/tested_eclipse/eclipse" />		
 		<property name="library-file" value="${testEclipseFolder}/plugins/${eclipseTestPluginFolderName}/library.xml" />
@@ -248,10 +246,11 @@
 		<delete dir="${allBuildOutputDirectory}" />
 		<mkdir dir="${allBuildOutputDirectory}"/>
 		
-		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature-${buildId}.zip" todir="${allBuildOutputDirectory}" />
-		<copy file="${buildDirectory}/${buildLabel}/eclihx.feature.tests-${buildId}.zip" todir="${allBuildOutputDirectory}" />
-		
 		<copydir src="${buildDirectory}/updatesite" dest="${allBuildOutputDirectory}/updatesite" />
+		
+		<property file="${buildDirectory}/finalFeaturesVersions.properties" />
+		<zip destfile="${allBuildOutputDirectory}/eclihx_${eclihx.feature}.zip" 
+		     basedir="${allBuildOutputDirectory}/updatesite" />
 		
 		<copy todir="${allBuildOutputDirectory}">
 			<fileset dir="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/results" includes="**.html"/>
