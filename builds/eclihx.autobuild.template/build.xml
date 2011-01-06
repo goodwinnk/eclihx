@@ -53,7 +53,7 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
             </fileset>
         </copy>
     	<copy todir="${buildDirectory}/updatesite">
-    		<fileset dir="../../updates/">
+    		<fileset dir="./">
     			<filename name="site.xml"/>
     		</fileset>
     	</copy>

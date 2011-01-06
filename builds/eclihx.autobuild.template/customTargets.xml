@@ -156,6 +156,10 @@
 	<!-- Steps to do after the build is done. -->
 	<!-- ===================================================================== -->
 	<target name="postBuild">
+		
+		<property file="${buildDirectory}/finalFeaturesVersions.properties" />
+		<property name="fullBuildVersion" value="${eclihx.feature}" />		
+		
 		<property name="UpdateSiteStagingLocation" value="${buildDirectory}/UpdateSite"/>
 		<property name="sitePackagePrefix" value="org.eclihx.updatesite"/>
 		<antcall target="generateUpdateSite"/>
@@ -171,11 +175,13 @@
 		<mkdir dir="${UpdateSiteStagingLocation}/plugins"/>
 		<!-- Build the jar files -->
 		<echo message="${allElementsFile}"/>
-		<antcall target="allElements">
+		<!-- <antcall target="allElements">
 			<param name="genericTargets" value="${builder}/customTargets.xml"/>
 			<param name="target" value="updateSiteExport"/>
 		</antcall>
+		--> 
 		<antcall target="copySiteXml"/>
+		<antcall target="setUpdateSiteVersion" />
 	</target>
 
 	<target name="updateSiteExport">
@@ -187,6 +193,10 @@
 
 	<target name="copySiteXml">
 		<!-- Should be already copied with build.xml -->
+	</target>
+	
+	<target name="setUpdateSiteVersion">
+        <replace token="{version.full}" value="${fullBuildVersion}" file="${UpdateSiteStagingLocation}/site.xml" />
 	</target>
 
 	<!-- ===================================================================== -->
@@ -246,12 +256,13 @@
 		<delete dir="${allBuildOutputDirectory}" />
 		<mkdir dir="${allBuildOutputDirectory}"/>
 		
-		<copydir src="${buildDirectory}/updatesite" dest="${allBuildOutputDirectory}/updatesite" />
+		<copy todir="${allBuildOutputDirectory}/updatesite">
+			<fileset dir="${buildDirectory}/updatesite"/>
+		</copy>
 		
-		<property file="${buildDirectory}/finalFeaturesVersions.properties" />
-		<zip destfile="${allBuildOutputDirectory}/eclihx_${eclihx.feature}.zip" 
-		     basedir="${allBuildOutputDirectory}/updatesite" />
-		
+		<zip destfile="${allBuildOutputDirectory}/eclihx_${fullBuildVersion}.zip" 
+			 basedir="${allBuildOutputDirectory}/updatesite" />
+			  
 		<copy todir="${allBuildOutputDirectory}">
 			<fileset dir="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/results" includes="**.html"/>
 		</copy>

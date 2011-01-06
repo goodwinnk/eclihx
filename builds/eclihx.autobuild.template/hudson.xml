@@ -21,5 +21,7 @@
 		<copydir dest="${hudsonOutput}" src="${allBuildOutputDirectory}"/>
 		
 		<copydir dest="${env.WORKSPACE}\archive\${env.BUILD_TAG}" src="${allBuildOutputDirectory}"></copydir>
+		
+		
 	</target>	
 </project>
