@@ -76,7 +76,7 @@ Modified by Lukas Zapletal <lzapletal@pikeelectronic.com>.
             </classpath>
         </java>
     </target>
-
+	
     <target name="clean">
         <delete dir="${buildDirectory}" />
     </target>
