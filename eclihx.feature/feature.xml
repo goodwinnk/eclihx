@@ -2,8 +2,7 @@
 <feature
       id="eclihx.feature"
       label="Eclihx Plugin Feature"
-      version="0.2.0.qualifier"
-      nl="en">
+      version="0.2.0.qualifier">
 
    <description url="http://code.google.com/p/eclihx/">
       Plugin for developing in the haXe language (http://haxe.org/).
