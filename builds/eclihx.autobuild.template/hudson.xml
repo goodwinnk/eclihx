@@ -7,21 +7,79 @@
 		<!-- Here you can prepare any properties for building -->
 		<property environment="env"/>
 		<property name="hudsonOutput" value="${env.WORKSPACE}/output" />
+		<property name="repositoryBuildPath" value="${env.WORKSPACE}/repository/builds/eclihx.autobuild.template/" />
 	</target>
 	
 	<target name="build">
-		<ant antfile="build.xml" />
+		<ant antfile="${repositoryBuildPath}/build.xml " 
+		     dir="${repositoryBuildPath}"/>
 	</target>
 	
 	<target name="run" depends="init, build">
 		<!-- Here you can process building output results -->
-		<property file="build.properties" />
+		<property file="${repositoryBuildPath}/build.properties" />
 		
 		<delete dir="${hudsonOutput}" />
 		<copydir dest="${hudsonOutput}" src="${allBuildOutputDirectory}"/>
 		
 		<copydir dest="${env.WORKSPACE}\archive\${env.BUILD_TAG}" src="${allBuildOutputDirectory}"></copydir>
 		
-		
+		<antcall target="publish-to-ftp" />
 	</target>	
+	
+	<target name="publish-to-ftp">		
+		<echo message="Publish trunk update site" />
+		
+		<property name="ftpServer" value="ftp.tuxfamily.org" />
+		<property name="ftpUserid" value="nkrasko" />
+		<property name="siteFolder" value="/eclihx/eclihx-repository/updatesite/trunk" />
+		<property name="ftpPassword" value="***************" />
+		
+		<ftp action="del"
+			 server="${ftpServer}"
+			 userid="${ftpUserid}"
+			 password="${ftpPassword}"
+			 passive="yes"
+			 verbose="yes"
+			 remotedir="${siteFolder}">
+			<fileset>
+				<include name="**"/>
+			</fileset>
+		</ftp>
+		
+		<ftp action="rmdir"
+			 server="${ftpServer}"
+			 userid="${ftpUserid}"
+			 password="${ftpPassword}"
+			 passive="yes"
+			 verbose="yes"
+			 remotedir="${siteFolder}">
+			<fileset>
+				<include name="**"/>
+			</fileset>
+		</ftp>
+		
+		<ftp server="${ftpServer}"
+			 userid="${ftpUserid}"
+			 password="${ftpPassword}"
+			 passive="yes"
+			 verbose="yes"
+			 remotedir="${siteFolder}" >
+			<fileset dir="${hudsonOutput}/updatesite" />
+		</ftp>
+		
+		<echo message="Archive to ftp" />
+		<ftp server="${ftpServer}"
+			 userid="${ftpUserid}"
+			 password="${ftpPassword}"
+			 passive="yes"
+			 verbose="yes"
+			 remotedir="/eclihx/eclihx-repository/builds/trunk/" >
+			<fileset dir="${hudsonOutput}">
+				<include name="eclihx*.zip" />
+				<include name="eclihx*.html" />
+			</fileset>			
+		</ftp>
+		
+	</target>
 </project>

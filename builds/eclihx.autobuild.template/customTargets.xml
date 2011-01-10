@@ -266,6 +266,9 @@
 		<copy todir="${allBuildOutputDirectory}">
 			<fileset dir="${eclipseAutomatedTestHome}/tested_eclipse/eclipse/results" includes="**.html"/>
 		</copy>
+		
+		<move tofile="${allBuildOutputDirectory}/eclihx_${fullBuildVersion}_tests.html" 
+			  file="${allBuildOutputDirectory}/eclihx.tests.AllTests.html" />
 	</target>
 
 	<!-- ===================================================================== -->
