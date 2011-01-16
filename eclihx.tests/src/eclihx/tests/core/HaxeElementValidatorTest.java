@@ -95,8 +95,7 @@ public class HaxeElementValidatorTest {
 	@Test
 	public void testValidateBuildFileNameEmpty() {
 		Assert.assertFalse(
-				HaxeElementValidator.validateBuildFileName("").isOK());		
-		
+				HaxeElementValidator.validateBuildFileName("").isOK());
 	}
 	
 	/**

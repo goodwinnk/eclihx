@@ -3,8 +3,11 @@ package eclihx.ui.internal.ui.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -15,7 +18,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import eclihx.core.haxe.model.CodeFormatter;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
@@ -29,13 +31,16 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 	private Button insertTabsCheck;
 	private Button oneOperatorOnLineCheck;
 	private Button indentOnEmptyLinesCheck;
+	private Button explicitEmptyPackageCheck;
 	private Text indentWidthTextField;
 	
-	private String BRACKET_NEW_LINE = "Should curly brackets be moved to new line";
-	private String INSERT_TABS = "Use tabs for indentation";	
+	private String EXPLICIT_EMPTY_PACKAGE_STRING = "Generate \"package ;\" string for default package";
+	private String BRACKET_NEW_LINE = "Move curly brackets to new lines";
+	private String INSERT_TABS = "Use tab character for indentation";	
 	private String ONE_OPERATOR_ON_LINE = "Allow only one operator on the line";
-	private String INDENT_ON_EMPTY_LINES = "Make indent on empty lines";		
-	private String INDENT_WIDTH = "Number of spaces in indentation";			
+	private String INDENT_ON_EMPTY_LINES = "Make indent on empty lines";
+	private String INDENT_WIDTH = "Number of spaces in indentation";
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
@@ -51,51 +56,79 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite top = new Composite(parent, SWT.LEFT);
-		Composite middle = new Composite(parent, SWT.LEFT);
-		// Sets the layout data for the top composite's 
-		// place in its parent's layout.
 		top.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		middle.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));		
+		top.setLayout(new GridLayout(1, false));
+			
 		// Sets the layout for the top composite's 
 		// children to populate.
 		top.setLayout(new GridLayout());
+		explicitEmptyPackageCheck = new Button(top, SWT.CHECK);
+		explicitEmptyPackageCheck.setText(EXPLICIT_EMPTY_PACKAGE_STRING);
 		bracketNewLineCheck = new Button(top, SWT.CHECK);
 		bracketNewLineCheck.setText(BRACKET_NEW_LINE);
-		insertTabsCheck = new Button(top, SWT.CHECK);
-		insertTabsCheck.setText(INSERT_TABS);
 		oneOperatorOnLineCheck = new Button(top, SWT.CHECK);
 		oneOperatorOnLineCheck.setText(ONE_OPERATOR_ON_LINE);
+		
 		indentOnEmptyLinesCheck = new Button(top, SWT.CHECK);
 		indentOnEmptyLinesCheck.setText(INDENT_ON_EMPTY_LINES);
-		middle.setLayout(new GridLayout(2,false));
-
-		indentWidthTextField = new Text(middle, SWT.SINGLE);
-		indentWidthTextField.setTextLimit(1);
-		(new Label(middle, SWT.CHECK)).setText(INDENT_WIDTH);
+		
+		insertTabsCheck = new Button(top, SWT.CHECK);
+		insertTabsCheck.setText(INSERT_TABS);
+		insertTabsCheck.addSelectionListener(new SelectionListener() {			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				indentWidthTextField.setEnabled(!insertTabsCheck.getSelection());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+		});
+		
+		Composite indentComposite = new Composite(top, SWT.FILL);	
+		indentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		FillLayout indentFillLayout = new FillLayout();
+		indentFillLayout.spacing = 5;
+		indentComposite.setLayout(indentFillLayout);	
+		
+		Label indentLabel = new Label(indentComposite, SWT.NONE);
+		indentLabel.setText(INDENT_WIDTH);
+		
+		indentWidthTextField = new Text(indentComposite, SWT.BORDER | SWT.FILL);
+		indentWidthTextField.setTextLimit(3);
+		indentWidthTextField.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				updateApplyButton();				
+			}
+		});
 		
 		initializeValues();
-		bracketNewLineCheck.addSelectionListener(
-				new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {}
-				});
-		insertTabsCheck.addSelectionListener(
-				new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {}
-				});		
-		oneOperatorOnLineCheck.addSelectionListener(
-				new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {}
-				});
-		indentOnEmptyLinesCheck.addSelectionListener(
-				new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {}
-				});
 		
-		return middle;
+		return top;
+	}
+	
+	@Override
+	public boolean isValid() {
+		if (!super.isValid()) {
+			return false;
+		}
+		
+		String indentText = indentWidthTextField.getText();
+		try {
+			int ident = Integer.parseInt(indentText);
+			if (ident <= 0) {
+				this.setErrorMessage("Ident size should be above zero");
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			this.setErrorMessage("Ident size is not a valid integer number");
+			return false;
+		}
+		
+		this.setErrorMessage(null);
+		return true;			
 	}
 
 	/*
@@ -104,11 +137,14 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 	 */
 	@Override
 	protected void performDefaults() {		
+		
+		explicitEmptyPackageCheck.setSelection(getPreferenceStore().getDefaultBoolean(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
 		bracketNewLineCheck.setSelection(getPreferenceStore().getDefaultBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
 		insertTabsCheck.setSelection(getPreferenceStore().getDefaultBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
 		oneOperatorOnLineCheck.setSelection(getPreferenceStore().getDefaultBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));
 		indentOnEmptyLinesCheck.setSelection(getPreferenceStore().getDefaultBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));
 		indentWidthTextField.setText(getPreferenceStore().getDefaultString(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));
+		
 		super.performDefaults();
 	}
 
@@ -119,27 +155,21 @@ public class HaxeFormatOptionsPreferencePage  extends PreferencePage
 	@Override
 	public boolean performOk() {		
 		IPreferenceStore store = getPreferenceStore();
+		
+		store.setValue(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE, explicitEmptyPackageCheck.getSelection());
 		store.setValue(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE, bracketNewLineCheck.getSelection());
-		CodeFormatter.setBracketNewLines(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
 		store.setValue(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS, insertTabsCheck.getSelection());
-		CodeFormatter.setInsertTabs(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
 		store.setValue(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE, oneOperatorOnLineCheck.getSelection());
-		CodeFormatter.setOneOperatorOnLine(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));
 		store.setValue(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, indentOnEmptyLinesCheck.getSelection());
-		CodeFormatter.setIndentOnEmptyLines(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));
 		store.setValue(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, indentWidthTextField.getText());
-		CodeFormatter.setIndendWidth(PreferenceConstants.getPreferenceStore().getInt(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));			
 				
 		return super.performOk();
 	}	
 		
 	private void initializeValues() {
 		IPreferenceStore store = getPreferenceStore();
+		
+		explicitEmptyPackageCheck.setSelection(store.getBoolean(PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
 		bracketNewLineCheck.setSelection(store.getBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
 		insertTabsCheck.setSelection(store.getBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
 		oneOperatorOnLineCheck.setSelection(store.getBoolean(PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));

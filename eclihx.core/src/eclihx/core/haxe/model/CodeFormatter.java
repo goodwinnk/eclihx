@@ -16,70 +16,100 @@ public final class CodeFormatter {
 	public static class FormatOptions {
 		
 		/**
+		 * @return the bracketNewLines
+		 */
+		public boolean isBracketNewLines() {
+			return bracketNewLines;
+		}
+
+		/**
+		 * @param bracketNewLines the bracketNewLines to set
+		 */
+		public void setBracketNewLines(boolean bracketNewLines) {
+			this.bracketNewLines = bracketNewLines;
+		}
+
+		/**
+		 * @return the insertTabs
+		 */
+		public boolean isInsertTabs() {
+			return insertTabs;
+		}
+
+		/**
+		 * @param insertTabs the insertTabs to set
+		 */
+		public void setInsertTabs(boolean insertTabs) {
+			this.insertTabs = insertTabs;
+		}
+
+		/**
+		 * @return the intendWidth
+		 */
+		public int getIntendWidth() {
+			return intendWidth;
+		}
+
+		/**
+		 * @param intendWidth the intendWidth to set
+		 */
+		public void setIntendWidth(int intendWidth) {
+			this.intendWidth = intendWidth;
+		}
+
+		/**
+		 * @return the oneOperatorOnLine
+		 */
+		public boolean isOneOperatorOnLine() {
+			return oneOperatorOnLine;
+		}
+
+		/**
+		 * @param oneOperatorOnLine the oneOperatorOnLine to set
+		 */
+		public void setOneOperatorOnLine(boolean oneOperatorOnLine) {
+			this.oneOperatorOnLine = oneOperatorOnLine;
+		}
+
+		/**
+		 * @return the indentOnEmptyLines
+		 */
+		public boolean isIndentOnEmptyLines() {
+			return indentOnEmptyLines;
+		}
+
+		/**
+		 * @param indentOnEmptyLines the indentOnEmptyLines to set
+		 */
+		public void setIndentOnEmptyLines(boolean indentOnEmptyLines) {
+			this.indentOnEmptyLines = indentOnEmptyLines;
+		}
+
+		/**
 		 * Move curly bracket to new line.
 		 */
-		public static boolean bracketNewLines = false;
+		private boolean bracketNewLines = false;
 		
 		/**
 		 * Use tabs for indentation.
 		 */
-		public static boolean insertTabs = false;
+		private boolean insertTabs = false;
 		
 		/**
 		 * Number of spaces in indentation.
 		 */
-		public static int intendWidth = 4;
+		private int intendWidth = 4;
 		
 		/**
 		 * Allows only one operator on the line.
 		 * Will make forced new line after the <code>;</code> char.
 		 */
-		public static boolean oneOperatorOnLine = true;
+		private boolean oneOperatorOnLine = true;
 
 		/**
 		 * Make indent on empty lines.
 		 */
-		public static boolean indentOnEmptyLines = false;
-	}
-	
-	/**
-	 * bracketNewLines setter
-	 * @param bracketNewLines Should curly bracket be moved to new lines case flag
-	 */
-	public static void setBracketNewLines(boolean bracketNewLines) {
-		FormatOptions.bracketNewLines = bracketNewLines;
-	}	
-
-	/**
-	 * insertTabs setter
-	 * @param insertTabs Use tabs for indentation case flag
-	 */
-	public static void setInsertTabs(boolean insertTabs) {
-		FormatOptions.insertTabs = insertTabs;
-	}
-	
-	/**
-	 * indentOnEmptyLines setter
-	 * @param indentOnEmptyLines Allow only one operator on the line case flag
-	 */
-	public static void setIndentOnEmptyLines(boolean indentOnEmptyLines) {
-		FormatOptions.indentOnEmptyLines = indentOnEmptyLines;
-	}	
-
-	/**
-	 *  oneOperatorOnLine setter
-	 * @param oneOperatorOnLine Make indent on empty lines case flag
-	 */
-	public static void setOneOperatorOnLine(boolean oneOperatorOnLine) {
-		FormatOptions.oneOperatorOnLine = oneOperatorOnLine;
-	}	
-
-	/**
-	 *  intendWidth setter
-	 * @param intendWidth Number of spaces in indentation combo choose
-	 */
-	public static void setIndendWidth(int intendWidth) {
-		FormatOptions.intendWidth = intendWidth;
+		private boolean indentOnEmptyLines = false;
 	}
 	
 	/**

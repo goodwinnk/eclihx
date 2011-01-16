@@ -236,17 +236,14 @@ public class HaxePackage extends HaxeElement implements IHaxePackage {
 	 */
 	@Override
 	public IHaxeSourceFile[] getHaxeSourceFiles() {
-		try {
-			
+		try {			
 			ArrayList<IHaxeSourceFile> haxeSourceFiles = 
 				new ArrayList<IHaxeSourceFile>();
 			
 			for (IResource resource : fFolder.members()) {
 				if (resource.getType() == IResource.FILE) {
-					if (HaxeElementValidator.validateHaxeFileName(
-							resource.getName()).isOK()) {
-						haxeSourceFiles.add(
-								new HaxeSourceFile((IFile)resource, this));
+					if (HaxeElementValidator.validateHaxeFileName(resource.getName()).isOK()) {
+						haxeSourceFiles.add(new HaxeSourceFile((IFile)resource, this));
 					}					
 				}
 			}

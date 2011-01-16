@@ -6,8 +6,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+import eclihx.core.haxe.internal.HaxeContentManager;
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
+import eclihx.ui.PreferenceConstants;
 import eclihx.ui.wizards.NewHaxeFileWizardPage;
 
 /**
@@ -47,6 +49,10 @@ public class HaxeFileWizard extends AbstractMonitorWizard implements INewWizard 
 		monitor.beginTask("Creating haXe file " + haxeFileName, 1);
 		
 		try {
+			// TODO 3: Remove that! Singleton usage should be removed. 
+			HaxeContentManager.getInstance().setEmptyPackagesEnabled(
+					PreferenceConstants.getPreferenceStore().getBoolean(
+							PreferenceConstants.HX_PACKAGE_PROPERTIES_DEFAULT_PACKAGE));
 						
 			IHaxeSourceFile sourceFile =
 				haxePackage.createHaxeFile(haxeFileName, monitor);
