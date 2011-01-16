@@ -61,11 +61,6 @@
             class="eclihx.ui.internal.ui.preferences.HaxeCompilerPreferencePage"
             id="eclihx.ui.internal.ui.preferences.HaxeCompilerPreferencePage"
             name="%hxCompilerPrefName"/>
-	  <page
-            category="org.eclipse.jdt.ui.preferences.EclihXMainPreferencePage"
-            class="eclihx.ui.internal.ui.preferences.HaxePackagePreferencePage"
-            id="eclihx.ui.internal.ui.preferences.HaxePackagePreferencePage"
-            name="%hxPackagePrefName"/>
    <page
          category="org.eclipse.jdt.ui.preferences.HaxeBasePreferencePage"
          class="eclihx.ui.internal.ui.preferences.HaxeColorPreferencePage"

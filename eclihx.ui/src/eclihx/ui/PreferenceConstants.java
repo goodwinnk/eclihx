@@ -253,17 +253,6 @@ public final class PreferenceConstants {
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES, false);
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
 		
-		CodeFormatter.setBracketNewLines(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_BRACKET_NEW_LINE));
-		CodeFormatter.setInsertTabs(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS));
-		CodeFormatter.setOneOperatorOnLine(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_ONE_OPERATOR_ON_LINE));
-		CodeFormatter.setIndentOnEmptyLines(PreferenceConstants.getPreferenceStore().getBoolean(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_ON_EMPTY_LINES));		
-		CodeFormatter.setIndendWidth(PreferenceConstants.getPreferenceStore().getInt(
-				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH));
-		
 		store.setDefault(HAXE_ALWAYS_OPEN_PROBLEM_VIEW_ON_ERRORS, false);
 	}
 	
