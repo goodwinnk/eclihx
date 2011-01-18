@@ -4,7 +4,7 @@
       EclihX is a plugin for developing in haXe language within the Eclipse IDE.
 It supports Eclipse 3.5 and above.
    </description>
-   <feature url="features/eclihx.feature_0.2.0.201012122240.jar" id="eclihx.feature" version="0.2.0.201012122240">
+   <feature url="features/eclihx.feature_0.3.0.201101170142.jar" id="eclihx.feature" version="0.3.0.201101170142">
       <category name="EclihX"/>
    </feature>
    <category-def name="EclihX" label="EclihX - haXe development in Eclipse"/>
