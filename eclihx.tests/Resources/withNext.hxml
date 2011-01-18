@@ -1,0 +1,6 @@
+-swf helloWorld.swf
+-main Test
+
+--next
+-as3 as
+-main Test

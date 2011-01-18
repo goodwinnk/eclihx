@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension point="org.eclipse.debug.core.breakpoints">
+		<breakpoint
+			class="eclihx.debug.flash.FlashBreakpoint"
+			id="FlashBreakpoint"
+			markerType="eclihx.debug.flash.FlashBreakpointMarker">
+		</breakpoint>
+	</extension>
+ <extension
+       id="flash.FlashBreakpointMarker"
+       point="org.eclipse.core.resources.markers">
+    <super
+          type="org.eclipse.debug.core.lineBreakpointMarker">
+    </super>
+    <persistent
+          value="true">
+    </persistent>
+ </extension>
+</plugin>

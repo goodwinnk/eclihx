@@ -1,0 +1,9 @@
+First release:
+Time: ???
+
+- Colorazing of the haxe code(Should be finished)
+- formatting???
+- Preferences of the code
+- hxml visual editor
+- Import project feature
+- CVS/SVN support.
