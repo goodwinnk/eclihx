@@ -230,7 +230,7 @@
           allowMultiple="false"
           category="eclihx.ui.HaxeCategory"
           class="eclihx.ui.internal.ui.views.HaxeExplorerView"
-          icon="icons/sample.gif"
+          icon="icons/eclihx-logo-small.gif"
           id="eclihx.ui.internal.ui.views.PackageExplorerView"
           name="%haxeViews.packageExplorerName">
     </view>
