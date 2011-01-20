@@ -404,25 +404,24 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 	 */
 	private void updateCurrentProject(String projectName) {
 		try {
+			
+			buildFilesCache.clear();
+			projectBuildButton.setEnabled(false);
+			
 			if (projectName.isEmpty()) {
 				haxeProject = null;
 			} else {
-				haxeProject = EclihxCore.getDefault().getHaxeWorkspace()
-						.getHaxeProject(projectName);
+				haxeProject = EclihxCore.getDefault().getHaxeWorkspace().getHaxeProject(projectName);
 			}
 
-			if (haxeProject != null) {
+			if (haxeProject != null) {				
 				if (!haxeProject.isOpen()) {
 					haxeProject.open(null);
 				}
 				
 				buildFilesCache.addAll(Arrays.asList(haxeProject.getBuildFiles()));
 				projectBuildButton.setEnabled(true);
-				
-			} else {
-				buildFilesCache.clear();
-				projectBuildButton.setEnabled(false);
-			}
+			} 
 		} catch (CoreException e) {
 			haxeProject = null;
 			buildFilesCache.clear();
