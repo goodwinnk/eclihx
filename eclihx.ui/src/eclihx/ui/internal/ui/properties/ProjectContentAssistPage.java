@@ -49,7 +49,7 @@ public class ProjectContentAssistPage extends PropertyPage {
 		buildFileNameText = new Text(top, SWT.BORDER);
 		buildFileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		buildFileNameText.setEditable(false);
-		String buildFileName = haxeProject.getContentAssistBuildFileAbsulute();
+		String buildFileName = haxeProject.getContentAssistBuildFileAbsolute();
 		buildFileNameText.setText(buildFileName != null ? buildFileName : "");
 		
 		projectBuildButton = new Button(top, SWT.NONE);
