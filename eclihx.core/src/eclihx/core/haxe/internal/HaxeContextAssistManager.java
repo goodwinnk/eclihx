@@ -83,7 +83,7 @@ public class HaxeContextAssistManager {
 	}
 	
 	private static HaxeConfiguration getProjectTipsConfiguration(IHaxeProject project) {
-		String absoluteContentAssistFilePath = project.getContentAssistBuildFileAbsulute();
+		String absoluteContentAssistFilePath = project.getContentAssistBuildFileAbsolute();
 		
 		if (absoluteContentAssistFilePath != null) {
 			
@@ -143,9 +143,8 @@ public class HaxeContextAssistManager {
 			HaxeLauncher launcher = new HaxeLauncher();
 			launcher.run(configuration, null, haxePath, workingDirectory);
 			
-			final String errors = launcher.getErrorString();
-			
-			EclihxCore.getLogHelper().logInfo("Errors: " + errors);
+			final String errors = launcher.getErrorString();			
+			EclihxCore.getLogHelper().logInfo("Haxe Tips Output: " + errors);
 			
 			{
 				// Read type content assist info.
@@ -222,7 +221,8 @@ public class HaxeContextAssistManager {
 		HaxeLauncher launcher = new HaxeLauncher();
 		launcher.run(haxeConfiguration, null, haxeCompilerPath, new File(haxeProject.getProjectBase().getLocation().toOSString()));
 		
-		String errors = launcher.getErrorString();
+		String errors = launcher.getErrorString();		
+		EclihxCore.getLogHelper().logInfo("Haxe Class Tips Output: " + errors);
 		
 		{
 			// Read type content assist info.

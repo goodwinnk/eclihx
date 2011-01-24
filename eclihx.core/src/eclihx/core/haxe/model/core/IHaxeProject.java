@@ -189,5 +189,5 @@ public interface IHaxeProject extends IHaxeElement {
 	 * Get the absolute build file path that should be used for content assist.
 	 * @return Absolute build file path should be used for content assist. Could be null if file wasn't set.
 	 */
-	String getContentAssistBuildFileAbsulute();
+	String getContentAssistBuildFileAbsolute();
 }

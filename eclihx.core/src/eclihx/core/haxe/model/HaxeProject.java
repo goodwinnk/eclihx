@@ -426,7 +426,7 @@ public final class HaxeProject extends HaxeElement implements IHaxeProject {
 	}
 
 	@Override
-	public String getContentAssistBuildFileAbsulute() {
+	public String getContentAssistBuildFileAbsolute() {
 		IEclipsePreferences scope = new ProjectScope(fProject).getNode(EclihxCore.PLUGIN_ID);
 		Preferences contentAssistNode = scope.node("contentassist");
 		String buildPath = contentAssistNode.get("buildfile", null);

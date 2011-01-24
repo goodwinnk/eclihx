@@ -2,10 +2,12 @@ package eclihx.core.haxe.model.helper;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import eclihx.core.EclihxCore;
+import eclihx.core.haxe.model.InvalidBuildFileNameException;
 import eclihx.core.haxe.model.core.IHaxeProject;
 
 /**
@@ -88,7 +90,18 @@ public class ProjectCreator {
 		monitor.setTaskName("Creation of build file: " + buildFileName);		
 		haxeProject.createBuildFile(buildFileName, 
 				createDefaultHxmlContent(projectName, outFolderName, srcFolderName), 
-				monitor);		
+				monitor);
+		
+		IFile[] buildFiles = haxeProject.getBuildFiles();
+		if (buildFiles.length != 0) {
+			try {
+				haxeProject.setContentAssistBuildFile(buildFiles[0].getLocation().toOSString());
+			} catch (InvalidBuildFileNameException e) {
+				// TODO 5: Notify user about errors
+				EclihxCore.getLogHelper().logError(e);
+			}
+		}
+		
 		monitor.worked(1);
 	}
 }
