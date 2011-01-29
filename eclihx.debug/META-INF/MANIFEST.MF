@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EclihX Debug Plug-in
 Bundle-SymbolicName: eclihx.debug;singleton:=true
-Bundle-Version: 0.3.0.qualifier
+Bundle-Version: 0.3.01.qualifier
 Bundle-Activator: eclihx.debug.Activator
 Require-Bundle: org.eclipse.debug.core,
  org.eclipse.core.runtime,
