@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests Plug-in
 Bundle-SymbolicName: eclihx.tests;singleton:=true
-Bundle-Version: 0.2.0.qualifier
+Bundle-Version: 0.3.1.qualifier
 Require-Bundle: org.junit4;bundle-version="4.3.1",
  eclihx.core,
  eclihx.ui,
