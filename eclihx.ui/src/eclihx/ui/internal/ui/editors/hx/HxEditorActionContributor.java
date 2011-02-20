@@ -1,5 +1,6 @@
 package eclihx.ui.internal.ui.editors.hx;
 
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.BasicTextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -10,8 +11,8 @@ import org.eclipse.ui.texteditor.RetargetTextEditorAction;
  */
 public class HxEditorActionContributor extends BasicTextEditorActionContributor {
 
-	private final RetargetTextEditorAction fContentAssist;
-	private final RetargetTextEditorAction fContentAssistTip;
+	private final RetargetTextEditorAction contentAssist;
+	private final RetargetTextEditorAction contentAssistTip;
 
 	/**
 	 * Default constructor.
@@ -19,11 +20,11 @@ public class HxEditorActionContributor extends BasicTextEditorActionContributor 
 	public HxEditorActionContributor() {
 		super();
 		
-		fContentAssist = new RetargetTextEditorAction(
+		contentAssist = new RetargetTextEditorAction(
 				HaxeEditorMessages.getBundle(),
 				HXEditor.CONTENT_PROPSALS_ACTION_RESOURCE_PREFIX);
 		
-		fContentAssistTip = new RetargetTextEditorAction(
+		contentAssistTip = new RetargetTextEditorAction(
 				HaxeEditorMessages.getBundle(),
 				HXEditor.CONTENT_TIPS_ACTION_RESOURCE_PREFIX);
 	}
@@ -44,7 +45,11 @@ public class HxEditorActionContributor extends BasicTextEditorActionContributor 
 			editor = (ITextEditor)part;
 		}
 		
-		fContentAssist.setAction(getAction(editor, HXEditor.CONTENT_PROPSALS_ACTION_ID));
-		fContentAssistTip.setAction(getAction(editor, HXEditor.CONTENT_TIPS_ACTION_ID));
+		IActionBars bars = getActionBars();
+        bars.setGlobalActionHandler(IHaxeEditorActionDefinitionIds.TOGGLE_COMMENT, 
+        		getAction(editor, HXEditor.TOGGLE_COMMENT_ACTION_ID));
+		
+		contentAssist.setAction(getAction(editor, HXEditor.CONTENT_PROPSALS_ACTION_ID));
+		contentAssistTip.setAction(getAction(editor, HXEditor.CONTENT_TIPS_ACTION_ID));
 	}
 }

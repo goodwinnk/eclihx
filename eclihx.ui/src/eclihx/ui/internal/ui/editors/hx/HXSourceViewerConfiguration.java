@@ -209,4 +209,9 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 		
 		return reconciler;
 	}
+	
+	@Override
+	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
+		return new String[] { "//", "" };
+	}
 }
