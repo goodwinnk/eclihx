@@ -13,6 +13,7 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 
+import eclihx.ui.actions.ToggleCommentAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.ColorManager;
 
@@ -41,7 +42,17 @@ public class HXEditor extends TextEditor {
 	 * Content assist tips action prefix in resource bundle resources.
 	 */
 	public static final String CONTENT_TIPS_ACTION_RESOURCE_PREFIX = "ContentAssistTips";
-
+	
+	/**
+	 * Unique id for the editor scope for toggle comment action.
+	 */
+	public static final String TOGGLE_COMMENT_ACTION_ID = "org.eclihx.uiToggleCommentAction";
+	
+	/**
+	 * Prefix to be prepended to the various resource keys for toggle comment action.
+	 */
+	public static final String TOGGLE_COMMENT_ACTION_PREFIX = "ToggleCommentAction";
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.editors.text.TextEditor#createActions()
@@ -55,25 +66,29 @@ public class HXEditor extends TextEditor {
 				HaxeEditorMessages.getBundle(), 
 				CONTENT_PROPSALS_ACTION_RESOURCE_PREFIX, 
 				this,
-				ISourceViewer.CONTENTASSIST_PROPOSALS);
-		
+				ISourceViewer.CONTENTASSIST_PROPOSALS);		
 		assistProposalsAction.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);		
 		setAction(CONTENT_PROPSALS_ACTION_ID, assistProposalsAction);
 		
 		IAction assistContextTipsAction = new TextOperationAction(
 				HaxeEditorMessages.getBundle(), 
 				CONTENT_TIPS_ACTION_RESOURCE_PREFIX, 
 				this,
-				ISourceViewer.CONTENTASSIST_CONTEXT_INFORMATION);
-		
+				ISourceViewer.CONTENTASSIST_CONTEXT_INFORMATION);		
 		assistContextTipsAction.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
-		
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);		
 		setAction(CONTENT_TIPS_ACTION_ID, assistContextTipsAction);		
+		
+		ToggleCommentAction toggleCommentAction = new ToggleCommentAction(
+				HaxeEditorMessages.getBundle(), 
+				TOGGLE_COMMENT_ACTION_PREFIX, 
+				this);
+		toggleCommentAction.setActionDefinitionId(IHaxeEditorActionDefinitionIds.TOGGLE_COMMENT);
+		toggleCommentAction.configure(getSourceViewer(), getSourceViewerConfiguration());
+		setAction(TOGGLE_COMMENT_ACTION_ID, toggleCommentAction);		
 	}
-
+	
 	/**
 	 * Color manager.
 	 */
@@ -114,8 +129,7 @@ public class HXEditor extends TextEditor {
 	 */
 	@Override
 	protected void initializeKeyBindingScopes() {
-		setKeyBindingScopes(
-				new String[] { "eclihx.ui.haxeEditorScope" }); //$NON-NLS-1$
+		setKeyBindingScopes(new String[] { "eclihx.ui.haxeEditorScope" }); //$NON-NLS-1$
 	}
 
 	/*
