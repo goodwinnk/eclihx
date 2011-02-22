@@ -9,7 +9,6 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
-import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 
 /**
@@ -36,8 +35,8 @@ public class HXPartitionScanner extends RuleBasedPartitionScanner {
 		rules.add(new EndOfLineRule("//", hxComment));
 		rules.add(new EndOfLineRule("#", hxPreprocessor));
 		rules.add(new MultiLineRule("~/", "/", hxRegexpr));
-		rules.add(new SingleLineRule("\"", "\"", hxString, '\\'));
-		rules.add(new SingleLineRule("\'", "\'", hxString, '\\'));
+		rules.add(new MultiLineRule("\"", "\"", hxString, '\\'));
+		rules.add(new MultiLineRule("\'", "\'", hxString, '\\'));
 
 		setPredicateRules(rules.toArray(new IPredicateRule[rules.size()]));
 	}
