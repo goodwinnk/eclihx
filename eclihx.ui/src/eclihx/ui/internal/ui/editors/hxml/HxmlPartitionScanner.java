@@ -29,10 +29,8 @@ public class HxmlPartitionScanner extends RuleBasedPartitionScanner implements
 	{
 		super();
 		
-		ArrayList<IPredicateRule> rules = new ArrayList<IPredicateRule>();
-	
-		rules.add(new EndOfLineRule("#", new Token(HXML_SINGLE_LINE_COMMENT)));
-	
+		ArrayList<IPredicateRule> rules = new ArrayList<IPredicateRule>();	
+		rules.add(new EndOfLineRule("#", new Token(HXML_SINGLE_LINE_COMMENT)));	
 		setPredicateRules(rules.toArray(new IPredicateRule[rules.size()]));
 	}
 	
@@ -44,8 +42,6 @@ public class HxmlPartitionScanner extends RuleBasedPartitionScanner implements
 						HXML_SINGLE_LINE_COMMENT
 				} );
 		partitioner.connect(document);
-		
-		document.setDocumentPartitioner(partitioner);
 	}
 	
 	
