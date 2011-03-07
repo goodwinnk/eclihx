@@ -3,9 +3,11 @@ package eclihx.ui.internal.ui.editors.hxml;
 import java.util.ArrayList;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.IWordDetector;
+import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 
@@ -43,6 +45,12 @@ public class HxmlScanner extends AbstractScanner {
 						PreferenceConstants.HXML_EDITOR_OPTION_COLOR, 
 						PreferenceConstants.HXML_EDITOR_OPTION_BOLD, 
 						PreferenceConstants.HXML_EDITOR_OPTION_ITALIC, 
+						null, null),
+						
+				new TextAttributesKey(
+						PreferenceConstants.HXML_EDITOR_COMMENT_COLOR, 
+						PreferenceConstants.HXML_EDITOR_COMMENT_BOLD, 
+						PreferenceConstants.HXML_EDITOR_COMMENT_ITALIC, 
 						null, null)
 		};
 		
@@ -53,6 +61,9 @@ public class HxmlScanner extends AbstractScanner {
 	protected ArrayList<IRule> createRules() {
 		
 		ArrayList<IRule> rules = new ArrayList<IRule>();
+		
+		// Comments
+		rules.add(new EndOfLineRule("#", getToken(PreferenceConstants.HXML_EDITOR_COMMENT_COLOR)));
 		
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new CodeWhitespaceDetector()));
