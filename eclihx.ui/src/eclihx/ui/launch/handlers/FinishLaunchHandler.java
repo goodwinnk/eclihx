@@ -156,10 +156,12 @@ public final class FinishLaunchHandler implements IStatusHandler {
 
 		for (final ICompilerError error : compileErrors) {
 
-			final IPath filePath = new Path(error.getFilePath());
-			final IPath relativePath = 
-				filePath.makeRelativeTo(haxeProject.getProjectBase().getLocation());
-			final IResource fileResource = haxeProject.getProjectBase().findMember(relativePath);
+			IPath filePath = new Path(error.getFilePath());
+			if (filePath.isAbsolute()) {
+				filePath = filePath.makeRelativeTo(haxeProject.getProjectBase().getLocation());
+			}
+			
+			final IResource fileResource = haxeProject.getProjectBase().findMember(filePath);
 
 			if (fileResource != null) {
 				final IFile file = (IFile) fileResource;
