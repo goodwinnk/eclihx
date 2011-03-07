@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Assert;
 
+import eclihx.core.EclihxCore;
 import eclihx.core.haxe.internal.configuration.CompilationError;
 import eclihx.core.haxe.internal.versioning.VersionInfo;
 import eclihx.core.util.language.Pair;
@@ -52,7 +53,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @param fileNamePart a part with the file name.
 	 * @return a file name
 	 */
-	protected String processFileName(String fileNamePart) {
+	private String processFileName(String fileNamePart) {
 		return fileNamePart.trim();
 	}
 	
@@ -62,7 +63,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @param linePart a substring with the line number.
 	 * @return a error line number. null if there's some error.
 	 */
-	protected Integer processLineNumber(String linePart) {
+	private Integer processLineNumber(String linePart) {
 		try {
 			return Integer.parseInt(linePart);
 		} catch (NumberFormatException e) {
@@ -77,7 +78,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @param pattern a pattern for matching integer pair.
 	 * @return a pair with the start and end character. Null if there are errors in matching.
 	 */
-	protected Pair<Integer, Integer> processIntPair(String stringPart, Pattern pattern) {
+	private Pair<Integer, Integer> processIntPair(String stringPart, Pattern pattern) {
 		
 		final Matcher matcher = pattern.matcher(stringPart);
 		
@@ -100,7 +101,7 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 	 * @param messagePart the part with the message.
 	 * @return error message.
 	 */
-	protected String processMessage(String messagePart) {
+	private String processMessage(String messagePart) {
 		return messagePart.trim();		
 	}
 	
@@ -123,13 +124,11 @@ public final class HaxeOutputErrorsParser implements IHaxeOutputErrorsParser {
 				
 				Assert.isTrue(charsRange == null || linesRange == null, "Could they be both not equal to null?");
 				
-				if (charsRange != null)
-				{
+				if (charsRange != null) {
 					return CompilationError.getCharRangeError(filePath, lineNumber, charsRange, message);
 				}
 				
-				if (linesRange != null)
-				{
+				if (linesRange != null) {
 					return CompilationError.getLineRangeError(filePath, lineNumber, linesRange, message);
 				}				
 			}			
