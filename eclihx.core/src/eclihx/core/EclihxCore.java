@@ -1,7 +1,6 @@
 package eclihx.core;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -50,10 +49,8 @@ public class EclihxCore extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		Platform.addLogListener(new ConsoleLogListener());
-		
 		haxeWorkspace = new HaxeWorkspace(ResourcesPlugin.getWorkspace()
-				.getRoot());	
+				.getRoot());		
 	}
 
 	/*
