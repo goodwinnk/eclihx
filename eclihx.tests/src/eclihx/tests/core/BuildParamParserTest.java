@@ -201,6 +201,18 @@ public class BuildParamParserTest {
 	}
 	
 	@Test
+	public void shouldParseDoubleVersion() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = 
+				parser.parseString(
+						"-debug -D fdb -swf Test.swf -swf-version 10.2 TestWhile", 
+						executableFolder);
+		
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertNotNull(config.getMainConfiguration().getFlashConfig());
+		Assert.assertTrue(config.getMainConfiguration().getFlashConfig().getVersion() == 10.2);
+	}
+	
+	@Test
 	public void shouldParseRealExampleConfiguration() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
 		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/functional/exampleConfig.hxml")).getPath();
 		

@@ -3,6 +3,7 @@ package eclihx.core.util.console.parser;
 import eclihx.core.util.console.parser.core.IValueParser;
 import eclihx.core.util.console.parser.core.Parameter;
 import eclihx.core.util.console.parser.core.ValueParser;
+import eclihx.core.util.console.parser.core.params.DoubleValue;
 import eclihx.core.util.console.parser.core.params.IntValue;
 import eclihx.core.util.console.parser.core.params.StringValue;
 
@@ -148,7 +149,6 @@ public class Builder {
 			
 		return createParam(prefix, actions, new IntValue(value));
 	}
-
 	
 	/**
 	 * Method creates an integer parameter.
@@ -161,7 +161,6 @@ public class Builder {
 	public static Parameter createIntParam(String prefix, IIntValue value) {
 		return createIntParam(prefix, null, value);
 	}
-
 	
 	/**
 	 * Method creates an integer parameter.
@@ -171,6 +170,36 @@ public class Builder {
 	 */
 	public static Parameter createEmptyIntParam(IIntValue value) {
 		return createIntParam("", null, value);
+	}
+	
+	/**
+	 * Method creates an double parameter.
+	 * 
+	 * @param prefix key for the parameter for example in the case of 
+	 * 		"haxe -swf-version 10.2" the key for the parameter is "-swf-version"
+	 * @param actions store action callback which works with the fact of
+	 * 		parameter existence.
+	 * @param value store callback for the value.
+	 * @return new integer parameter.
+	 */
+	public static Parameter createDoubleParam(
+		String prefix,
+		IParamExistense actions,
+		IDoubleValue value) {
+			
+		return createParam(prefix, actions, new DoubleValue(value));
+	}
+	
+	/**
+	 * Method creates a double parameter.
+	 * 
+	 * @param prefix key for the parameter for example in the case of 
+	 * 		"haxe -swf-version 10.2" the key for the parameter is "-swf-version"
+	 * @param value store callback for the value.
+	 * @return new integer parameter.
+	 */
+	public static Parameter createDoubleParam(String prefix, IDoubleValue value) {
+		return createDoubleParam(prefix, null, value);
 	}
 	
 }
