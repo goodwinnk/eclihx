@@ -2,6 +2,7 @@ package eclihx.ui.launch.handlers;
 
 import static eclihx.core.util.language.CollectionUtils.array;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -75,7 +76,7 @@ public final class FinishLaunchHandler implements IStatusHandler {
 
 		final String projectPath = OSUtil
 				.replaceToHaxeOutputSlashes(haxeProject.getProjectBase()
-						.getLocation().toString());
+						.getLocation().toString() + File.pathSeparator);
 
 		final int pathLength = projectPath.length();
 		final String projectReplaceString = "";
