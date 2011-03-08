@@ -16,11 +16,6 @@ public class HaxePreferencesManager {
 	 */
 	public static final String HAXE_FILE_EXTENSION = "hx";
 	
-	/**
-	 * Supported flash version. 0 in invalid and it's not allowed in that list.
-	 */
-	public static final int[] SUPPORTED_VERSIONS = new int[] {6, 7, 8, 9, 10};
-	
 	// Compile options
   	public static final String PARAM_PREFIX_SOURCE_DIRECTORY = "-cp";
 	public static final String PARAM_PREFIX_JAVA_SCRIPT_OUTPUT = "-js";

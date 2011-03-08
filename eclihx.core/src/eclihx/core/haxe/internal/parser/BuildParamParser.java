@@ -10,7 +10,7 @@ import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration.Platform;
 import eclihx.core.util.console.parser.Builder;
-import eclihx.core.util.console.parser.IIntValue;
+import eclihx.core.util.console.parser.IDoubleValue;
 import eclihx.core.util.console.parser.IParamExistense;
 import eclihx.core.util.console.parser.IStringValue;
 import eclihx.core.util.console.parser.core.InitializeParseError;
@@ -102,8 +102,8 @@ public final class BuildParamParser {
 		}
 	}
 	
-	private class SwfVersion implements IIntValue {
-		public void save(int value) throws ParseError {
+	private class SwfVersion implements IDoubleValue {
+		public void save(double value) throws ParseError {
 			currentConfig.getFlashConfig().setVersion(value);
 		}
 	}
@@ -190,7 +190,7 @@ public final class BuildParamParser {
 				new Swf9Output()),
 			
 			// -swf-version <version> : change the SWF version (6,7,8,9)
-			Builder.createIntParam(
+			Builder.createDoubleParam(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION, 
 				new SwfVersion()),
 			

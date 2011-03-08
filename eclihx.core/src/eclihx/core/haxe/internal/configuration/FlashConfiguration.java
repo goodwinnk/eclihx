@@ -1,7 +1,7 @@
 package eclihx.core.haxe.internal.configuration;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import eclihx.core.haxe.internal.HaxePreferencesManager;
@@ -13,6 +13,11 @@ import eclihx.core.util.OSUtil;
 public final class FlashConfiguration extends AbstractConfiguration {
 	
 	/**
+	 * The minimal flash version supporter with haxe compiler.
+	 */
+	public static final int MINIMAL_FLASH_VERSION = 6;
+	
+	/**
 	 * Path of the output flash file.
 	 */
 	private String outputFile;
@@ -21,7 +26,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	/**
 	 * Version of the output flash file.
 	 */
-	private Integer version;
+	private Double version;
 	
 	
 	/**
@@ -64,7 +69,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	 * The version of the flash format.
 	 * @return the version of the flash format.
 	 */
-	public int getVersion() {
+	public double getVersion() {
 		return version;
 	}
 
@@ -73,7 +78,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 	 * checks of the path correctness - use <code>validate</code> method.  
 	 * @param version the version to set
 	 */
-	public void setVersion(int version) {
+	public void setVersion(double version) {
 		this.version = version;
 	}
 
@@ -122,26 +127,26 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		
 		StringBuilder outputBuilder = new StringBuilder();
 		
-		if (version != null && version == 9) {
-			// use special option for storing both version and output file
+		// Print output file
+		if (version != null && version >= 9) {
 			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF9_OUTPUT,
 				OSUtil.quoteCompoundPath(outputFile)			
 			));
 		} else {
-			if (version != null) {
-				// write version
-				outputBuilder.append(HaxeConfiguration.generateParameter(
-					HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION,
-					version.toString()
-				));
-			}
-			
 			// write output file
 			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_OUTPUT,
 				OSUtil.quoteCompoundPath(outputFile)				
-			));			
+			));
+		}
+
+		// Write version. If version == 9 no more parameters are needed
+		if (version != null && version != 9) {
+			outputBuilder.append(HaxeConfiguration.generateParameter(
+				HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION,
+				new DecimalFormat("#.##").format(version)
+			));					
 		}
 		
 		// It's valid not to include header - so we can omit 
@@ -185,21 +190,15 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		// But if we have changed the default value of the version 
 		// we should check it.
 		if (version != null) {		
-			Arrays.sort(HaxePreferencesManager.SUPPORTED_VERSIONS);
-			int index = Arrays.binarySearch(
-				HaxePreferencesManager.SUPPORTED_VERSIONS, version);
-			
-			if (index < 0) {
-				// Element wan't found.
+			if (version < MINIMAL_FLASH_VERSION) {
 				errorMessages.add(
-					"Illegal flash version. Valid versions are: " +  
-					Arrays.toString(HaxePreferencesManager.SUPPORTED_VERSIONS)
-				); 
-			}			
+					"Illegal flash version. haxe supports version above: " +  
+					MINIMAL_FLASH_VERSION
+				);
+			}
 		}
 		
-		// TODO 4 Add validation for header
-				
+		// TODO 4 Add validation for header				
 		return errorMessages;
 	}
 }
