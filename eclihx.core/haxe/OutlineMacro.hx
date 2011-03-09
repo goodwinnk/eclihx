@@ -5,13 +5,12 @@ import neko.io.File;
 
 class OutlineMacro {	
 	public static function main() {
-		OutlineMacro.traceClassInfo();
 	}
 
 	@:macro public static function traceClassInfo() {
 	
-		function getFieldXml(field: ClassField) {
-			var fieldNode = Xml.createElement("member");
+		function getFieldXml(fieldName: String, field: ClassField) {
+			var fieldNode = Xml.createElement(fieldName);
 			fieldNode.set("name", field.name);
 			fieldNode.set("isPublic", Std.string(field.isPublic));
 			switch (field.kind) {
@@ -28,23 +27,30 @@ class OutlineMacro {
 			var typeNode = Xml.createElement("type");
 			
 			switch (type) {
-				case TInst(classTypeRef, typeParams):
+				case TInst(classTypeRef, _):
 					typeNode.set("name", classTypeRef.get().name);
 					
 					var fieldsNode = Xml.createElement("members");
 					typeNode.addChild(fieldsNode);
 				
 					for (field in classTypeRef.get().fields.get()) {
-						fieldsNode.addChild(getFieldXml(field));
+						fieldsNode.addChild(getFieldXml("member", field));
+	    			}
+	    			
+	    			var staticsNode = Xml.createElement("statics");
+	    			typeNode.addChild(staticsNode);
+	    			
+	    			for (field in classTypeRef.get().statics.get()) {
+	    				staticsNode.addChild(getFieldXml("static", field));
 	    			}
 	    			
 	    			var genericParamsNode = Xml.createElement("typeparams");
 	    			typeNode.addChild(genericParamsNode);
 					
 					// Need a way to read a parameter name
-					for (typeParam in typeParams) {
+					for (typeParam in classTypeRef.get().params) {
 						var typeParamNode = Xml.createElement("param");
-						typeParamNode.set("name", "test");
+						typeParamNode.set("name", typeParam.name);
 						genericParamsNode.addChild(typeParamNode);
 					}
 				default:
@@ -67,12 +73,12 @@ class OutlineMacro {
 		}
 		
 		var xmlDocument = Xml.createDocument();
-		xmlDocument.addChild(getModuleXml("neko.FileSystem"));
+		xmlDocument.addChild(getModuleXml("neko.NativeArray"));
 		
 		var file = File.write("outline.xml", false);
 		file.writeString(xmlDocument.toString());
 		file.close();
 		
-		return { expr : EBlock(new Array()), pos : Context.currentPos() };
+		return null;
     }
 }
