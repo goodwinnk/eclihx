@@ -1,11 +1,15 @@
 import haxe.macro.Expr;
 import haxe.macro.Context;
 import haxe.macro.Type;
-import neko.io.File;
+
+//-cp src
+//--no-output 
+//-swf fake.swf 
+//-main OutlineMacro 
+//--macro OutlineMacro.traceClassInfo()
 
 class OutlineMacro {	
-	public static function main() {
-	}
+	public static function main() {	}
 
 	@:macro public static function traceClassInfo() {
 	
@@ -73,9 +77,9 @@ class OutlineMacro {
 		}
 		
 		var xmlDocument = Xml.createDocument();
-		xmlDocument.addChild(getModuleXml("neko.NativeArray"));
+		xmlDocument.addChild(getModuleXml("flash.display.Graphics"));
 		
-		var file = File.write("outline.xml", false);
+		var file = neko.io.File.write("outline.xml", false);
 		file.writeString(xmlDocument.toString());
 		file.close();
 		
