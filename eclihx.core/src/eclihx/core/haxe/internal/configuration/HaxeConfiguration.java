@@ -130,6 +130,8 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	private boolean displayKeywords;
 	
 	private boolean isDeadCodeEliminationEnabled;
+	
+	private boolean isInterpModeEnabled;
 
 	/**
 	 * The name of the file for the code tip.
@@ -213,7 +215,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * Collection of the file with the classes excluded from code generation.
 	 */
 	private final ArrayList<String> excludeFiles = new ArrayList<String>();
-	
+
 	/**
 	 * Creates the string representation of the haXe build parameter by the key
 	 * and value. Note that both values can't be <code>null</value>.
@@ -607,6 +609,24 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	}
 	
 	/**
+	 * Mark the configuration as being interpret using internal macro system
+	 * 
+	 * @param isInterpEnabled enable interpret mode if true.
+	 */
+	public void enableInterpMode(boolean isInterpEnabled) {
+		isInterpModeEnabled = isInterpEnabled;
+	}
+	
+	/**
+	 * Is interpret mode is enabled for this configuration
+	 * 
+	 * @return <code>true</code> if enabled.
+	 */
+	public boolean isInterpModeEnabled() {
+		return isInterpModeEnabled;
+	}
+	
+	/**
 	 * Set code optimization option.
 	 * 
 	 * @param exist is optimization enabled in this configuration.
@@ -867,6 +887,10 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 					HaxePreferencesManager.PARAM_PREFIX_REMAP_PACKAGE,
 					directive));
 		}
+		
+		outputBuilder.append(generateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_INTERP, 
+				isInterpModeEnabled));
 		
 		for (String macroCall : macroCalls) {
 			outputBuilder.append(generateParameter(
