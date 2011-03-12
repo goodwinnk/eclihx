@@ -21,6 +21,11 @@ public class PHPConfiguration extends AbstractConfiguration {
 	private String frontFile;
 	
 	/**
+	 * PHP library folder path
+	 */
+	private String libFolderPath;
+	
+	/**
 	 * Sets the output directory for the PHP platform.
 	 * @param outputDirectory
 	 * 		Name of the directory.
@@ -53,6 +58,24 @@ public class PHPConfiguration extends AbstractConfiguration {
 	public String getFrontFile() {
 		return frontFile;
 	}
+	
+	/**
+	 * Sets the PHP library folder path.
+	 * 
+	 * @param phpLibFolderPath library folder path.
+	 */
+	public void setLibFolderPath(String phpLibFolderPath) {
+		this.libFolderPath = phpLibFolderPath;
+	}
+
+	/**
+	 * Get PHP library folder path.
+	 * 
+	 * @return PHP library folder path.
+	 */
+	public String getLibFolderPath() {
+		return libFolderPath;
+	}	
 
 	
 	/* (non-Javadoc)
@@ -83,6 +106,13 @@ public class PHPConfiguration extends AbstractConfiguration {
 					OSUtil.quoteCompoundPath(frontFile));
 		}
 		
+		if (libFolderPath != null) {
+			output += HaxeConfiguration.generateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_PHP_LIB_FOLDER, 
+					OSUtil.quoteCompoundPath(libFolderPath));
+		}
+		
+		
 		return output;
-	}	
+	}
 }

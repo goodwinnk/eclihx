@@ -56,14 +56,23 @@ public final class BuildParamParser {
 			String.format("Multiple: %s.", 
 				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS));
 	
+	private final MultiParameterRestrictor phpLibParamRestrictor = 
+		new MultiParameterRestrictor(
+			String.format("Multiple: %s.",
+					HaxePreferencesManager.PARAM_PREFIX_PHP_LIB_FOLDER));
+	
 	private final MultiParameterRestrictor jsNamespaceParam = 
 		new MultiParameterRestrictor(
 			String.format("Multiple: %s.", 
 				HaxePreferencesManager.PARAM_PREFIX_JS_NAMESPACE));
 	
+	
+	
 	private final MultiParameterRestrictor platformParam =
 		new MultiParameterRestrictor(
 				String.format("Multiple targets"));	
+	
+	
 	
 	private final Parser parser;
 	
@@ -489,8 +498,19 @@ public final class BuildParamParser {
 					}
 				}),
 				
+			// --php-lib <filename> : select the name for the php lib folder
+			Builder.createStringParam(
+					HaxePreferencesManager.PARAM_PREFIX_PHP_LIB_FOLDER,
+					new IStringValue() {
+						@Override
+						public void save(String value) throws ParseError {
+							phpLibParamRestrictor.check();
+							currentConfig.getPHPConfig().setLibFolderPath(value);
+						}
+					}),
+
+				
 			// --js-namespace <namespace> : create a namespace where root
-			// types are defined
 			Builder.createStringParam(
 					HaxePreferencesManager.PARAM_PREFIX_JS_NAMESPACE,
 					new IStringValue() {

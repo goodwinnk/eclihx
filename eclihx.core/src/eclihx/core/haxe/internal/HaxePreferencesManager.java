@@ -51,6 +51,7 @@ public class HaxePreferencesManager {
 	public static final String PARAM_PREFIX_NO_INLINE_FLAG = "--no-inline";
 	public static final String PARAM_PREFIX_NO_OPTIMIZATION_FLAG = "--no-opt";
 	public static final String PARAM_PREFIX_PHP_FRONT_FILE = "--php-front";
+	public static final String PARAM_PREFIX_PHP_LIB_FOLDER = "--php-lib";
 	public static final String PARAM_PREFIX_JS_NAMESPACE = "--js-namespace";
 	public static final String PARAM_PREFIX_REMAP_PACKAGE = "--remap";
 	public static final String PARAM_PREFIX_INTERP = "--interp";
