@@ -51,5 +51,16 @@ public class JSConfigurationTest {
 		
 		Assert.assertEquals("-js \"hi hi.my\" ", config.printConfiguration());
 	}
-
+	
+	/**
+	 * Test method for {@link eclihx.core.haxe.internal.configuration.JSConfiguration#printConfiguration()}.
+	 * @throws InvalidConfigurationException configuration exception
+	 */
+	@Test
+	public void shouldPrintNamespace() throws InvalidConfigurationException {
+		config.setNamespace("some");
+		config.setOutputFile("some.js");
+		
+		Assert.assertEquals("-js some.js --js-namespace some ", config.printConfiguration());
+	}
 }

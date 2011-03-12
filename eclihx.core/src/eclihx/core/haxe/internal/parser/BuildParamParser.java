@@ -56,6 +56,11 @@ public final class BuildParamParser {
 			String.format("Multiple: %s.", 
 				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS));
 	
+	private final MultiParameterRestrictor jsNamespaceParam = 
+		new MultiParameterRestrictor(
+			String.format("Multiple: %s.", 
+				HaxePreferencesManager.PARAM_PREFIX_JS_NAMESPACE));
+	
 	private final MultiParameterRestrictor platformParam =
 		new MultiParameterRestrictor(
 				String.format("Multiple targets"));	
@@ -166,7 +171,7 @@ public final class BuildParamParser {
 						currentConfig.getJSConfig().setOutputFile(value);
 					}
 				}),
-			
+				
 			// -as3 <directory> : generate AS3 code into target directory
 			Builder.createStringParam(
 				HaxePreferencesManager.PARAM_PREFIX_ACTION_SCRIPT3_DIRECTORY, 
@@ -482,7 +487,19 @@ public final class BuildParamParser {
 						phpFrontParam.check();
 						currentConfig.getPHPConfig().setFrontFile(value);						
 					}
-				}),	
+				}),
+				
+			// --js-namespace <namespace> : create a namespace where root
+			// types are defined
+			Builder.createStringParam(
+					HaxePreferencesManager.PARAM_PREFIX_JS_NAMESPACE,
+					new IStringValue() {
+						@Override
+						public void save(String value) throws ParseError {
+							jsNamespaceParam.check();
+							currentConfig.getJSConfig().setNamespace(value);
+						}
+					}),
 				
 			// --remap <package:target> : remap a package to another one
 			Builder.createStringParam(

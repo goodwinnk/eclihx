@@ -15,6 +15,26 @@ public class JSConfiguration extends AbstractConfiguration {
 	 */
 	private String outputFile;
 	
+	private String namespace;
+	
+	/**
+	 * Get namespace name for JS generation.
+	 * 
+	 * @return the namespace name for JS generation
+	 */
+	public String getNamespace() {
+		return namespace;
+	}
+
+	/**
+	 * Sets the namespace name for JS generation.
+	 * 
+	 * @param namespace the namespace to set
+	 */
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+
 	/**
 	 * Sets the output for the JS platform.
 	 * @param outputFile
@@ -32,6 +52,8 @@ public class JSConfiguration extends AbstractConfiguration {
 		return outputFile;
 	}
 	
+	
+	
 	/* (non-Javadoc)
 	 * @see eclihx.core.haxe.internal.configuration.AbstractConfiguration#internalValidate()
 	 */
@@ -47,8 +69,19 @@ public class JSConfiguration extends AbstractConfiguration {
 	 */
 	@Override
 	public String printConfiguration() throws InvalidConfigurationException {
-		return HaxeConfiguration.generateParameter(
-			HaxePreferencesManager.PARAM_PREFIX_JAVA_SCRIPT_OUTPUT, 
-			OSUtil.quoteCompoundPath(outputFile));
+		
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append(
+				HaxeConfiguration.generateParameter(
+						HaxePreferencesManager.PARAM_PREFIX_JAVA_SCRIPT_OUTPUT, 
+						OSUtil.quoteCompoundPath(outputFile)));
+		
+		builder.append(HaxeConfiguration.generateNullableParameter(
+				HaxePreferencesManager.PARAM_PREFIX_JS_NAMESPACE, namespace));
+		
+		return builder.toString();
+		
+		
 	}	
 }
