@@ -51,5 +51,20 @@ public class PHPConfigurationTest {
 			"-php \"..\\hi hello\\myPHP\" --php-front \\test.php ", 
 			config.printConfiguration());
 	}
+	
+	/**
+	 * Test for {@link PHPConfiguration#printConfiguration()}
+	 * @throws InvalidConfigurationException invalid configuration test.
+	 */
+	@Test
+	public void shouldPrintPhpLibPath() throws InvalidConfigurationException {
+		config.setOutputDirectory("..\\hi hello\\myPHP");
+		config.setLibFolderPath("my dir\\libs");
+		
+		Assert.assertEquals(
+			"-php \"..\\hi hello\\myPHP\" --php-lib \"my dir\\libs\" ", 
+			config.printConfiguration());
+	}
+
 
 }

@@ -260,6 +260,22 @@ public class BuildParamParserTest {
 	}
 	
 	@Test
+	public void shouldParsePHPLibDirectory() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = parser.parseString("-php test --php-lib \"php\\folder\"", executableFolder);
+	
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertEquals("\"php\\folder\"", 
+				config.getMainConfiguration().getPHPConfig().getLibFolderPath());
+		
+	}
+	
+	@Test(expected = ParseError.class)
+	public void shouldFailOnMultiplePHPLib() throws ParseError {
+		parser.parseString("-php test --php-lib \"php\\folder\" --php-lib other", 
+				executableFolder);
+	}
+	
+	@Test
 	public void shouldParseRealExampleConfiguration() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
 		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/functional/exampleConfig.hxml")).getPath();
 		
