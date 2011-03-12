@@ -52,6 +52,9 @@ public class HaxePreferencesManager {
 	public static final String PARAM_PREFIX_NO_OPTIMIZATION_FLAG = "--no-opt";
 	public static final String PARAM_PREFIX_PHP_FRONT_FILE = "--php-front";
 	public static final String PARAM_PREFIX_REMAP_PACKAGE = "--remap";
+	public static final String PARAM_PREFIX_INTERP = "--interp";
+	public static final String PARAM_PREFIX_MACRO = "--macro";
+	public static final String PARAM_PREFIX_DEAD_CODE_ELIMINATION = "--dead-code-elimination";
 	public static final String PARAM_PREFIX_HELP1_FLAG = "-help";
 	public static final String PARAM_PREFIX_HELP2_FLAG = "--help";
 }
