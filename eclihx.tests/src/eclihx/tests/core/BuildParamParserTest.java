@@ -245,6 +245,21 @@ public class BuildParamParserTest {
 	}
 	
 	@Test
+	public void shouldParseJsNamespace() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = parser.parseString("-js ha.js --js-namespace hohoho", executableFolder);
+	
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertEquals("hohoho", config.getMainConfiguration().getJSConfig().getNamespace());
+	}
+	
+	@Test(expected = ParseError.class)
+	public void shouldFailOnMultipleJsNamepaces() throws ParseError {
+		parser.parseString(
+				"-js ha.js --js-namespace ho --js-namespace hi",
+				executableFolder);
+	}
+	
+	@Test
 	public void shouldParseRealExampleConfiguration() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
 		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/functional/exampleConfig.hxml")).getPath();
 		
