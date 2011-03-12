@@ -237,6 +237,14 @@ public class BuildParamParserTest {
 	}
 	
 	@Test
+	public void shouldParseInterp() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = parser.parseString("--interp Test", executableFolder);
+	
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertTrue(config.getMainConfiguration().isInterpModeEnabled());
+	}
+	
+	@Test
 	public void shouldParseRealExampleConfiguration() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
 		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/functional/exampleConfig.hxml")).getPath();
 		

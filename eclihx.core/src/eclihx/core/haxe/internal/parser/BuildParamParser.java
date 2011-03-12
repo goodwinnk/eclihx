@@ -494,6 +494,16 @@ public final class BuildParamParser {
 					}
 				}),
 				
+			// --interp : interpret the program using internal macro system
+			Builder.createFlagParam(
+					HaxePreferencesManager.PARAM_PREFIX_INTERP, 
+					new IParamExistense() {
+						@Override
+						public void save(boolean exist) throws ParseError {
+							currentConfig.enableInterpMode(exist);							
+						}
+					}),
+				
 			// --macro  : call the given macro before typing anything else
 			Builder.createStringParam(
 					HaxePreferencesManager.PARAM_PREFIX_MACRO, 

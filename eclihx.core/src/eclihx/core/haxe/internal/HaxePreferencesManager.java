@@ -24,7 +24,7 @@ public class HaxePreferencesManager {
 	public static final String PARAM_PREFIX_ACTION_SCRIPT3_DIRECTORY = "-as3";
 	public static final String PARAM_PREFIX_NEKO_OUTPUT = "-neko";
 	public static final String PARAM_PREFIX_PHP_DIRECTORY = "-php";
-	public static final String PARAM_PREFIX_CPP_DIRECTORY = "-cpp"; // new	
+	public static final String PARAM_PREFIX_CPP_DIRECTORY = "-cpp";	
 	public static final String PARAM_PREFIX_XML_DESCRIPTION_OUTPUT = "-xml";
 	public static final String PARAM_PREFIX_STARTUP_CLASS = "-main";
 	public static final String PARAM_PREFIX_HAXE_LIB = "-lib";

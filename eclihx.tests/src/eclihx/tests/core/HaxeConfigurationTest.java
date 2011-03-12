@@ -263,4 +263,24 @@ public class HaxeConfigurationTest {
 		configuration.addMacroCall("Test.run()");
 		Assert.assertTrue(configuration.isValid());
 	}
+	
+	@Test
+	public void shouldPrintInterpetMode() throws InvalidConfigurationException {
+		configuration.enableInterpMode(true);
+		configuration.setPlatform(Platform.Neko);
+		configuration.getNekoConfig().setOutputFile("test.n");
+		configuration.addClassName("OhMy");
+		
+		Assert.assertEquals("--interp -neko test.n OhMy ", configuration.printConfiguration());
+	}
+	
+	@Test
+	public void shouldBeValidWithInterpetMode() {
+		configuration.enableInterpMode(true);
+		configuration.setPlatform(Platform.Neko);
+		configuration.getNekoConfig().setOutputFile("test.n");
+		configuration.addClassName("OhMy");
+		
+		Assert.assertTrue(configuration.isValid());
+	}
 }
