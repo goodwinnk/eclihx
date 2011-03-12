@@ -492,18 +492,38 @@ public final class BuildParamParser {
 					public void save(String value) throws ParseError {
 						currentConfig.addRemapPackage(value);
 					}
-				}),		
+				}),
+				
+			// --macro  : call the given macro before typing anything else
+			Builder.createStringParam(
+					HaxePreferencesManager.PARAM_PREFIX_MACRO, 
+					new IStringValue() {				
+						@Override
+						public void save(String value) throws ParseError {
+							currentConfig.addMacroCall(value);
+						}
+					}),
+				
+			// --dead-code-elimination  : remove unused methods
+			Builder.createFlagParam(
+					HaxePreferencesManager.PARAM_PREFIX_DEAD_CODE_ELIMINATION, 
+					new IParamExistense() {						
+						@Override
+						public void save(boolean exist) throws ParseError {
+							currentConfig.enableDeadCodeElimination(exist);
+						}
+					}),
 			
 			//  -help  Display this list of options
 			Builder.createFlagParam(
-				HaxePreferencesManager.PARAM_PREFIX_HELP1_FLAG,
-				new IParamExistense () {
-					public void save(boolean exist) {
-						if (exist) {
-							currentConfig.enableHelp();
+					HaxePreferencesManager.PARAM_PREFIX_HELP1_FLAG,
+					new IParamExistense () {
+						public void save(boolean exist) {
+							if (exist) {
+								currentConfig.enableHelp();
+							}
 						}
-					}
-				}),
+					}),
 			
 			// --help  Display this list of options
 			Builder.createFlagParam(

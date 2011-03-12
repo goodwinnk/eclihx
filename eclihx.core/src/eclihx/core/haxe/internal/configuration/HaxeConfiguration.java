@@ -1,5 +1,6 @@
 package eclihx.core.haxe.internal.configuration;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -108,6 +109,11 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 */
 	private final LinkedList<String> compilationFlags = 
 		new LinkedList<String>();
+	
+	/**
+	 * Macro call strings
+	 */
+	private LinkedList<String> macroCalls = new LinkedList<String>();
 
 	/**
 	 * Debug flag (-debug).
@@ -122,6 +128,8 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	private boolean displayClassTips;
 	
 	private boolean displayKeywords;
+	
+	private boolean isDeadCodeEliminationEnabled;
 
 	/**
 	 * The name of the file for the code tip.
@@ -170,7 +178,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * Command which should be done after compilation.
 	 */
 	private String cmdCommand;
-
+	
 	/**
 	 * No traces mode state.
 	 */
@@ -205,7 +213,7 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	 * Collection of the file with the classes excluded from code generation.
 	 */
 	private final ArrayList<String> excludeFiles = new ArrayList<String>();
-
+	
 	/**
 	 * Creates the string representation of the haXe build parameter by the key
 	 * and value. Note that both values can't be <code>null</value>.
@@ -224,6 +232,28 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 
 		return key + " " + value + " ";
 	}
+	
+	/**
+	 * Creates the string representation of the haXe build parameter by the key
+	 * and value. Empty string is returned when value is equal to null.
+	 * 
+	 * @param key suffix of the parameter. Null is forbidden.
+	 * @param value parameter value
+	 * @return string representation of the parameter.
+	 */
+	public final static String generateNullableParameter(String key, String value) {
+
+		if (key == null) {
+			throw new NullPointerException("Null isn't allowed for 'key' parameter.");
+		}
+		
+		if (value == null) {
+			return "";
+		}
+
+		return key + " " + value + " ";
+	}
+	
 
 	/**
 	 * Return string representation of the configuration flag parameter.
@@ -398,6 +428,28 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	public void addExcludeFile(String excludeFile) {
 		excludeFiles.add(excludeFile);
 	}
+	
+	/**
+	 * Add the macro call string.
+	 * 
+	 * @param macroCallString string of the macro execution.
+	 */
+	public void addMacroCall(String macroCallString) {
+		if (macroCallString == null || macroCallString.isEmpty()) {
+			throw new InvalidParameterException("macroCallString can't be null or empty");
+		}
+		
+		macroCalls.add(macroCallString);
+	}
+	
+	/**
+	 * Get the macro calls.
+	 * 
+	 * @return list of macro calls in configuration.
+	 */
+	public Collection<String> getMacroCalls() {
+		return macroCalls;
+	}
 
 	/**
 	 * Checks if configuration has some compilation flag.
@@ -553,6 +605,24 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	public void enableNoOptimizationMode() {
 		noOptimizedMode = true;
 	}
+	
+	/**
+	 * Set code optimization option.
+	 * 
+	 * @param exist is optimization enabled in this configuration.
+	 */
+	public void enableDeadCodeElimination(boolean exist) {
+		isDeadCodeEliminationEnabled = exist;	
+	}
+	
+	/**
+	 * Check if dead code elimination option is set.
+	 * 
+	 * @return <code>true</code> if enabled.
+	 */
+	public boolean isDeadCodeEliminationMode() {
+		return isDeadCodeEliminationEnabled;
+	}
 
 	/**
 	 * Output file for xml-description.
@@ -659,11 +729,9 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		StringBuilder outputBuilder = new StringBuilder();
 		
 		// Startup class
-		if (startupClass != null) {
-			outputBuilder.append(generateParameter(
-					HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
-					startupClass));
-		}
+		outputBuilder.append(generateNullableParameter(
+				HaxePreferencesManager.PARAM_PREFIX_STARTUP_CLASS,
+				startupClass));
 
 		// Stored libraries
 		for (String library : libraries) {
@@ -750,13 +818,13 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 					HaxePreferencesManager.PARAM_PREFIX_EXCLUDE_FILE,
 					OSUtil.quoteCompoundPath(excludeFile)));
 		}
-
-		// Xml description
+		
 		if (outputXmlFile != null) {
-			outputBuilder.append(generateParameter(
+			// Xml description
+			outputBuilder.append(generateNullableParameter(
 					HaxePreferencesManager.PARAM_PREFIX_XML_DESCRIPTION_OUTPUT,
 					OSUtil.quoteCompoundPath(outputXmlFile)));
-		}
+		}		
 
 		// Prompt on error.
 		outputBuilder.append(generateFlagParameter(
@@ -799,6 +867,16 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 					HaxePreferencesManager.PARAM_PREFIX_REMAP_PACKAGE,
 					directive));
 		}
+		
+		for (String macroCall : macroCalls) {
+			outputBuilder.append(generateParameter(
+					HaxePreferencesManager.PARAM_PREFIX_MACRO,
+					macroCall));
+		}
+		
+		outputBuilder.append(generateFlagParameter(
+				HaxePreferencesManager.PARAM_PREFIX_DEAD_CODE_ELIMINATION, 
+				isDeadCodeEliminationEnabled));
 		
 		// Platforms
 		if (isPlatformExplicitlySet) {

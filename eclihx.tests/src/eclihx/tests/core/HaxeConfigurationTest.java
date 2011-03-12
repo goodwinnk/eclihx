@@ -219,6 +219,13 @@ public class HaxeConfigurationTest {
 	}
 	
 	@Test
+	public void shouldPrintDeadEliminationCode() throws InvalidConfigurationException {
+		configuration.enableDeadCodeElimination(true);
+		configuration.setStartupClass("Test");
+		Assert.assertEquals("-main Test --dead-code-elimination ", configuration.printConfiguration());
+	}
+	
+	@Test
 	public void shouldProcessNoOptimizationOption() throws InvalidConfigurationException {
 		configuration.enableNoOptimizationMode();
 		Assert.assertEquals("--no-opt ", configuration.printConfiguration());
@@ -239,6 +246,21 @@ public class HaxeConfigurationTest {
 		configuration.setPlatform(Platform.PHP);
 		configuration.getPHPConfig().setOutputDirectory("some/other folder/php/output");
 		
+		Assert.assertTrue(configuration.isValid());
+	}
+	
+	@Test
+	public void shouldPrintSeveralMacroses() throws InvalidConfigurationException {
+		configuration.addMacroCall("Test.run()");
+		configuration.addMacroCall("Test.run()");
+		
+		Assert.assertEquals("--macro Test.run() --macro Test.run() ", 
+				configuration.printConfiguration());
+	}
+	
+	@Test
+	public void shouldBeValidWithMacroWithoudMain() {
+		configuration.addMacroCall("Test.run()");
 		Assert.assertTrue(configuration.isValid());
 	}
 }

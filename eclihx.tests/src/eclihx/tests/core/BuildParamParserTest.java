@@ -213,6 +213,30 @@ public class BuildParamParserTest {
 	}
 	
 	@Test
+	public void shouldParseDeadCodeElemination() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = 
+			parser.parseString(
+					"--dead-code-elimination TestWhile", 
+					executableFolder);
+	
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertNotNull(config.getMainConfiguration().getFlashConfig());
+		Assert.assertTrue(config.getMainConfiguration().isDeadCodeEliminationMode());
+	}
+	
+	@Test
+	public void shouldParseMacroses() throws ParseError, InvalidConfigurationException {
+		HaxeConfigurationList config = 
+			parser.parseString(
+					"--macro Test.run() --macro Some.execute()", 
+					executableFolder);
+	
+		Assert.assertNotNull(config.getMainConfiguration());
+		Assert.assertTrue(config.getMainConfiguration().getMacroCalls().contains("Test.run()"));
+		Assert.assertTrue(config.getMainConfiguration().getMacroCalls().contains("Some.execute()"));
+	}
+	
+	@Test
 	public void shouldParseRealExampleConfiguration() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
 		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/functional/exampleConfig.hxml")).getPath();
 		
