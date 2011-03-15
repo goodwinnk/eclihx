@@ -12,6 +12,7 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import eclihx.ui.actions.ToggleCommentAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
@@ -52,6 +53,8 @@ public class HXEditor extends TextEditor {
 	 * Prefix to be prepended to the various resource keys for toggle comment action.
 	 */
 	public static final String TOGGLE_COMMENT_ACTION_PREFIX = "ToggleCommentAction";
+	
+	private IContentOutlinePage haxeOutlinePage;
 	
 	/*
 	 * (non-Javadoc)
@@ -159,5 +162,16 @@ public class HXEditor extends TextEditor {
 	public void dispose() {
 		colorManager.dispose();
 		super.dispose();
+	}
+	
+	@Override
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class required) {
+		if (IContentOutlinePage.class.equals(required)) {
+			if (haxeOutlinePage == null) {
+				haxeOutlinePage = new HaxeOutlinePage(this);
+			}
+			return haxeOutlinePage;
+		}
+		return super.getAdapter(required);
 	}
 }
