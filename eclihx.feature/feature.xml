@@ -2,7 +2,7 @@
 <feature
       id="eclihx.feature"
       label="Eclihx Plugin Feature"
-      version="0.3.1.qualifier">
+      version="0.4.0.qualifier">
 
    <description url="http://code.google.com/p/eclihx/">
       Plugin for developing in the haXe language (http://haxe.org/).
@@ -121,35 +121,35 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="eclihx.ui"
          download-size="0"
          install-size="0"
-         version="0.3.1.qualifier"
+         version="0.4.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="eclihx.core"
          download-size="0"
          install-size="0"
-         version="0.3.1.qualifier"
+         version="0.4.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="eclihx.debug"
          download-size="0"
          install-size="0"
-         version="0.3.1.qualifier"
+         version="0.4.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="eclihx.debug.ui"
          download-size="0"
          install-size="0"
-         version="0.3.1.qualifier"
+         version="0.4.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="eclihx.launching"
          download-size="0"
          install-size="0"
-         version="0.3.1.qualifier"
+         version="0.4.0.qualifier"
          unpack="false"/>
 
 </feature>
