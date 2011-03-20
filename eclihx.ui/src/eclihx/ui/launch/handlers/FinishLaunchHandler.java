@@ -149,31 +149,66 @@ public final class FinishLaunchHandler implements IStatusHandler {
 	 * @param compileErrors
 	 * @throws CoreException
 	 */
-	private void updateErrorsMarkers(final IHaxeProject haxeProject,
+	private void updateErrorsMarkers(final IHaxeProject haxeProject, String buildFilePath,
 			final List<ICompilerError> compileErrors) throws CoreException {
 
 		haxeProject.getProjectBase().deleteMarkers(IMarker.PROBLEM, true,
 				IResource.DEPTH_INFINITE);
 
 		for (final ICompilerError error : compileErrors) {
-
-			IPath filePath = new Path(error.getFilePath());
-			if (filePath.isAbsolute()) {
-				filePath = filePath.makeRelativeTo(haxeProject.getProjectBase().getLocation());
-			}
 			
-			final IResource fileResource = haxeProject.getProjectBase().findMember(filePath);
-
-			if (fileResource != null) {
-				final IFile file = (IFile) fileResource;
-				final IMarker marker = file.createMarker(IMarker.PROBLEM);
-
-				marker.setAttributes(array(IMarker.SEVERITY, IMarker.MESSAGE,
-						IMarker.LINE_NUMBER), array(
-						(Object) IMarker.SEVERITY_ERROR, error.getMessage(),
-						error.getLineNumber()));
+			if (isAddedToLocalResource(error, haxeProject)) {
+				
+			} else if (isAddedToBuildFile(error, haxeProject, buildFilePath)) {
+				
+			} else {
+				EclihxUIPlugin.getLogHelper().logError(
+						"Can't find a resource for marker attachment: " 
+						+ error.getFilePath() + " " + buildFilePath);
+				
+				throw new RuntimeException("Can't find a resource for marker attachment");
 			}
 		}
+	}
+
+	private boolean isAddedToBuildFile(ICompilerError error, 
+			IHaxeProject haxeProject, String buildFilePath) throws CoreException {
+		
+		IPath buildPath = new Path(buildFilePath);
+		if (buildPath.isAbsolute()) {
+			buildPath = buildPath.makeRelativeTo(haxeProject.getProjectBase().getLocation());
+		}
+		
+		final IFile buildFile = haxeProject.getProjectBase().getFile(buildPath);
+		if (buildFile.exists()) {
+			final IMarker market = buildFile.createMarker(IMarker.PROBLEM);
+			market.setAttributes(array(IMarker.SEVERITY, IMarker.MESSAGE), 
+					             array((Object) IMarker.SEVERITY_ERROR, error.toString()));
+			return true;
+		}
+		
+		return false;
+	}
+
+	private boolean isAddedToLocalResource(ICompilerError error, IHaxeProject haxeProject) throws CoreException {
+		IPath filePath = new Path(error.getFilePath());
+		if (filePath.isAbsolute()) {
+			filePath = filePath.makeRelativeTo(haxeProject.getProjectBase().getLocation());
+		}
+		
+		final IResource fileResource = haxeProject.getProjectBase().findMember(filePath);
+		if (fileResource != null) {
+			final IFile file = (IFile)fileResource;
+			final IMarker marker = file.createMarker(IMarker.PROBLEM);
+
+			marker.setAttributes(array(IMarker.SEVERITY, IMarker.MESSAGE,
+					IMarker.LINE_NUMBER), array(
+					(Object) IMarker.SEVERITY_ERROR, error.getMessage(),
+					error.getLineNumber()));
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -260,7 +295,7 @@ public final class FinishLaunchHandler implements IStatusHandler {
 			final List<ICompilerError> compileErrors = getCompilerErrors(
 					finishInfo.getOutput(), haxeProject, finishInfo.getBuildFile());
 
-			updateErrorsMarkers(haxeProject, compileErrors);
+			updateErrorsMarkers(haxeProject, finishInfo.getBuildFile(), compileErrors);
 
 			if (!compileErrors.isEmpty()) {
 				showErrorsDialog(haxeProject.getName());
