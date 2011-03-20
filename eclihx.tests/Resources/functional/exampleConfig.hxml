@@ -1,0 +1,7 @@
+-cp src
+-debug
+-main Main
+-swf9 main.swf
+-swf-version 9
+-D network-sandbox
+-swf-lib asset_lib.swf
