@@ -1,5 +1,6 @@
 package eclihx.core.haxe.internal.configuration;
 
+import java.io.File;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -91,8 +92,8 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	/**
 	 * Source directory configuration (-cp).
 	 */
-	private final LinkedList<String> sourceDirectories = 
-			new LinkedList<String>();
+	private final ArrayList<String> sourceDirectories = 
+			new ArrayList<String>();
 
 	/**
 	 * Name of the startup class (-main).
@@ -970,5 +971,29 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 		
 		Assert.isTrue(false);
 		return null;
+	}
+	
+	/**
+	 * Make all paths in configuration absolute.
+	 * 
+	 * @param directory directory for resolving relative paths.
+	 */
+	public void makePathsAbsolute(File directory) {
+		
+		ArrayList<String> tmpDirectories = new ArrayList<String>();
+		for (String sourcePath : sourceDirectories) {
+			File sourceDir = new File(sourcePath);
+			
+			if (sourceDir.isAbsolute()) {
+				tmpDirectories.add(sourceDir.getAbsolutePath());
+			} else {
+				tmpDirectories.add((new File(directory, sourcePath)).getAbsolutePath());
+			}
+		}
+		
+		sourceDirectories.clear();
+		sourceDirectories.addAll(tmpDirectories);
+		
+		// TODO 5: Do for other paths in configuration.
 	}
 }

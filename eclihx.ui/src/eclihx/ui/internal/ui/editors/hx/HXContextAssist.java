@@ -224,26 +224,6 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	}
 	
 	/**
-	 * Gets the {@link IHaxeSourceFile} from the input. If input has another
-	 * source this method will return null.
-	 * 
-	 * @param input the editor input.
-	 * @return {@link IHaxeSourceFile} object or <code>null</code>.
-	 */
-	private IHaxeSourceFile getHaxeSourceFile(IEditorInput input) {
-		if (input instanceof IFileEditorInput) {
-			IHaxeElement haxeElement = EclihxCore.getDefault().getHaxeWorkspace().getHaxeElement(
-							((IFileEditorInput) input).getFile());
-
-			if (haxeElement instanceof IHaxeSourceFile) {
-				return (IHaxeSourceFile) haxeElement;
-			}
-		}
-
-		return null;
-	}
-	
-	/**
 	 * Method searches the beginning of the identifier 
 	 * 
 	 * @param text the text where search should be done.
@@ -279,12 +259,13 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		// the current file.		
 		editor.doSave(null);
 		
-		IHaxeSourceFile haxeFile = getHaxeSourceFile(editor.getEditorInput());
+		IHaxeSourceFile haxeFile = ConverterHelper.getHaxeSourceFile(editor.getEditorInput());
 		
 		List<ContentInfo> tips = new ArrayList<ContentInfo>();
 		
 		if (haxeFile != null) {
 			try {
+				
 				tips.addAll(HaxeContextAssistManager.getTips(haxeFile, offset));
 				
 				if (offset == 0 || Character.isWhitespace(viewer.getDocument().get().charAt(offset - 1))) {
