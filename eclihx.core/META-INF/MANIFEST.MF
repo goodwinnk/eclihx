@@ -16,6 +16,7 @@ Export-Package: eclihx.core;
  eclihx.core.haxe;uses:="org.eclipse.debug.core,eclihx.core.haxe.internal.configuration",
  eclihx.core.haxe.internal;uses:="org.eclipse.core.runtime,eclihx.core.haxe.model.core,eclihx.core.util.language",
  eclihx.core.haxe.internal.configuration;uses:="eclihx.core.util.language,eclihx.core.haxe.internal,eclihx.core.util",
+ eclihx.core.haxe.internal.outline,
  eclihx.core.haxe.internal.parser;uses:="eclihx.core.haxe.internal.configuration",
  eclihx.core.haxe.internal.versioning,
  eclihx.core.haxe.model;uses:="org.eclipse.core.runtime,eclihx.core.haxe.model.core,org.eclipse.core.resources",
