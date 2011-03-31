@@ -264,7 +264,7 @@ public class BuildParamParserTest {
 		HaxeConfigurationList config = parser.parseString("-php test --php-lib \"php\\folder\"", executableFolder);
 	
 		Assert.assertNotNull(config.getMainConfiguration());
-		Assert.assertEquals("\"php\\folder\"", 
+		Assert.assertEquals("php\\folder", 
 				config.getMainConfiguration().getPHPConfig().getLibFolderPath());
 		
 	}
@@ -289,6 +289,22 @@ public class BuildParamParserTest {
 		 * -swf-lib asset_lib.swf
 		 */
 		Assert.assertEquals("-main Main -D network-sandbox -cp src -debug -swf9 main.swf -swf-lib asset_lib.swf ", config.printConfiguration());	
+	}
+	
+	@Test
+	public void shouldParseCmdWithSpaces() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
+		HaxeConfiguration config = parser.parseString("-cmd \"cd ..\\my folder\" -main Main", executableFolder).getMainConfiguration();
+		
+		Assert.assertEquals(1, config.getCmdCommands().size());
+		Assert.assertEquals("cd ..\\my folder", config.getCmdCommands().toArray(new String[0])[0]);	
+	}
+	
+	@Test
+	public void shouldParseMultiCmds() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
+		HaxeConfiguration config = parser.parseString("-cmd \"cd ..\\my folder\" -main Main -cmd ping", executableFolder).getMainConfiguration();
+		
+		Assert.assertEquals(2, config.getCmdCommands().size());
+		Assert.assertEquals("-main Main -cmd \"cd ..\\my folder\" -cmd ping ", config.printConfiguration());		
 	}
 	
 }
