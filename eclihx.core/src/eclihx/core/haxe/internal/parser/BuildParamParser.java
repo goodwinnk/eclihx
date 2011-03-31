@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.eclipse.core.runtime.Assert;
+
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.HaxeConfigurationList;
@@ -348,7 +350,7 @@ public final class BuildParamParser {
 				new IStringValue() {
 					@Override
 					public void save(String value) throws ParseError {
-						currentConfig.setCmdCommand(value);
+						currentConfig.addCmdCommand(value);
 					}
 				}),
 			
@@ -612,7 +614,7 @@ public final class BuildParamParser {
 		return parser.getParametersKeys();
 	}
 	
-	private HaxeConfiguration parseConfiguration(String strArray[]) throws ParseError {
+	private HaxeConfiguration parseConfiguration(String configStr) throws ParseError {
 		
 		if (!continueConfig) {
 			
@@ -628,7 +630,7 @@ public final class BuildParamParser {
 			continueConfig = false;
 		}
 		
-		parser.parse(strArray);
+		parser.parse(configStr);
 		
 		return currentConfig;		
 	}
@@ -637,23 +639,9 @@ public final class BuildParamParser {
 		
 		String configStrs[] = str.split("--next");
 		
-		for (String configStr : configStrs) {	
-			
-			String[] inputParams;
-			
+		for (String configStr : configStrs) {
 			String trimmedConfig = configStr.trim();
-			
-			if (trimmedConfig.isEmpty())
-			{
-				inputParams = new String[0];
-			}
-			else
-			{
-				// FIXME 10: Will break paths with spaces!
-				inputParams = trimmedConfig.replaceAll("[\\s\\t]+", " ").trim().split(" ");
-			}
-			
-			configList.add(parseConfiguration(inputParams));			
+			configList.add(parseConfiguration(trimmedConfig));			
 		}
 	}
 	
@@ -704,9 +692,33 @@ public final class BuildParamParser {
 				while((buffer = in.readLine())!= null) {
 					String trimString = buffer.trim();
 					
+					// We adds only non-comments and not-empty strings
 					if (!(trimString.isEmpty() || trimString.startsWith("#"))) {
-						// We adds only non-comments and not-empty strings 
-						fileContent.append(trimString);
+						
+						if (trimString.startsWith("-")) {
+							String[] optionValuePair = trimString.split(" ", 2);
+							Assert.isTrue(optionValuePair.length != 0);
+							
+							// Append first parameter.
+							fileContent.append(optionValuePair[0]);
+							fileContent.append(" ");
+							
+							if (optionValuePair.length == 2) {
+								String value = optionValuePair[1];
+								
+								// quotes value if necessary
+								if (value.contains(" ")) {
+									fileContent.append("\"");
+									fileContent.append(value);
+									fileContent.append("\"");
+								} else {
+									fileContent.append(value);
+								}								
+							}							
+						} else {
+							fileContent.append(trimString);
+						}
+						
 						fileContent.append(" ");
 					}
 				}

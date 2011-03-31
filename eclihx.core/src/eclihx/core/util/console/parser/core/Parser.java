@@ -1,12 +1,14 @@
 package eclihx.core.util.console.parser.core;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
-// TODO 5 Implement default implementation for file parameter
+import eclihx.core.EclihxCore;
 
 /**
  * My (Nikolay Krasko) own attempt to implement console parameter parser. It's a little bit naive but gives 
@@ -63,6 +65,68 @@ public class Parser {
 	}
 	
 	/**
+	 * Parse input as a console parameters.
+	 * 
+	 * @param input A string with input that should be interpreted as console parameters.
+	 * @return Output parameters
+	 */
+	public static String[] splitToParams(String input) {
+		// Didn't want to write this method... but is there exists a build-in splitter
+		ArrayList<String> params = new ArrayList<String>();
+		
+		final char QUOTE = '\"';
+		
+		StringBuilder tempParam = new StringBuilder();
+		boolean isInQuotedString = false;
+		
+		StringReader reader = new StringReader(input);
+		
+		try {			
+			for (int ch = reader.read(); ch != -1; ch = reader.read()) {				
+				if (ch == QUOTE) {
+					isInQuotedString = !isInQuotedString;
+				} else if (!isInQuotedString && Character.isWhitespace(ch)) {
+					
+					if (!tempParam.toString().isEmpty()) {
+						params.add(tempParam.toString());
+						
+						// clear
+						tempParam.delete(0, tempParam.length());
+					}					
+					
+				} else {
+					tempParam.append((char) ch);
+				}
+			}
+			
+			// If we were have unfinished param 
+			if (!tempParam.toString().isEmpty()) {
+				params.add(tempParam.toString());
+			}	
+			
+		} catch (IOException e) {
+			// Should never happen
+			EclihxCore.getLogHelper().logError(e);
+		} finally {
+			reader.close();
+		}
+		
+		
+		
+		return params.toArray(new String[params.size()]);
+	}
+	
+	/**
+	 * Parse an input after splitting it with Parse.splitToParams().
+	 * 
+	 * @param input string that should be splitted like console parameters 
+	 * @throws ParseError Error in parsing.
+	 */
+	public void parse(String input) throws ParseError {
+		parse(Parser.splitToParams(input));
+	}
+	
+	/**
 	 * Parse an array of input arguments.
 	 * 
 	 * @param args Console parameters arguments.
@@ -100,7 +164,6 @@ public class Parser {
 				
 			} else {
 				// Bad thing here...We don't know how to proceed
-				// TODO 5: Add recovery ability
 				throw new ParseError(String.format("Uknown prefix '%1$s'", args[i]));
 			}
 		}	
