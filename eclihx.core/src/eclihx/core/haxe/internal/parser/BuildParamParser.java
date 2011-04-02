@@ -707,13 +707,20 @@ public final class BuildParamParser {
 								String value = optionValuePair[1];
 								
 								// quotes value if necessary
-								if (value.contains(" ")) {
-									fileContent.append("\"");
-									fileContent.append(value);
-									fileContent.append("\"");
-								} else {
-									fileContent.append(value);
-								}								
+								if (!value.isEmpty()) {
+									if (value.contains(" ") && !(value.startsWith("\"") && value.endsWith("\""))) {
+										fileContent.append("\"");
+										
+										// Escape quotes in string
+										value = value.replace("\"", "\\\"");									
+										
+										fileContent.append(value);
+										
+										fileContent.append("\"");
+									} else {
+										fileContent.append(value);
+									}						
+								}
 							}							
 						} else {
 							fileContent.append(trimString);

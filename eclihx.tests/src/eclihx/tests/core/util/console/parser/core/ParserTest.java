@@ -80,4 +80,27 @@ public class ParserTest {
 		Assert.assertEquals("-int", params[6]);
 		Assert.assertEquals("-1", params[7]);
 	}
+	
+	@Test
+	public void shouldSplitWithEscapedQuotes() {
+		String[] params = Parser.splitToParams("-cmd \"mdkir \\\"my dir\\\"\"");
+		Assert.assertTrue(params.length == 2);
+		Assert.assertEquals("-cmd", params[0]);
+		Assert.assertEquals("mdkir \"my dir\"", params[1]);
+	}
+	
+	@Test
+	public void shouldSplitAndIgnoreEscapeWhileNotInSting() {
+		String[] params = Parser.splitToParams("-string \\\"ssr");
+		Assert.assertTrue(params.length == 2);
+		Assert.assertEquals("-string", params[0]);
+		Assert.assertEquals("\\\"ssr", params[1]);
+	}
+	
+	public void shouldSplitPathsWithEscapeChar() {
+		String[] params = Parser.splitToParams("-file \"\\some\\some dir.test\"");
+		Assert.assertTrue(params.length == 2);
+		Assert.assertEquals("-file", params[0]);
+		Assert.assertEquals("\\some\\some dir.test", params[1]);
+	}
 }

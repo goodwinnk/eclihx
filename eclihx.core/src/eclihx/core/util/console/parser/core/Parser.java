@@ -1,6 +1,7 @@
 package eclihx.core.util.console.parser.core;
 
 import java.io.IOException;
+import java.io.PushbackReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,23 +72,32 @@ public class Parser {
 	 * @return Output parameters
 	 */
 	public static String[] splitToParams(String input) {
-		// Didn't want to write this method... but is there exists a build-in splitter
+		// Didn't want to write this method... but is there exist a build-in splitter?
 		ArrayList<String> params = new ArrayList<String>();
 		
 		final char QUOTE = '\"';
+		final char ESCAPE = '\\';
 		
 		StringBuilder tempParam = new StringBuilder();
 		boolean isInQuotedString = false;
 		
-		StringReader reader = new StringReader(input);
+		PushbackReader reader = new PushbackReader(new StringReader(input));
 		
 		try {			
 			for (int ch = reader.read(); ch != -1; ch = reader.read()) {				
 				if (ch == QUOTE) {
-					isInQuotedString = !isInQuotedString;
+					
+					// Don't enter in quoted state if we have some part of parameter
+					if (isInQuotedString || tempParam.length() == 0) {
+						isInQuotedString = !isInQuotedString;
+					} else {
+						// Or quote is ordinal character for parameter
+						tempParam.append((char) ch);
+					}
+					
 				} else if (!isInQuotedString && Character.isWhitespace(ch)) {
 					
-					if (!tempParam.toString().isEmpty()) {
+					if (tempParam.length() != 0) {
 						params.add(tempParam.toString());
 						
 						// clear
@@ -95,20 +105,29 @@ public class Parser {
 					}					
 					
 				} else {
+					if (ch == ESCAPE && isInQuotedString) {
+						int nextChar = reader.read();
+						if (nextChar == QUOTE) {
+							ch = nextChar;
+						} else {
+							reader.unread(nextChar);
+						}
+					}
+					
 					tempParam.append((char) ch);
 				}
 			}
 			
-			// If we were have unfinished param 
+			// If we were have unfinished parameter
 			if (!tempParam.toString().isEmpty()) {
 				params.add(tempParam.toString());
 			}	
 			
+			reader.close();
+			
 		} catch (IOException e) {
 			// Should never happen
 			EclihxCore.getLogHelper().logError(e);
-		} finally {
-			reader.close();
 		}
 		
 		
