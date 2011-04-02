@@ -307,4 +307,12 @@ public class BuildParamParserTest {
 		Assert.assertEquals("-main Main -cmd \"cd ..\\my folder\" -cmd ping ", config.printConfiguration());		
 	}
 	
+	@Test
+	public void shouldParseQuotedBuildFiles() throws MalformedURLException, IOException, InvalidConfigurationException, ParseError {
+		String path = FileLocator.toFileURL(new URL("platform:/plugin/eclihx.tests/Resources/quotedCmd.hxml")).getPath();
+		
+		HaxeConfiguration config = parser.parseFile(path, executableFolder).getMainConfiguration();
+		Assert.assertEquals(1, config.getCmdCommands().size());
+		Assert.assertEquals("mkdir \"\\hello\\my dir\"", config.getCmdCommands().toArray(new String[0])[0]); 
+	}
 }
