@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import eclihx.core.EclihxCore;
 
@@ -115,18 +116,18 @@ public class ProcessUtil {
      * Executes the command line at the given project location, and returns the 
      * correspondent output.
      * 
-     * @param commandLine the command line
+     * @param params the command line parameters
      * @param workingDirectory the file with execution working directory.
      * @return Information about process execution.
      */
-    public static ProcessExecResult executeProcess(String commandLine, File workingDirectory) {
+    public static ProcessExecResult executeProcess(String[] params, File workingDirectory) {
     	
     	EclihxCore.getLogHelper().logInfo(
     			String.format("Eclihx ExecuteProcess. WorkingDirectory: \"%s\". CommandLine: \"%s\".",
-    					workingDirectory, commandLine));
+    					workingDirectory, Arrays.toString(params)));
     	
     	try {
-	    	Process process = Runtime.getRuntime().exec(commandLine, null, workingDirectory);
+	    	Process process = Runtime.getRuntime().exec(params, null, workingDirectory);
 			
 			final StreamReaderThread errorStreamReader = new StreamReaderThread(process.getErrorStream());
 			final StreamReaderThread processOutputReader = new StreamReaderThread(process.getInputStream());
