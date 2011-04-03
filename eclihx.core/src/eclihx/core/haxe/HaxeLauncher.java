@@ -11,6 +11,7 @@ import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
 import eclihx.core.haxe.internal.configuration.InvalidConfigurationException;
 import eclihx.core.util.OSUtil;
 import eclihx.core.util.ProcessUtil;
+import eclihx.core.util.console.parser.core.Parser;
 
 /**
  * Class launches the haXe process with the given configuration.
@@ -46,7 +47,8 @@ public class HaxeLauncher {
 			String commandLine = OSUtil.quoteCompoundPath(compilerPath) + " "
 					+ configuration.printConfiguration();
 			
-			ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(commandLine, workingDirectory);
+			ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(
+					Parser.splitToParams(commandLine), workingDirectory);
 			
 			errorsString = execResult.getErrorsString();
 			outputString = execResult.getOutputString();
@@ -72,8 +74,9 @@ public class HaxeLauncher {
 	public synchronized void run(String buildFilePath,
 			ILaunch launch, String compilerPath, File workingDirectory) {
 
-		String commandLine = OSUtil.quoteCompoundPath(compilerPath) + " " + OSUtil.quoteCompoundPath(buildFilePath);
-		ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(commandLine, workingDirectory);
+		
+		String[] params = new String[] { compilerPath, buildFilePath };
+		ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(params, workingDirectory);
 
 		errorsString = execResult.getErrorsString();
 		outputString = execResult.getOutputString();
