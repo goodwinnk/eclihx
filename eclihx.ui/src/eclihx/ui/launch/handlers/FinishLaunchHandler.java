@@ -22,9 +22,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
@@ -37,32 +34,12 @@ import eclihx.core.util.OSUtil;
 import eclihx.launching.HaxeLaunchDelegate.FinishLaunchInfo;
 import eclihx.ui.PreferenceConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.ui.utils.ConsoleViewHelper;
 
 /**
  * Handlers the end of launch operation.
  */
 public final class FinishLaunchHandler implements IStatusHandler {
-
-	/**
-	 * Find the appreciate console.
-	 * 
-	 * @param name the name of the console
-	 * @return the console object.
-	 */
-	private MessageConsole findConsole(final String name) {
-		final ConsolePlugin plugin = ConsolePlugin.getDefault();
-		final IConsoleManager conMan = plugin.getConsoleManager();
-		final IConsole[] existing = conMan.getConsoles();
-		for (int i = 0; i < existing.length; i++) {
-			if (name.equals(existing[i].getName())) {
-				return (MessageConsole) existing[i];
-			}
-		}
-		// no console found, so create a new one
-		final MessageConsole myConsole = new MessageConsole(name, null);
-		conMan.addConsoles(new IConsole[] { myConsole });
-		return myConsole;
-	}
 
 	/**
 	 * Makes paths in the output string relative to the project.
@@ -102,7 +79,8 @@ public final class FinishLaunchHandler implements IStatusHandler {
 	private void printOutputToConsole(final String output,
 			final IHaxeProject haxeProject) throws PartInitException {
 
-		final MessageConsole myConsole = findConsole("EclihxLaunchConsole");
+		final MessageConsole myConsole = ConsoleViewHelper.findConsole(
+				"EclihxLaunchConsole");
 
 		myConsole.clearConsole();
 		final MessageConsoleStream out = myConsole.newMessageStream();

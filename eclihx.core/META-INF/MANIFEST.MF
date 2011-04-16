@@ -14,6 +14,7 @@ Export-Package: eclihx.core;
    org.osgi.framework,
    org.eclipse.core.runtime.preferences",
  eclihx.core.haxe;uses:="org.eclipse.debug.core,eclihx.core.haxe.internal.configuration",
+ eclihx.core.haxe.contentassist,
  eclihx.core.haxe.internal;uses:="org.eclipse.core.runtime,eclihx.core.haxe.model.core,eclihx.core.util.language",
  eclihx.core.haxe.internal.configuration;uses:="eclihx.core.util.language,eclihx.core.haxe.internal,eclihx.core.util",
  eclihx.core.haxe.internal.outline,

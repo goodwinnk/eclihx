@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 
-import eclihx.core.haxe.internal.ContentInfo;
+import eclihx.core.haxe.contentassist.ContentInfo;
 
 /**
  * Stores a list of haXe compiler content informations for the given file offset.

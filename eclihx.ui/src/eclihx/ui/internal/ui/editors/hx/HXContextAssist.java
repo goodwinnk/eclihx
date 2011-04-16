@@ -2,6 +2,8 @@ package eclihx.ui.internal.ui.editors.hx;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -14,19 +16,18 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.console.MessageConsole;
 
-import eclihx.core.EclihxCore;
-import eclihx.core.haxe.internal.ContentInfo;
-import eclihx.core.haxe.internal.HaxeContextAssistManager;
-import eclihx.core.haxe.internal.HaxeContextAssistManager.TipsEvaluationException;
+import eclihx.core.haxe.contentassist.ContentAssistResult;
+import eclihx.core.haxe.contentassist.HaxeContentAssistManager;
+import eclihx.core.haxe.contentassist.HaxeContentAssistManager.TipsEvaluationException;
+import eclihx.core.haxe.contentassist.ContentInfo;
 import eclihx.core.haxe.internal.KeywordManager;
-import eclihx.core.haxe.model.core.IHaxeElement;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.ui.PluginImages;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.ui.utils.ConsoleViewHelper;
 
 /**
  * Content assist for the haXe code.
@@ -263,21 +264,39 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		
 		List<ContentInfo> tips = new ArrayList<ContentInfo>();
 		
+		MessageConsole console = ConsoleViewHelper.findConsole("EclihxContextAsssit");
+		console.clearConsole();
+		
 		if (haxeFile != null) {
 			try {
 				
-				tips.addAll(HaxeContextAssistManager.getTips(haxeFile, offset));
+				tips.addAll(showErrorsInConsole(console, HaxeContentAssistManager.getTips(haxeFile, offset)));
 				
+				// If previous symbol is space add class tips to the result
 				if (offset == 0 || Character.isWhitespace(viewer.getDocument().get().charAt(offset - 1))) {
-					tips.addAll(HaxeContextAssistManager.getClassTips(haxeFile.getPackage()));
+					tips.addAll(showErrorsInConsole(console, 
+							HaxeContentAssistManager.getClassTips(haxeFile.getPackage())));
 				}
+				
 			} catch (TipsEvaluationException e) {
-				EclihxUIPlugin.getLogHelper().logError(e);
-				Assert.isTrue(false);
+				console.activate();
+				console.newMessageStream().println(e.getMessage());				
 			}
 		}
 		
 		return tips;
+	}
+	
+	private Collection<ContentInfo> showErrorsInConsole(MessageConsole console, ContentAssistResult result) {
+		if (result.hasErrors()) {
+			
+			console.activate();
+			console.newMessageStream().println(result.getErrors());		
+			
+			return new LinkedList<ContentInfo>();
+		}
+		
+		return result.getContentInfos();
 	}
 	
 	private List<ICompletionProposal> generateKeywordProposals(ITextViewer viewer, 
@@ -335,7 +354,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	@Override
 	public String getErrorMessage() {
 		// It looks like in current version of Eclipse user won't see this message anyway
-		return null; 
+		return "No message"; 
 	}
 	
 	@Override
