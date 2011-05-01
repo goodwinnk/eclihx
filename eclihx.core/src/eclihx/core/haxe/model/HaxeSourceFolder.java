@@ -112,14 +112,12 @@ public final class HaxeSourceFolder extends HaxeElement
 	 * 
 	 * @throws CoreException if there are some errors during folders creation.
 	 */
-	public void createPackage(
-			String packageName, IProgressMonitor monitor) throws CoreException
-	{
+	public void createPackage(String packageName, IProgressMonitor monitor) throws CoreException {
 		String[] paths = packageName.split("\\.");
 		
 		IContainer container = fFolder;
 		
-		for(String folderPath : paths)
+		for (String folderPath : paths)
 		{
 			IFolder folder = container.getFolder(new Path(folderPath));
 			
@@ -157,11 +155,11 @@ public final class HaxeSourceFolder extends HaxeElement
 			
 			for (IResource resource : resources) {
 				if (resource.getType() == IResource.FOLDER) {
-					IHaxePackage curPackage = new HaxePackage(
-							this, (IFolder)resource);
-					haxePackages.add(curPackage);
-					haxePackages.addAll(
-							Arrays.asList(curPackage.getChildrenPackages()));					
+					if (HaxeElementValidator.validatePackageName(resource.getName()).isOK()) {
+						IHaxePackage curPackage = new HaxePackage(this, (IFolder)resource);
+						haxePackages.add(curPackage);
+						haxePackages.addAll(Arrays.asList(curPackage.getChildrenPackages()));
+					}
 				}
 			}
 			
