@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
@@ -16,6 +18,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import eclihx.ui.actions.ToggleCommentAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
+import eclihx.ui.internal.ui.editors.BracketInserter;
 import eclihx.ui.internal.ui.editors.ColorManager;
 
 /**
@@ -55,6 +58,8 @@ public class HXEditor extends TextEditor {
 	public static final String TOGGLE_COMMENT_ACTION_PREFIX = "ToggleCommentAction";
 	
 	private IContentOutlinePage haxeOutlinePage;
+	
+	private BracketInserter bracketInserter = new BracketInserter(EclihxUIPlugin.getLogHelper());
 	
 	/*
 	 * (non-Javadoc)
@@ -121,8 +126,7 @@ public class HXEditor extends TextEditor {
 		setDocumentProvider(new HXDocumentProvider());
 
 		colorManager = new ColorManager();
-		setSourceViewerConfiguration(new HXSourceViewerConfiguration(
-				colorManager));
+		setSourceViewerConfiguration(new HXSourceViewerConfiguration(colorManager));
 		
 		setEditorContextMenuId("#HaxeEditorContext"); //$NON-NLS-1$
 	}	
@@ -150,6 +154,18 @@ public class HXEditor extends TextEditor {
 		return false;
 	}
 	
+	@Override
+	public void createPartControl(Composite parent) {	
+		
+		super.createPartControl(parent);
+		
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer instanceof ITextViewerExtension) {
+			bracketInserter.setViewer(sourceViewer);
+			((ITextViewerExtension) sourceViewer).prependVerifyKeyListener(bracketInserter);
+		}
+	}
+	
 //	@Override
 //	protected void editorSaved() {
 //	}
@@ -161,6 +177,12 @@ public class HXEditor extends TextEditor {
 	@Override
 	public void dispose() {
 		colorManager.dispose();
+		
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer instanceof ITextViewerExtension) {
+			((ITextViewerExtension) sourceViewer).removeVerifyKeyListener(bracketInserter);
+		}
+		
 		super.dispose();
 	}
 	
