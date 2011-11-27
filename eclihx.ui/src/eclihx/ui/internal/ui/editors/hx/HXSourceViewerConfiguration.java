@@ -3,6 +3,8 @@
 package eclihx.ui.internal.ui.editors.hx;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -143,6 +145,26 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 		}
 		
 		return doubleClickStrategy;
+	}
+	
+	@Override
+	public IAutoEditStrategy[] getAutoEditStrategies(
+			ISourceViewer sourceViewer, String contentType) {
+		
+		if (!(IHXPartitions.HX_CHARACTER.equals(contentType)) ||
+				IHXPartitions.HX_PREPROCESSOR.equals(contentType) ||
+				IHXPartitions.HX_REGEXPR.equals(contentType) ||
+				IHXPartitions.HX_SINGLE_LINE_COMMENT.equals(contentType) ||
+				IHXPartitions.HX_STRING.equals(contentType)) {
+			
+			// For IHXPartitions.HX_MULTI_LINE_COMMENT
+			// For IHXPartitions.HX_DOC
+			// And for default partition
+			
+			return new IAutoEditStrategy[] { new DefaultIndentLineAutoEditStrategy() };
+		}
+
+		return null;		
 	}
 	
 
