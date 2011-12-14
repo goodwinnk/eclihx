@@ -16,10 +16,14 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
+import eclihx.ui.internal.ui.editors.extensions.bracketinserter.Filter;
+import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketInserter;
+
 import eclihx.ui.actions.ToggleCommentAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.BracketInserter;
 import eclihx.ui.internal.ui.editors.ColorManager;
+import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketInserter;
 
 /**
  * Class extend functionality of the standard text editor to make it work with
@@ -59,7 +63,8 @@ public class HXEditor extends TextEditor {
 	
 	private IContentOutlinePage haxeOutlinePage;
 	
-	private BracketInserter bracketInserter = new BracketInserter(EclihxUIPlugin.getLogHelper());
+	// private BracketInserter bracketInserter = new BracketInserter(EclihxUIPlugin.getLogHelper());
+	private GenericBracketInserter bracketInserter = new GenericBracketInserter();
 	
 	/*
 	 * (non-Javadoc)
@@ -67,7 +72,6 @@ public class HXEditor extends TextEditor {
 	 */
 	@Override
 	protected void createActions() {
-		
 		super.createActions();
 		
 		IAction assistProposalsAction = new TextOperationAction(
@@ -161,9 +165,28 @@ public class HXEditor extends TextEditor {
 		
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (sourceViewer instanceof ITextViewerExtension) {
-			bracketInserter.setViewer(sourceViewer);
+			configureBracketInserter(sourceViewer);
+
 			((ITextViewerExtension) sourceViewer).prependVerifyKeyListener(bracketInserter);
 		}
+	}
+	
+	private void configureBracketInserter(ISourceViewer sourceViewer) {
+		bracketInserter.setViewer(sourceViewer);
+		
+		bracketInserter.addBrackets('(', ')');
+		bracketInserter.addBrackets('<', '>');
+		bracketInserter.addBrackets('[', ']');
+		bracketInserter.addBrackets('{', '}');
+		bracketInserter.addBrackets('"', '"');
+		bracketInserter.addBrackets('\'', '\'');
+	}
+	
+	/**
+	 * @return Editor source viewer.
+	 */
+	public ISourceViewer getViewer() {
+		return super.getSourceViewer();
 	}
 	
 //	@Override

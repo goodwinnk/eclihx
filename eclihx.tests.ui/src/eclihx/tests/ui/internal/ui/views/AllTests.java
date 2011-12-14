@@ -1,10 +1,10 @@
-package eclihx.ui;
+package eclihx.tests.ui.internal.ui.views;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { PerspectiveTest.class } )
+@Suite.SuiteClasses( { /* HaxeExplorerViewTest.class */ } )
 public class AllTests {
 
 }

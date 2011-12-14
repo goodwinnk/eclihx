@@ -1,7 +1,7 @@
 /**
  * 
  */
-package eclihx.ui.internal.ui.views;
+package eclihx.tests.ui.internal.ui.views;
 
 //import static org.junit.Assert.fail;
 //

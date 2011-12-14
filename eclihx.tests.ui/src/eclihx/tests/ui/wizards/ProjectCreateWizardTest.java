@@ -1,4 +1,4 @@
-package eclihx.ui.wizards;
+package eclihx.tests.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;

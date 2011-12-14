@@ -35,10 +35,11 @@ public interface IHaxeSourceFolder extends IHaxeElement {
 	 * @param packageName the name of the package.
 	 * @param monitor monitor for the operation. <code>null</code> 
 	 *        value is allowed.
+	 * @return Created package.
 	 * 
 	 * @throws CoreException if there are some errors during folders creation.
 	 */
-	void createPackage(String packageName, IProgressMonitor monitor) 
+	IHaxePackage createPackage(String packageName, IProgressMonitor monitor) 
 			throws CoreException;
 	
 	/**

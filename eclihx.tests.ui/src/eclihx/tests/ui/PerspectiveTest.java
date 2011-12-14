@@ -1,4 +1,4 @@
-package eclihx.ui;
+package eclihx.tests.ui;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.IWorkbenchPage;

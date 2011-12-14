@@ -121,7 +121,9 @@ public class BracketInserter implements VerifyKeyListener {
 			// // A quote is a closing char when inserted to terminate a string
 			// literal,
 			// // otherwise it is an opening char:
-			// String partitionType = PartitionTypes.getPerlPartition(doc,
+			// String partitionType = doc.getPartition(offset)
+			//
+			// PartitionTypes.getPerlPartition(doc,
 			// offset-1).getType();
 			// return PartitionTypes.LITERAL1.equals(partitionType) ||
 			// PartitionTypes.LITERAL2.equals(partitionType);
@@ -174,7 +176,8 @@ public class BracketInserter implements VerifyKeyListener {
 
 				if (offset + length < doc.getLength()
 						&& doc.getChar(offset + length) == keystrokeChar) {
-					// There's already an opening char in front of us, so skip it
+					// There's already an opening char in front of us, so skip
+					// it
 					skipChar();
 					return false;
 				} else {
