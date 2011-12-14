@@ -109,10 +109,13 @@ public final class HaxeSourceFolder extends HaxeElement
 	 * @param packageName the name of the package.
 	 * @param monitor monitor for the operation. <code>null</code> 
 	 *        value is allowed.
+	 * @return created package.
 	 * 
 	 * @throws CoreException if there are some errors during folders creation.
+	 * 
 	 */
-	public void createPackage(String packageName, IProgressMonitor monitor) throws CoreException {
+	@Override
+	public IHaxePackage createPackage(String packageName, IProgressMonitor monitor) throws CoreException {
 		String[] paths = packageName.split("\\.");
 		
 		IContainer container = fFolder;
@@ -127,6 +130,8 @@ public final class HaxeSourceFolder extends HaxeElement
 			
 			container = folder;
 		}
+		
+		return getPackage(container.getFolder(new Path("")));
 	}
 
 	/*
