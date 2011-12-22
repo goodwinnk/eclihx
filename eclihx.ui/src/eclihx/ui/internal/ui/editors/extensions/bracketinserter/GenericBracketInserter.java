@@ -128,6 +128,18 @@ public class GenericBracketInserter implements VerifyKeyListener {
 	}
 	
 	/**
+	 * Add a pair of brackets which is always enabled and active for all partitions.
+	 * 
+	 * @param open open bracket char.
+	 * @param close close bracket char.
+	 * @param filter filter where brackets rule should be active.
+	 */
+	public void addBrackets(char open, char close, IFilter<String> filter) {
+		addBrackets(UUID.randomUUID().toString(), 
+				new PairConfiguration(open, close, filter));
+	}
+	
+	/**
 	 * Check if some bracket pair configuration is enabled.
 	 * @return <code>true</code> if some configuration are enabled.
 	 */
@@ -162,7 +174,7 @@ public class GenericBracketInserter implements VerifyKeyListener {
 		
 		String partitionName = "";
 		try {
-			viewer.getDocument().getPartition(event.keyLocation).getType();
+			partitionName = viewer.getDocument().getPartition(viewer.getSelectedRange().x).getType();
 		} catch (BadLocationException e) {
 			event.doit = true;
 			return;

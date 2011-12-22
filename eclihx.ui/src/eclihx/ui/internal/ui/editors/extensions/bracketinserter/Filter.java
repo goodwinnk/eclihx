@@ -47,6 +47,26 @@ public class Filter<T> implements IFilter<T> {
 	}
 	
 	/**
+	 * Create a new filter with 'or' condition between the current filter and filter from parameter.
+	 * 
+	 * @param right right operand of 'or' condition.
+	 * @return new filter with 'or operation'.
+	 */
+	public Filter<T> or(Filter<T> right) {
+		return Filter.or(this, right);
+	}
+	
+	/**
+	 * Create a new filter with 'and' condition between the current filter and filter from parameter. 
+	 * 
+	 * @param right right operand of 'and' condition.
+	 * @return new filter with 'or operation'.
+	 */
+	public Filter<T> and(Filter<T> right) {
+		return Filter.and(this, right);
+	}
+	
+	/**
 	 * @return Filter which accepts any element.
 	 */
 	public static <U> IFilter<U> any() {
@@ -77,7 +97,7 @@ public class Filter<T> implements IFilter<T> {
 	 * @param right Right filter operand.
 	 * @return A new filter compound with AND condition.
 	 */
-	public static <U> IFilter<U> and(IFilter<U> left, IFilter<U> right) {
+	public static <U> Filter<U> and(IFilter<U> left, IFilter<U> right) {
 		return new Filter<U>(left, right, Operation.AND);
 	}
 	
@@ -88,7 +108,7 @@ public class Filter<T> implements IFilter<T> {
 	 * @param right Right filter operand.
 	 * @return A new filter compound with OR condition.
 	 */
-	public static <U> IFilter<U> or(IFilter<U> left, IFilter<U> right) {
+	public static <U> Filter<U> or(IFilter<U> left, IFilter<U> right) {
 		return new Filter<U>(left, right, Operation.OR);
 	}
 	
@@ -98,9 +118,27 @@ public class Filter<T> implements IFilter<T> {
 	 * @param filter filter operand.
 	 * @return New filter with negation operation.
 	 */
-	public static <U> IFilter<U> not(IFilter<U> filter) {
+	public static <U> Filter<U> not(IFilter<U> filter) {
 		return new Filter<U>(filter, null, Operation.NOT);
 	}	
+	
+	/**
+	 * Constructs a simple filter base on the equals filter.
+	 * @param object an object to compare item with.
+	 * @return new filter with equals expression.
+	 */
+	public static <U> Filter<U> equal(final U object) {
+		return new Filter<U>(
+			new IFilter<U>() {
+				@Override
+				public boolean isAccepted(U item) {
+					return object.equals(item);
+				}
+			},
+			null,
+			Operation.NONE
+		);
+	}
 	
 	public boolean isAccepted(T item) {
 		return operation.accept(leftFilter, rightFilter, item);

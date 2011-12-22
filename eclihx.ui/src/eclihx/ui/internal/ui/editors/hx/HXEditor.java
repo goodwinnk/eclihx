@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -21,9 +22,7 @@ import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketIn
 
 import eclihx.ui.actions.ToggleCommentAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
-import eclihx.ui.internal.ui.editors.BracketInserter;
 import eclihx.ui.internal.ui.editors.ColorManager;
-import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketInserter;
 
 /**
  * Class extend functionality of the standard text editor to make it work with
@@ -174,12 +173,22 @@ public class HXEditor extends TextEditor {
 	private void configureBracketInserter(ISourceViewer sourceViewer) {
 		bracketInserter.setViewer(sourceViewer);
 		
-		bracketInserter.addBrackets('(', ')');
-		bracketInserter.addBrackets('<', '>');
-		bracketInserter.addBrackets('[', ']');
-		bracketInserter.addBrackets('{', '}');
-		bracketInserter.addBrackets('"', '"');
-		bracketInserter.addBrackets('\'', '\'');
+		Filter<String> codeFilter = Filter.equal(IDocument.DEFAULT_CONTENT_TYPE).or(Filter.equal(IHXPartitions.HX_PREPROCESSOR));
+		
+		bracketInserter.addBrackets('(', ')', codeFilter);		
+		bracketInserter.addBrackets('<', '>', codeFilter);
+		bracketInserter.addBrackets('[', ']', codeFilter);
+		bracketInserter.addBrackets('{', '}', codeFilter);
+		
+		bracketInserter.addBrackets("double_quotes_insert_rule", 
+				new GenericBracketInserter.PairConfiguration('"', '"', 
+						codeFilter, 
+						codeFilter.or(Filter.equal(IHXPartitions.HX_STRING))));
+		
+		bracketInserter.addBrackets("single_quotes_insert_rule",
+				new GenericBracketInserter.PairConfiguration('\'', '\'', 
+						codeFilter, 
+						codeFilter.or(Filter.equal(IHXPartitions.HX_STRING))));
 	}
 	
 	/**

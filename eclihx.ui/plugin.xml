@@ -45,7 +45,7 @@
            extensions="hxml">
      </participant>
   </extension>
-   <extension
+  <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="eclihx.ui.internal.ui.preferences.EclihxMainPreferencePage"
