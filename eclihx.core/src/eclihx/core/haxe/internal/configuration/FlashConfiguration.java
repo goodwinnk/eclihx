@@ -1,8 +1,10 @@
 package eclihx.core.haxe.internal.configuration;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import eclihx.core.haxe.internal.HaxePreferencesManager;
 import eclihx.core.util.OSUtil;
@@ -145,7 +147,7 @@ public final class FlashConfiguration extends AbstractConfiguration {
 		if (version != null && version != 9) {
 			outputBuilder.append(HaxeConfiguration.generateParameter(
 				HaxePreferencesManager.PARAM_PREFIX_SWF_VERSION,
-				new DecimalFormat("#.##").format(version)
+				new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.ROOT)).format(version)
 			));					
 		}
 		
