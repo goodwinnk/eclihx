@@ -27,7 +27,7 @@ public class BracketInserterTest extends HXEditorTestBase {
 		}    	
     }       
     
-    // TODO: This is a bug. Error behavior when cursor is at the end of partiotion.
+    // TODO: This is a bug. Error behavior when cursor is at the end of partition.
     @Ignore
     @Test
     public void doNotInsertInSingleLineCommentAtEnd() {

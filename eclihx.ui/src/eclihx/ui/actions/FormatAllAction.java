@@ -57,11 +57,12 @@ public class FormatAllAction implements IEditorActionDelegate {
 		} catch (BadLocationException e) {
 			EclihxUIPlugin.getLogHelper().logError(e);
 		}
-	}
-	
-	
+	}	
 
-	private FormatOptions getPreferenceOptions() {
+	/**
+	 * @return Formating options.
+	 */
+	public static FormatOptions getPreferenceOptions() {
 		
 		FormatOptions formatOptions = new CodeFormatter.FormatOptions();
 		

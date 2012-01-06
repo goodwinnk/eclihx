@@ -373,7 +373,7 @@ public final class CodeFormatter {
 	 *        
 	 * @return Multiplied string.
 	 */
-	static private String multiply(String str, int number) {
+	static public String multiply(String str, int number) {
 		
 		StringBuilder newStrBuilder = new StringBuilder();
 		
