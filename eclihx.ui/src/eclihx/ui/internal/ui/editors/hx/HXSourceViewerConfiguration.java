@@ -125,10 +125,14 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		return new String[] { IDocument.DEFAULT_CONTENT_TYPE,
+		return new String[] { 
+				IDocument.DEFAULT_CONTENT_TYPE,
 				IHXPartitions.HX_SINGLE_LINE_COMMENT,
-				IHXPartitions.HX_MULTI_LINE_COMMENT, IHXPartitions.HX_STRING,
-				IHXPartitions.HX_REGEXPR, IHXPartitions.HX_PREPROCESSOR };
+				IHXPartitions.HX_MULTI_LINE_COMMENT, 
+				IHXPartitions.HX_DOC,
+				IHXPartitions.HX_STRING,
+				IHXPartitions.HX_REGEXPR, 
+				IHXPartitions.HX_PREPROCESSOR };
 	}
 
 	@Override

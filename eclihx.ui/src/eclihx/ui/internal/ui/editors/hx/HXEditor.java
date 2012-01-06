@@ -202,10 +202,6 @@ public class HXEditor extends TextEditor {
 	public ISourceViewer getViewer() {
 		return super.getSourceViewer();
 	}
-	
-//	@Override
-//	protected void editorSaved() {
-//	}
 
 	/*
 	 * (non-Javadoc)
