@@ -3,7 +3,6 @@
 package eclihx.ui.internal.ui.editors.hx;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
@@ -17,10 +16,14 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 import eclihx.ui.PreferenceConstants;
+import eclihx.ui.actions.FormatAllAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.AbstractScanner;
 import eclihx.ui.internal.ui.editors.ColorManager;
 import eclihx.ui.internal.ui.editors.SingleTokenScanner;
+import eclihx.ui.internal.ui.editors.hx.indent.HaxeAutoIndentStrategy;
+import eclihx.ui.internal.ui.editors.hx.indent.HaxeDocAutoIndentStrategy;
+import eclihx.ui.internal.ui.editors.hx.indent.HaxeIndenter;
 
 /**
  * Configuration for haXe source code editor.
@@ -36,6 +39,8 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 	private final AbstractScanner regexprScanner;
 	private final AbstractScanner hxDocScanner;
 	private final AbstractScanner hxConditionCompilationScanner;
+	
+	private final HaxeIndenter haxeIndenter;
 
 	/**
 	 * Distribute property change events to all interested parts.
@@ -50,6 +55,8 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 		regexprScanner.adaptToPreferenceChange(event);
 		hxDocScanner.adaptToPreferenceChange(event);
 		hxConditionCompilationScanner.adaptToPreferenceChange(event);
+		
+		haxeIndenter.propertyChange(event);
 	}
 
 	/**
@@ -112,6 +119,8 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 				PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_COLOR,
 				PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_BOLD,
 				PreferenceConstants.HX_EDITOR_CONDITIONAL_COMPILATION_ITALIC);
+		
+		haxeIndenter = new HaxeIndenter();
 	}
 
 	@Override
@@ -133,17 +142,12 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 	}
 
 	@Override
-	public IAutoEditStrategy[] getAutoEditStrategies(
-			ISourceViewer sourceViewer, String contentType) {
-
-		if (IDocument.DEFAULT_CONTENT_TYPE.equals(contentType)
-				|| IHXPartitions.HX_MULTI_LINE_COMMENT.equals(contentType)
-				|| IHXPartitions.HX_DOC.equals(contentType)) {
-
-			return new IAutoEditStrategy[] { new DefaultIndentLineAutoEditStrategy() };
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		if (IHXPartitions.HX_DOC.equals(contentType) || IHXPartitions.HX_MULTI_LINE_COMMENT.equals(contentType)) {
+			return new IAutoEditStrategy[] { new HaxeDocAutoIndentStrategy() };
 		}
-
-		return null;
+		
+		return new IAutoEditStrategy[] { new HaxeAutoIndentStrategy(haxeIndenter) };		
 	}
 
 	protected HXScanner getHXScanner() {
@@ -205,10 +209,18 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 
 		return reconciler;
 	}
-
+	
 	@Override
-	public String[] getDefaultPrefixes(ISourceViewer sourceViewer,
-			String contentType) {
+	public int getTabWidth(ISourceViewer sourceViewer) {
+		return FormatAllAction.getPreferenceOptions().getIntendWidth();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getDefaultPrefixes(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
+	@Override
+	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
 		return new String[] { "//", "" };
 	}
 }

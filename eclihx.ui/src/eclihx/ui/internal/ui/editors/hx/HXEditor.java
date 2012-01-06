@@ -9,20 +9,23 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-import eclihx.ui.internal.ui.editors.extensions.bracketinserter.Filter;
-import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketInserter;
-
+import eclihx.ui.PreferenceConstants;
+import eclihx.ui.actions.FormatAllAction;
 import eclihx.ui.actions.ToggleCommentAction;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.ColorManager;
+import eclihx.ui.internal.ui.editors.extensions.bracketinserter.Filter;
+import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketInserter;
 
 /**
  * Class extend functionality of the standard text editor to make it work with
@@ -98,6 +101,8 @@ public class HXEditor extends TextEditor {
 		toggleCommentAction.setActionDefinitionId(IHaxeEditorActionDefinitionIds.TOGGLE_COMMENT);
 		toggleCommentAction.configure(getSourceViewer(), getSourceViewerConfiguration());
 		setAction(TOGGLE_COMMENT_ACTION_ID, toggleCommentAction);		
+		
+		
 	}
 	
 	/**
@@ -228,4 +233,44 @@ public class HXEditor extends TextEditor {
 		}
 		return super.getAdapter(required);
 	}
+
+	@Override
+	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
+		
+		final String property= event.getProperty();
+
+		if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH.equals(property) ||
+				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS.equals(property)) {
+			return;
+		}
+		
+		if (PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS.equals(property) || 
+				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH.equals(property)) {
+			
+			if (isTabsToSpacesConversionEnabled()) {
+				// Reinstall standard space converter
+				uninstallTabsToSpacesConverter();
+				installTabsToSpacesConverter();
+			} else {
+				StyledText textWidget = getSourceViewer().getTextWidget();
+				int tabWidth = getSourceViewerConfiguration().getTabWidth(getSourceViewer());
+				if (textWidget.getTabs() != tabWidth) {
+					textWidget.setTabs(tabWidth);
+				}
+			}
+		}
+		
+		super.handlePreferenceStoreChanged(event);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#isTabsToSpacesConversionEnabled()
+	 */
+	@Override
+	protected boolean isTabsToSpacesConversionEnabled() {
+		return !FormatAllAction.getPreferenceOptions().isInsertTabs();
+	}	
+	
+	
 }
