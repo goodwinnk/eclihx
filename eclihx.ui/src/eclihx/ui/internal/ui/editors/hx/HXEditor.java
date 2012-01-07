@@ -244,10 +244,10 @@ public class HXEditor extends TextEditor {
 		
 		if (PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INSERT_TABS.equals(property) || 
 				PreferenceConstants.HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH.equals(property)) {
+			uninstallTabsToSpacesConverter();
 			
 			if (isTabsToSpacesConversionEnabled()) {
 				// Reinstall standard space converter
-				uninstallTabsToSpacesConverter();
 				installTabsToSpacesConverter();
 			} else {
 				StyledText textWidget = getSourceViewer().getTextWidget();
