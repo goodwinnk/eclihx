@@ -210,7 +210,7 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 		dr = new DefaultDamagerRepairer(getHXConditionCompilationScanner());
 		reconciler.setDamager(dr, IHXPartitions.HX_PREPROCESSOR);
 		reconciler.setRepairer(dr, IHXPartitions.HX_PREPROCESSOR);
-
+		
 		return reconciler;
 	}
 	

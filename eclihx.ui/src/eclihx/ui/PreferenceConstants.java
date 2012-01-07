@@ -152,6 +152,9 @@ public final class PreferenceConstants {
 		"hx_format_option_properties_indent_on_empty_lines";		
 	public final static String HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH = 
 		"hx_format_option_properties_indent_width";		
+	
+	public final static String HX_EDITOR_MATCHING_BRACKETS = "hx_editor_matching_brackets";
+	public final static String HX_EDITOR_MATCHING_BRACKETS_COLOR = "hx_editor_matching_brackets_color";
 
 	//==============================================//
 	
@@ -242,7 +245,7 @@ public final class PreferenceConstants {
 		store.setDefault(HXML_EDITOR_COMMENT_ITALIC, true);
 		
 		PreferenceConverter.setDefault(
-				store, HXML_EDITOR_OPTION_COLOR,  new RGB(127, 0, 85));
+				store, HXML_EDITOR_OPTION_COLOR, new RGB(127, 0, 85));
 		store.setDefault(HXML_EDITOR_OPTION_BOLD, true);
 		store.setDefault(HXML_EDITOR_OPTION_ITALIC, false);
 		
@@ -254,6 +257,10 @@ public final class PreferenceConstants {
 		store.setDefault(HX_FORMAT_OPTION_PROPERTIES_INDENT_WIDTH, 4);
 		
 		store.setDefault(HAXE_ALWAYS_OPEN_PROBLEM_VIEW_ON_ERRORS, false);
+		
+		store.setDefault(HX_EDITOR_MATCHING_BRACKETS, true);
+		PreferenceConverter.setDefault(
+				store, HX_EDITOR_MATCHING_BRACKETS_COLOR, new RGB(192, 192, 192));
 	}
 	
 	public static IPreferenceStore getPreferenceStore() {
