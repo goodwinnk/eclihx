@@ -7,6 +7,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewerExtension;
+import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.StyledText;
@@ -16,6 +17,7 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -257,6 +259,19 @@ public class HXEditor extends TextEditor {
 		}
 		
 		super.handlePreferenceStoreChanged(event);
+	}
+	
+	@Override
+	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
+		support.setCharacterPairMatcher(new DefaultCharacterPairMatcher(
+				new char[] { '(', ')', '<', '>', '[', ']', '{', '}' }));
+		
+		support.setMatchingCharacterPainterPreferenceKeys(
+				PreferenceConstants.HX_EDITOR_MATCHING_BRACKETS, 
+				PreferenceConstants.HX_EDITOR_MATCHING_BRACKETS_COLOR);
+		
+		super.configureSourceViewerDecorationSupport(support);
+		
 	}
 
 	/*
