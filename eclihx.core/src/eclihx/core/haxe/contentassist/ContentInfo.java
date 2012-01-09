@@ -41,7 +41,7 @@ public class ContentInfo {
 	public String getName() {
 		return name;
 	}
-
+	
 	/**
 	 * Set the name.
 	 * @param name the name to set.
