@@ -1,8 +1,11 @@
 package eclihx.ui.internal.ui.editors.hx;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -37,14 +40,58 @@ public class ContentInfoCache {
 			return cachedContentInfos;
 		}
 		
-		List<ContentInfo> filteredInfos = new ArrayList<ContentInfo>();
+		// Filtered collection with priorities - the infos with greater priority will be at the beginning
+		TreeMap<Integer, TreeSet<ContentInfo>> filteredInfos = 
+				new TreeMap<Integer, TreeSet<ContentInfo>>(Collections.reverseOrder());
+		
 		for (ContentInfo contentInfo : cachedContentInfos) {
-			if (contentInfo.getName().startsWith(identPart)) {
-				filteredInfos.add(contentInfo);
+			int priority = getMatchPriority(identPart, contentInfo);
+			if (priority > 0) {
+				if (!filteredInfos.containsKey(priority)) {
+					filteredInfos.put(priority, new TreeSet<ContentInfo>(ContentInfo.getNameComparator()));
+				}
+				
+				filteredInfos.get(priority).add(contentInfo);
 			}
 		}
 		
-		return filteredInfos;
+		return collect(filteredInfos.values());
+	}
+	
+	private int getMatchPriority(String identPart, ContentInfo contentInfo) {
+		
+		final String contentInfoName = contentInfo.getName();
+		final String identLowCase = identPart.toLowerCase();
+		
+		if (contentInfoName.toLowerCase().startsWith(identLowCase)) {
+			return 100;
+		}
+		
+		if (contentInfoName.toLowerCase().contains(identLowCase)) {
+			return 50;
+		}
+		
+		// Looking for abbreviation
+		if (getAbbreviation(contentInfoName).toLowerCase().contains(identLowCase)) { 
+			return 10;
+		}
+		
+		return -1;
+	}
+	
+	private String getAbbreviation(String name) {
+		if (name.isEmpty() || !Character.isUpperCase(name.charAt(0))) {
+			return "";
+		}
+		
+		StringBuilder abbreviation = new StringBuilder();
+		for (char ch : name.toCharArray()) {
+			if (Character.isUpperCase(ch)) {
+				abbreviation.append(ch);
+			}			
+		}
+		
+		return abbreviation.toString();
 	}
 	
 	/**
@@ -95,5 +142,14 @@ public class ContentInfoCache {
 	 */
 	public boolean isValid() {
 		return cachedOffset != -1;
+	}
+	
+	private static <E, T extends Collection<E>> List<E> collect(Collection<T> collections) {
+		ArrayList<E> result = new ArrayList<E>();
+		for (Collection<E> collection : collections) {
+			result.addAll(collection);
+		}
+		
+		return result;
 	}
 }
