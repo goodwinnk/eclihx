@@ -5,15 +5,16 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.PartInitException;
 import org.junit.Assert;
-import eclihx.core.EclihxCore;
+
 import eclihx.core.haxe.model.core.IHaxePackage;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.core.haxe.model.core.IHaxeSourceFolder;
-import eclihx.core.haxe.model.core.IHaxeWorkspace;
+import eclihx.core.haxe.model.helper.ProjectCreator;
 import eclihx.ui.internal.ui.editors.hx.HXEditor;
 import eclipse.testframework.text.EditorTestHelper;
 import eclipse.testframework.text.TextEditorTest;
@@ -34,8 +35,7 @@ public abstract class HXEditorTestBase extends TextEditorTest<HXEditor, IHaxePro
 	public HXEditor getEditor() {
 		if (editor == null) {
 			try {
-				getProject().createOutputFolder("out", null);				
-				IHaxeSourceFolder sourceFolder = getProject().createSourceFolder("src", null);
+				IHaxeSourceFolder sourceFolder = getProject().getSourceFolders()[0];		
 				IHaxePackage haxePackage = sourceFolder.createPackage("testing", null);
 				IHaxeSourceFile haxeFile = haxePackage.createHaxeFile("Test.hx", null);
 				
@@ -50,8 +50,7 @@ public abstract class HXEditorTestBase extends TextEditorTest<HXEditor, IHaxePro
 
 	@Override
 	protected void createProject() throws CoreException {
-		IHaxeWorkspace workspace = EclihxCore.getDefault().getHaxeWorkspace(); 
-		project = workspace.createHaxeProject("Testing", null);
+		project = ProjectCreator.createCommonProject("Testing", "build.hxml", "out", "src", new NullProgressMonitor());
 	}
 
 	@Override

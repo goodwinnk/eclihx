@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  eclihx.core;bundle-version="0.4.0",
  eclihx.ui;bundle-version="0.4.0",
  eclipse.testframework.text;bundle-version="0.4.0",
- org.eclipse.text.tests;bundle-version="3.6.0"
+ org.eclipse.text.tests;bundle-version="3.6.0",
+ org.eclipse.jface.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: eclihx.tests.ui.internal.ui.views,
