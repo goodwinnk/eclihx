@@ -4,7 +4,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { BracketInserterTest.class, AutoIndentTest.class, DocAutoIndentTest.class } )
+@Suite.SuiteClasses( { 
+	BracketInserterTest.class, 
+	AutoIndentTest.class, 
+	DocAutoIndentTest.class, 
+	CompletionTest.class } )
 public class AllTests {
 
 }

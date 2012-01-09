@@ -66,9 +66,10 @@ public class ProjectCreator {
 	 * @param outFolderName Output folder name. Can't be null.
 	 * @param srcFolderName Source folder name. Can't be null.
 	 * @param monitor UI progress monitor. Can't be null.
+	 * @return New haXe project.
 	 * @throws CoreException some project creation exception.
 	 */
-	public static void createCommonProject(String projectName, 
+	public static IHaxeProject createCommonProject(String projectName, 
 			String buildFileName, String outFolderName, String srcFolderName, 
 			IProgressMonitor monitor) throws CoreException  {
 		
@@ -103,5 +104,7 @@ public class ProjectCreator {
 		}
 		
 		monitor.worked(1);
+		
+		return haxeProject;
 	}
 }
