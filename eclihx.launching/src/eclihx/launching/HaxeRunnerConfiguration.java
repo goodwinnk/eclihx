@@ -11,6 +11,7 @@ public class HaxeRunnerConfiguration {
 	private String[] arguments;
 	private String workingDirectory;
 	private String buildFile;
+	private boolean isNonDefaultCompiler;
 	private String compilerPath;
 	private String projectName;
 	
@@ -30,10 +31,17 @@ public class HaxeRunnerConfiguration {
 	 * {@link ILaunchConfiguration#getAttribute(String, String)} throw block.
 	 */
 	public void load(ILaunchConfiguration configuration) throws CoreException {
-
-		setCompilerPath(configuration.getAttribute( 
-				IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, ""));
-        
+		
+		boolean nonDefaulCompiler = configuration.getAttribute(IHaxeLaunchConfigurationConstants.IS_ALTERNATIVE_COMPILER, false);
+		setIsNonDefaultCompiler(nonDefaulCompiler);
+		
+		if (nonDefaulCompiler) {
+			setCompilerPath(configuration.getAttribute( 
+					IHaxeLaunchConfigurationConstants.HAXE_COMPILER_PATH, ""));
+		} else {
+			setCompilerPath("");
+		}		
+		
 		setBuildFile(configuration.getAttribute(
 				IHaxeLaunchConfigurationConstants.BUILD_FILE, 
 				(String) null));
@@ -104,6 +112,21 @@ public class HaxeRunnerConfiguration {
 	 */
 	public String getCompilerPath() {
 		return compilerPath;
+	}
+	
+	/**
+	 * Check if non-default compiler should be used for this launch.
+	 * @return <code>true</code> if non-default compiler should be used for this launch.
+	 */
+	public boolean isNonDefaultCompiler() {
+		return isNonDefaultCompiler;
+	}
+
+	/**
+	 * @param isNonDefaultCompiler <code>true</code> if non-default compiler should be used for this launch.
+	 */
+	public void setIsNonDefaultCompiler(boolean isNonDefaultCompiler) {
+		this.isNonDefaultCompiler = isNonDefaultCompiler;
 	}
 
 	/**
