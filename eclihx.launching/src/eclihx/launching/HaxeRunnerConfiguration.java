@@ -115,6 +115,14 @@ public class HaxeRunnerConfiguration {
 	}
 	
 	/**
+	 * Get the path of the compiler.
+	 * @param compilePath the compiler path.
+	 */
+	public void setCompilerPath(String compilePath) {
+		compilerPath = compilePath;
+	}
+	
+	/**
 	 * Check if non-default compiler should be used for this launch.
 	 * @return <code>true</code> if non-default compiler should be used for this launch.
 	 */
@@ -127,14 +135,6 @@ public class HaxeRunnerConfiguration {
 	 */
 	public void setIsNonDefaultCompiler(boolean isNonDefaultCompiler) {
 		this.isNonDefaultCompiler = isNonDefaultCompiler;
-	}
-
-	/**
-	 * Get the path of the compiler.
-	 * @param compilePath the compiler path.
-	 */
-	public void setCompilerPath(String compilePath) {
-		compilerPath = compilePath;
 	}
 	
 	/**

@@ -13,8 +13,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
-import eclihx.core.CorePreferenceInitializer;
-import eclihx.core.EclihxCore;
+import eclihx.core.haxe.HaxeCompilerResolver;
 import eclihx.core.haxe.internal.HaxeElementValidator;
 import eclihx.core.haxe.model.core.IHaxeProject;
 
@@ -193,12 +192,10 @@ public class NewHaxeProjectWizardFirstPage
 	 * Check the Compiler field.
 	 */
 	public void checkCompiler() {
-		if (EclihxCore.getDefault().getPluginPreferences().getString(
-				CorePreferenceInitializer.HAXE_COMPILER_PATH).isEmpty()) {
-			
+		if (HaxeCompilerResolver.getDefaultGlobalCompiler().isEmpty()) {			
 			MessageDialog.openWarning(getShell(), "Missing Compiler Path",
 					"Please, define haXe compiler first " +
-		    			"(Preferences->EclihX->Compiler).");
+		    		"(Preferences->EclihX->Compiler).");
 		}
 	}
 
