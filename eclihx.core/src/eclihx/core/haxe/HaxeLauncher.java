@@ -73,7 +73,6 @@ public class HaxeLauncher {
 	 */
 	public synchronized void run(String buildFilePath,
 			ILaunch launch, String compilerPath, File workingDirectory) {
-
 		
 		String[] params = new String[] { compilerPath, buildFilePath };
 		ProcessUtil.ProcessExecResult execResult = ProcessUtil.executeProcess(params, workingDirectory);

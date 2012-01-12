@@ -11,8 +11,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.runtime.CoreException;
 
-import eclihx.core.CorePreferenceInitializer;
-import eclihx.core.EclihxCore;
+import eclihx.core.haxe.HaxeCompilerResolver;
 import eclihx.core.haxe.HaxeLauncher;
 import eclihx.core.haxe.internal.FunctionSignature;
 import eclihx.core.haxe.internal.configuration.HaxeConfiguration;
@@ -114,16 +113,12 @@ public class HaxeContentAssistManager {
 	
 	static private ContentAssistResult getTips(HaxeConfiguration configuration, IHaxeSourceFile haxeFile) throws TipsEvaluationException {
 
-		final String haxePath = 
-			EclihxCore.getDefault().getPluginPreferences().getString(
-				CorePreferenceInitializer.HAXE_COMPILER_PATH);
-		
+		final String haxePath = HaxeCompilerResolver.getProjectCompiler(haxeFile.getHaxeProject());		
 		if (haxePath == null || haxePath.isEmpty()) {
 			throw new TipsEvaluationException("Haxe compiler isn't set in preferences");
 		}
 		
-		File workingDirectory = haxeFile.getHaxeProject().getProjectBase().getLocation().toFile();
-		
+		File workingDirectory = haxeFile.getHaxeProject().getProjectBase().getLocation().toFile();		
 		
 		HaxeLauncher launcher = new HaxeLauncher();
 		
@@ -188,10 +183,10 @@ public class HaxeContentAssistManager {
 	private static ContentAssistResult getClassTips(HaxeConfiguration haxeConfiguration, 
 			IHaxePackage haxePackage) throws TipsEvaluationException {
 		
-		final String haxeCompilerPath = EclihxCore.getDefault().getPluginPreferences().getString(
-				CorePreferenceInitializer.HAXE_COMPILER_PATH);
-		
+
 		IHaxeProject haxeProject = haxePackage.getSourceFolder().getHaxeProject();
+		
+		final String haxeCompilerPath = HaxeCompilerResolver.getProjectCompiler(haxeProject);		
 		
 		HaxeLauncher launcher = new HaxeLauncher();
 		
