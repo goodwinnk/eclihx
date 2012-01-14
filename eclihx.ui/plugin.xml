@@ -11,6 +11,19 @@
          </adapter>
       </factory>
    </extension>
+     <extension
+           point="org.eclipse.core.runtime.products">
+        <product
+              application="eclihx.ui"
+              name="EclihX">
+        </product>
+     </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="eclihx.ui.internal.ui.PreferencesInitializer">
+      </initializer>
+   </extension>
    <extension
          point="org.eclipse.ui.contexts">
       <context
@@ -443,13 +456,6 @@
       </commonWizard>
    </extension>
      <extension
-           point="org.eclipse.core.runtime.products">
-        <product
-              application="eclihx.ui"
-              name="EclihX">
-        </product>
-     </extension>
-     <extension
            point="org.eclipse.core.filebuffers.annotationModelCreation">
         <factory
               class="org.eclipse.ui.texteditor.ResourceMarkerAnnotationModelFactory"
@@ -541,4 +547,15 @@
            sequence="M1+/">
      </key>
   </extension>
+  <!--
+  <extension
+        point="com.github.eclipsecolortheme.mapper">
+     <mapper
+           class="com.github.eclipsecolortheme.mapper.GenericMapper"
+           name="haxe - eclihx"
+           pluginId="eclihx.ui"
+           xml="eclipsecolortheme/eclihx.ui.mapping.xml">
+     </mapper>
+  </extension>
+  -->
 </plugin>
