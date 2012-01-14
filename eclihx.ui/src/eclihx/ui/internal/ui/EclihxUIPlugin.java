@@ -39,12 +39,8 @@ public class EclihxUIPlugin extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
-	@SuppressWarnings({"deprecation"})
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-				
-		//FIXME 9 remove it from here
-		initializeDefaultPluginPreferences();
 	}
 
 	/*
