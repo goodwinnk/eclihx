@@ -1,13 +1,18 @@
 package eclihx.tests.ui.internal.ui.editors.hx;
 
+import java.util.ArrayList;
+
 import junit.framework.Assert;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.junit.Test;
 
 import eclihx.ui.internal.ui.editors.hx.HXContextAssist;
+import eclipse.testframework.text.DisplayHelper;
+import eclipse.testframework.text.EditorTestHelper;
 
 public class CompletionTest extends HXEditorTestBase {
 	
@@ -51,6 +56,21 @@ public class CompletionTest extends HXEditorTestBase {
 		assertProposalsExist(collectProposals, "Connection", "HttpConnection");
 	}
 	
+	@Test
+	public void byteOffsetUtf8Completion() throws CoreException {
+		haxeFile.getBaseFile().setCharset("UTF-8", null);
+		
+		configureFromText("class Test { \n" +
+		                  "  // Привет \n" + 
+                		  "  public function test() { \n" +
+		                  "    \"\".<caret>\n" +
+                          "  } \n" +
+		                  "}");
+		
+		ICompletionProposal[] collectProposals = collectProposals(new Region(getCaret(), 1));		
+		assertProposalsExist(collectProposals, "charAt", "indexOf");		
+	}
+	
 	protected void assertProposalsExist(ICompletionProposal[] proposals, String... expected) {
 		int previousProposalIndex = -1;
 		String previousExpectedProposal = "";
@@ -60,8 +80,8 @@ public class CompletionTest extends HXEditorTestBase {
 			
 			// If this is not first loop
 			if (previousProposalIndex != -1) {
-				String message = String.format("'%s' proposal was before '%s' proposal", 
-						expectedProposal, previousExpectedProposal);
+				String message = String.format("'%s' proposal was before '%s' proposal in %s", 
+						expectedProposal, previousExpectedProposal, proposalsStrings(proposals));
 				
 				Assert.assertTrue(message, index > previousProposalIndex);
 			}
@@ -80,7 +100,7 @@ public class CompletionTest extends HXEditorTestBase {
 			
 		}
 		
-		Assert.fail(String.format("%s proposal wasn't found", expectedProposal));
+		Assert.fail(String.format("%s proposal wasn't found in %s", expectedProposal, proposalsStrings(proposals)));
 		return -1;
 	}
 	
@@ -93,16 +113,27 @@ public class CompletionTest extends HXEditorTestBase {
 	protected void assertProposalAbsent(ICompletionProposal[] proposals, String unexpectedProposal) {
 		for (ICompletionProposal completionProposal : proposals) {
 			Assert.assertFalse(
-					String.format("%s proposal should absent in the list", unexpectedProposal),
+					String.format("%s proposal should absent in the list %s", unexpectedProposal, proposalsStrings(proposals)),
 					completionProposal.getDisplayString().startsWith(unexpectedProposal));
 		}
 	}
 	
+	private static ArrayList<String> proposalsStrings(ICompletionProposal[] proposals) {
+		ArrayList<String> result = new ArrayList<String>(proposals.length);
+		for (ICompletionProposal proposal : proposals) {
+			result.add(proposal.getDisplayString());
+		}
+		
+		return result;
+	}
+	 
 	protected ICompletionProposal[] collectProposals(IRegion selection) {
 		HXContextAssist haxeProcessor = new HXContextAssist();
 
 		ICompletionProposal[] proposals = haxeProcessor.computeCompletionProposals(
 				getEditor().getViewer(), selection.getOffset());
+		
+		DisplayHelper.sleep(EditorTestHelper.getActiveDisplay(), 300);
 		
 		return proposals;
 	}
