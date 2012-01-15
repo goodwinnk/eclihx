@@ -2,6 +2,7 @@ package eclihx.core.haxe.contentassist;
 
 import java.io.File;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,24 +55,37 @@ public class HaxeContentAssistManager {
 	 * Get the tips for the defined position.
 	 * 
 	 * @param haxeFile the haXe file for getting tip. 
+	 * @param text full text of the file.
 	 * @param charPosition char offset in file where tip should be shown.
 	 * @return set of tips. 
 	 * @throws TipsEvaluationException if there were errors in tips execution.
 	 */
-	static public ContentAssistResult getTips(IHaxeSourceFile haxeFile, int charPosition) throws TipsEvaluationException {
+	static public ContentAssistResult getTips(IHaxeSourceFile haxeFile, String text, int charPosition) throws TipsEvaluationException {
 
 		IHaxeProject project = haxeFile.getHaxeProject();
 		if (project == null) {
 			throw new TipsEvaluationException("Can't find a project for given file");
 		}
 		
-		HaxeConfiguration projectConfiguration = prepareProjectTipsConfiguration(haxeFile, charPosition);
+		HaxeConfiguration projectConfiguration = prepareProjectTipsConfiguration(
+				haxeFile, getByteOffset(haxeFile, text, charPosition));
 
 		if (projectConfiguration == null) {
 			throw new TipsEvaluationException("Can't find project tips configuation");
 		}		
 
 		return getTips(projectConfiguration, haxeFile);
+	}
+	
+	private static int getByteOffset(IHaxeSourceFile haxeFile, String text, int charPosition) throws TipsEvaluationException {
+		try {
+			String charset = haxeFile.getBaseFile().getCharset(true);
+			return text.substring(0, charPosition).getBytes(charset).length;
+		} catch (CoreException e) {
+			throw new TipsEvaluationException(e);
+		} catch (UnsupportedEncodingException e) {
+			throw new TipsEvaluationException(e);
+		}
 	}
 	
 	private static HaxeConfiguration getProjectTipsConfiguration(IHaxeProject project) throws TipsEvaluationException {

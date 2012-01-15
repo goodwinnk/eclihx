@@ -23,6 +23,7 @@ public abstract class HXEditorTestBase extends TextEditorTest<HXEditor, IHaxePro
 	
 	protected HXEditor editor;
 	protected IHaxeProject project;
+	protected IHaxeSourceFile haxeFile;
 	
     private HXEditor openHaxeEditor(IPath path) throws PartInitException {
         IFile file= ResourcesPlugin.getWorkspace().getRoot().getFile(path);
@@ -37,7 +38,7 @@ public abstract class HXEditorTestBase extends TextEditorTest<HXEditor, IHaxePro
 			try {
 				IHaxeSourceFolder sourceFolder = getProject().getSourceFolders()[0];		
 				IHaxePackage haxePackage = sourceFolder.createPackage("testing", null);
-				IHaxeSourceFile haxeFile = haxePackage.createHaxeFile("Test.hx", null);
+				haxeFile = haxePackage.createHaxeFile("Test.hx", null);
 				
 				editor = openHaxeEditor(haxeFile.getBaseResource().getFullPath());				
 			} catch (CoreException e) {

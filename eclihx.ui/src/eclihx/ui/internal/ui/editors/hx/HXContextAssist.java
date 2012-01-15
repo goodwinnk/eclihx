@@ -20,9 +20,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.console.MessageConsole;
 
 import eclihx.core.haxe.contentassist.ContentAssistResult;
+import eclihx.core.haxe.contentassist.ContentInfo;
 import eclihx.core.haxe.contentassist.HaxeContentAssistManager;
 import eclihx.core.haxe.contentassist.HaxeContentAssistManager.TipsEvaluationException;
-import eclihx.core.haxe.contentassist.ContentInfo;
 import eclihx.core.haxe.internal.KeywordManager;
 import eclihx.core.haxe.model.core.IHaxeSourceFile;
 import eclihx.ui.PluginImages;
@@ -242,6 +242,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 			
 		return identStartOffset;
 	}
+
 	
 	/**
 	 * Get the information from the haXe compiler.
@@ -254,7 +255,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		// Get current file
 		IEditorPart editor = EclihxUIPlugin.getDefault().getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-
+		
 		// Save the file
 		// TODO 6: fix it. For example there should be a separate storage for 
 		// the current file.		
@@ -270,7 +271,10 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		if (haxeFile != null) {
 			try {
 				
-				tips.addAll(showErrorsInConsole(console, HaxeContentAssistManager.getTips(haxeFile, offset)));
+				tips.addAll(showErrorsInConsole(console, HaxeContentAssistManager.getTips(
+						haxeFile, 
+						viewer.getDocument().get(),
+						offset)));
 				
 				// If previous symbol is space add class tips to the result
 				if (offset == 0 || Character.isWhitespace(viewer.getDocument().get().charAt(offset - 1))) {
