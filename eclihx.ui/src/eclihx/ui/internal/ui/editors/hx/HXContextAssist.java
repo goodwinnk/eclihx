@@ -306,10 +306,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	
 	private Collection<ContentInfo> showErrorsInConsole(MessageConsole console, ContentAssistResult result) {
 		if (result.hasErrors()) {
-			
-			console.activate();
 			console.newMessageStream().println(result.getErrors());		
-			
 			return new LinkedList<ContentInfo>();
 		}
 		
