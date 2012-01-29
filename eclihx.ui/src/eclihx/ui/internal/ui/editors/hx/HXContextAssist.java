@@ -228,8 +228,13 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		return resultProposals;		
 	}
 	
-	// package
-	static String getIndentifierPrefix(ITextViewer viewer, int offset) {
+	/**
+	 * Get haxe identifier prefix.
+	 * @param viewer text viewer.
+	 * @param offset current offset.
+	 * @return an identifier.
+	 */
+	public static String getIndentifierPrefix(ITextViewer viewer, int offset) {
 		final String text = viewer.getDocument().get();
 		
 		final int identOffset = getIdentifierStartOffset(text, offset);		
