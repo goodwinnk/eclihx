@@ -19,6 +19,7 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.texteditor.templates.ITemplatesPage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import eclihx.ui.PreferenceConstants;
@@ -28,6 +29,7 @@ import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.editors.ColorManager;
 import eclihx.ui.internal.ui.editors.extensions.bracketinserter.Filter;
 import eclihx.ui.internal.ui.editors.extensions.bracketinserter.GenericBracketInserter;
+import eclihx.ui.internal.ui.editors.templates.HaxeTemplatesPage;
 
 /**
  * Class extend functionality of the standard text editor to make it work with
@@ -66,6 +68,7 @@ public class HXEditor extends TextEditor {
 	public static final String TOGGLE_COMMENT_ACTION_PREFIX = "ToggleCommentAction";
 	
 	private IContentOutlinePage haxeOutlinePage;
+	private ITemplatesPage templatesPage;
 	
 	// private BracketInserter bracketInserter = new BracketInserter(EclihxUIPlugin.getLogHelper());
 	private GenericBracketInserter bracketInserter = new GenericBracketInserter();
@@ -111,6 +114,8 @@ public class HXEditor extends TextEditor {
 	 * Color manager.
 	 */
 	private final ColorManager colorManager;
+
+	
 
 	/**
 	 * Combine eclihx.ui preference store with EditorUI store.
@@ -229,6 +234,15 @@ public class HXEditor extends TextEditor {
 			}
 			return haxeOutlinePage;
 		}
+		
+		if (ITemplatesPage.class.equals(required)) {
+			if (templatesPage == null) {
+				templatesPage = new HaxeTemplatesPage(this);
+			}
+			
+			return templatesPage;
+		}
+		
 		return super.getAdapter(required);
 	}
 
@@ -282,6 +296,4 @@ public class HXEditor extends TextEditor {
 	protected boolean isTabsToSpacesConversionEnabled() {
 		return !FormatAllAction.getPreferenceOptions().isInsertTabs();
 	}	
-	
-	
 }

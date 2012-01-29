@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
@@ -34,6 +35,9 @@ import eclihx.ui.utils.ConsoleViewHelper;
  */
 public final class HXContextAssist implements IContentAssistProcessor, ICompletionListener {
 	
+	private static final HXTemplateCompletionProcessor templateProcessor = 
+			new HXTemplateCompletionProcessor();
+	
 	/**
 	 * A very simple context which invalidates information after typing several
 	 * chars.
@@ -57,7 +61,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 * Characters for auto activation proposal computation.
 	 */
 	private static final char[] VALID_HAXE_PROPOSALS_CHARS = new char[] { '.' };
-	private static final char[] VALID_HAXE_INFO_CHARS = new char[] { '(' };
+	private static final char[] VALID_HAXE_INFO_CHARS = new char[] { '(', ',' };
 	
 	
 	/**
@@ -224,6 +228,15 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		return resultProposals;		
 	}
 	
+	// package
+	static String getIndentifierPrefix(ITextViewer viewer, int offset) {
+		final String text = viewer.getDocument().get();
+		
+		final int identOffset = getIdentifierStartOffset(text, offset);		
+		Assert.isTrue(identOffset <= offset);
+		return text.substring(identOffset, offset);
+	}
+	
 	/**
 	 * Method searches the beginning of the identifier 
 	 * 
@@ -231,7 +244,7 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 	 * @param offset 
 	 * @return
 	 */
-	private int getIdentifierStartOffset(String text, int offset) {
+	private static int getIdentifierStartOffset(String text, int offset) {
 		int identStartOffset = offset;
 		
 		while ((identStartOffset != 0) && 
@@ -344,7 +357,14 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		final String identifierPart = fileText.substring(identOffset, offset);
 		
 		List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		
+		// Templates
+		proposals.addAll(Arrays.asList(templateProcessor.computeCompletionProposals(viewer, offset)));
+		
+		// Keywords
 		proposals.addAll(generateKeywordProposals(viewer, identOffset, offset, identifierPart));
+		
+		// Haxe proposals
 		proposals.addAll(generateProposalsList(identOffset, offset, infosCache.getFilteredInfos(identifierPart)));
 		
 		return proposals.toArray(new ICompletionProposal[proposals.size()]);
@@ -361,19 +381,24 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		return "No message"; 
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(org.eclipse.jface.text.ITextViewer, int)
+	 */
 	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		
-		if (offset != 0) {
-			char previousChar = viewer.getDocument().get().charAt(offset - 1);
+		int nonWhiteSpaceOffset = getPreviousNonWhitespaceOffset(viewer, offset);
+		
+		if (nonWhiteSpaceOffset != 0) {
+			char previousChar = viewer.getDocument().get().charAt(nonWhiteSpaceOffset);			
 			
 			switch (previousChar) {
 				case ',':
-					// TODO 6: add context info for function parameters.
-					break;
+					return computeContextInformation(viewer, getPreviousUnbalancedOpenBracket(viewer, nonWhiteSpaceOffset) + 1);
 				case '(':
 					// In current version we count informations only for the open bracket				
-					List<ContentInfo> contextInfos = getContentInfoForce(viewer, offset);
+					List<ContentInfo> contextInfos = getContentInfoForce(viewer, nonWhiteSpaceOffset);
 					
 					List<IContextInformation> resultInfos = new ArrayList<IContextInformation>();
 					for (ContentInfo contextInfo : contextInfos) {
@@ -388,6 +413,48 @@ public final class HXContextAssist implements IContentAssistProcessor, ICompleti
 		}
 		
 		return null;		
+	}
+	
+	private static int getPreviousNonWhitespaceOffset(ITextViewer viewer, int offset) {
+		while (--offset >= 0) {
+			try {
+				char ch;
+				ch = viewer.getDocument().getChar(offset);
+				
+				if (!Character.isWhitespace(ch)) {
+					return offset;
+				}
+				
+			} catch (BadLocationException e) {
+				EclihxUIPlugin.getLogHelper().logError(e);
+				return -1;
+			}
+			
+		}
+		
+		return -1;
+	}
+	
+	private int getPreviousUnbalancedOpenBracket(ITextViewer viewer, int offset) {
+		String text = viewer.getDocument().get();
+		int bracketBacance = 0;
+		
+		while ((--offset) >= 0) {
+			char ch = text.charAt(offset);
+			if (ch == '(') {
+				if (bracketBacance == 0) {
+					return offset;
+				} else {
+					bracketBacance--;
+				}
+			} else if (ch == ')') {
+				bracketBacance++;
+			} else if (ch == ';' || ch == '{' || ch == '}') {
+				return -1;
+			}
+		}
+		
+		return -1;
 	}
 
 	@Override

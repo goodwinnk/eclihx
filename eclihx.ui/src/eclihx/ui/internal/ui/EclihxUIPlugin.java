@@ -101,4 +101,6 @@ public class EclihxUIPlugin extends AbstractUIPlugin {
 		
 		return logger;
 	}
+	
+	
 }

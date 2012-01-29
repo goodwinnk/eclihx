@@ -72,7 +72,7 @@ public class HXSourceViewerConfiguration extends TextSourceViewerConfiguration {
 		assistant.setAutoActivationDelay(300);
 		assistant.setContentAssistProcessor(haxeContextAssist,
 				IDocument.DEFAULT_CONTENT_TYPE);
-		assistant.addCompletionListener(haxeContextAssist);
+		assistant.addCompletionListener(haxeContextAssist);		
 		assistant.setShowEmptyList(true);
 
 		return assistant;
