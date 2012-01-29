@@ -19,6 +19,8 @@ import eclihx.ui.internal.ui.editors.hx.HXEditor;
 import eclipse.testframework.text.EditorTestHelper;
 import eclipse.testframework.text.TextEditorTest;
 
+
+
 public abstract class HXEditorTestBase extends TextEditorTest<HXEditor, IHaxeProject> {
 	
 	protected HXEditor editor;
@@ -27,9 +29,9 @@ public abstract class HXEditorTestBase extends TextEditorTest<HXEditor, IHaxePro
 	
     private HXEditor openHaxeEditor(IPath path) throws PartInitException {
         IFile file= ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-        Assert.assertTrue(file != null && file.exists());              
+        Assert.assertTrue(file != null && file.exists());         
         
-        return (HXEditor)EditorTestHelper.openInEditor(file);        
+        return (HXEditor)EditorTestHelper.openInEditor(file);
     }
     
 	@Override

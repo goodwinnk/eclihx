@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+<template name="fora" description="%Templates.for_array" id="eclihx.ui.templates.for_array" 
+		context="haxe-statements" enabled="true" autoinsert="false">for (${index} in 0...${array}.length) {
+	${line_selection}${cursor}
+}</template>
+
+<template name="forr" description="%Templates.for_temp" id="eclihx.ui.templates.for_range" 
+		context="haxe-statements" 
+		enabled="true" autoinsert="false">for (${index} in ${lbound}...${ubound}) {
+	${line_selection}${cursor}
+}</template>
+
+<template name="if" description="%Templates.if" id="eclihx.ui.templates.if" context="haxe-statements" enabled="true" autoinsert="false">if (${condition}) {
+	${line_selection}${cursor}
+}</template>
+
+<template name="ifelse" description="%Templates.ifelse" id="eclihx.ui.templates.ifelse" 
+		context="haxe-statements" enabled="true" autoinsert="false">if (${condition}) {
+	${cursor}
+} else {
+	
+}</template>
+
+<template name="elseif" description="%Templates.elseif" id="eclihx.ui.templates.elseif" context="haxe-statements" enabled="true" autoinsert="false">else if (${condition}) {
+	${cursor}
+}</template>
+
+<template name="else" description="%Templates.else" id="eclihx.ui.templates.else" context="haxe-statements" enabled="true" autoinsert="false">else {
+	${cursor}
+}</template>
+
+<template name="main" description="%Templates.main" id="eclihx.ui.templates.main" context="haxe-members" enabled="true" autoinsert="false">public static function main() {
+	${cursor}
+}</template>
+
+</templates>
