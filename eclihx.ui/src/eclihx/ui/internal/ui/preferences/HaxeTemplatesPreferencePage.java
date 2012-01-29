@@ -1,6 +1,5 @@
 package eclihx.ui.internal.ui.preferences;
 
-import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
@@ -9,8 +8,12 @@ import eclihx.ui.internal.ui.editors.templates.CustomTemplateManager;
 /**
  * Show global templates for haxe.
  */
-public class HaxeTemplatesPreferencePage extends TemplatePreferencePage
-		implements IWorkbenchPreferencePage {
+public class HaxeTemplatesPreferencePage extends TemplatePreferencePage {
+	
+	/**
+	 * Identifier of the preference page.
+	 */
+	public static final String ID = "eclihx.ui.internal.ui.preferences.HaxeTemplatesPreferencePage";
 
 	/**
 	 * Default constructor.
@@ -25,13 +28,15 @@ public class HaxeTemplatesPreferencePage extends TemplatePreferencePage
 		}
 	}
 
+	@Override
 	protected boolean isShowFormatterSetting() {
-		return false;
+		return true;
 	}
 
+	@Override
 	public boolean performOk() {
 		boolean ok = super.performOk();
-		EclihxUIPlugin.getDefault().savePluginPreferences();
+		EclihxUIPlugin.flushInstanceScope();
 		return ok;
 	}
 }
