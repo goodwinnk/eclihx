@@ -10,13 +10,6 @@
                type="org.eclipse.core.resources.IResource">
          </adapter>
       </factory>
-      <factory
-            adaptableType="eclihx.ui.internal.ui.editors.hx.EditorAdapterFactory"
-            class="eclihx.ui.AdapterFactory1">
-         <adapter
-               type="eclihx.ui.internal.ui.editors.hx.HXEditor">
-         </adapter>
-      </factory>
    </extension>
      <extension
            point="org.eclipse.core.runtime.products">
