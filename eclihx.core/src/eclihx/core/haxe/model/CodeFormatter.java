@@ -254,7 +254,9 @@ public final class CodeFormatter {
 										indentationString,
 										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 					} else {
-						outputLineBuffer.append('}');
+						outputBuilder
+							.append(multiply(indentationString, numberOfIndentation))
+							.append('}');
 					}					
 					
 					break;
@@ -301,7 +303,6 @@ public final class CodeFormatter {
 					outputLineBuffer.append(currentChar);
 					break;
 			}
-			
 		}
 		
 		return outputBuilder.toString();
