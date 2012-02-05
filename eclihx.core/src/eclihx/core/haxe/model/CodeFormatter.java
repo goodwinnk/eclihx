@@ -115,19 +115,51 @@ public final class CodeFormatter {
 	/**
 	 * Format text.
 	 * @param text text to format.
+	 * @param options set of options for the formatter.
+	 * @return formatted text.
+	 */
+	public static String formatAll(
+			final String text, 
+			final FormatOptions options) {
+		
+		return format(text, options, 0, false);
+	}
+	
+	/**
+	 * Format text.
+	 * 
+	 * @param text text to format.
+	 * @param options set of options for the formatter.
+	 * @param lineIndentation pattern for line indentation.
+	 * @return formatted text.
+	 */
+	public static String formatSelection(
+			final String text, 
+			final FormatOptions options,
+			final String lineIndentation) {
+		
+		return format(text, options, getIndentationLevel(lineIndentation, singleIndentStr(options)), true);
+	}
+	
+	/**
+	 * Format text.
+	 * @param text text to format.
 	 * @param options set of options for the formatter
+	 * @param initIndentationLevel level of text selection indentation
+	 * @param firstLineAlreadyIndented is first line indented (useful for formatting selections)
 	 * @return formatted text.
 	 */
 	public static String format(
 			final String text, 
-			final FormatOptions options) {
+			final FormatOptions options,
+			final int initIndentationLevel,
+			final boolean firstLineAlreadyIndented) {
 		
 		// Store indentation string for one gap. 
-		String indentationString = options.insertTabs ? "\t" : 
-								   multiply(" ", options.intendWidth);
+		String indentationString = singleIndentStr(options);
 		
 		// Global variable o count number of indentation for the current code.
-		int numberOfIndentation = 0;
+		int numberOfIndentation = initIndentationLevel;
 		
 		// This variable is a buffer for the method result		
 		final StringBuilder outputBuilder = new StringBuilder();
@@ -145,8 +177,7 @@ public final class CodeFormatter {
 			
 			switch (currentChar) {
 				case '{':
-					if (outputLineBuffer.toString().trim().isEmpty() ||
-						!options.bracketNewLines) {
+					if (outputLineBuffer.toString().trim().isEmpty() || !options.bracketNewLines) {
 						
 						// Insert additional space before the brace
 						if (!checkChar(text, index-1, ' ')) {
@@ -169,7 +200,8 @@ public final class CodeFormatter {
 										outputLineBuffer, 
 										options.indentOnEmptyLines, 
 										numberOfIndentation, 
-										indentationString));
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 						
 					} else {
 						// Write line content first
@@ -178,7 +210,8 @@ public final class CodeFormatter {
 										outputLineBuffer, 
 										options.indentOnEmptyLines, 
 										numberOfIndentation, 
-										indentationString));
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 						
 						omitLineBreak = existValidNewLine(text, index+1);
 						
@@ -188,7 +221,8 @@ public final class CodeFormatter {
 										"{", 
 										options.indentOnEmptyLines, 
 										numberOfIndentation, 
-										indentationString));
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 					
 					}
 					
@@ -203,19 +237,25 @@ public final class CodeFormatter {
 										outputLineBuffer, 
 										options.indentOnEmptyLines, 
 										numberOfIndentation, 
-										indentationString));
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 					}
 					
 					--numberOfIndentation;
 					
-					omitLineBreak = existValidNewLine(text, index+1);
+					omitLineBreak = existValidNewLine(text, index + 1);
 					
-					outputBuilder.append(
-							generateLine(
-									"}", 
-									options.indentOnEmptyLines, 
-									numberOfIndentation, 
-									indentationString));
+					if (options.bracketNewLines || !followedBy(text, index + 1, "else")) {
+						outputBuilder.append(
+								generateLine(
+										"}", 
+										options.indentOnEmptyLines, 
+										numberOfIndentation, 
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
+					} else {
+						outputLineBuffer.append('}');
+					}					
 					
 					break;
 					
@@ -234,7 +274,8 @@ public final class CodeFormatter {
 										outputLineBuffer, 
 										options.indentOnEmptyLines, 
 										numberOfIndentation, 
-										indentationString));
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 					}
 					break;
 					
@@ -250,7 +291,8 @@ public final class CodeFormatter {
 										outputLineBuffer, 
 										options.indentOnEmptyLines, 
 										numberOfIndentation, 
-										indentationString));
+										indentationString,
+										!(outputBuilder.length() == 0 && firstLineAlreadyIndented)));
 					}
 					
 					break;
@@ -264,7 +306,7 @@ public final class CodeFormatter {
 		
 		return outputBuilder.toString();
 	}
-	
+
 	/**
 	 * Method checks there is exist new-line char separated from the 
 	 * specified place only with spaces and tab chars.
@@ -313,6 +355,14 @@ public final class CodeFormatter {
 		return index >= 0 && index < str.length() && str.charAt(index) == ch;			
 	}
 	
+	static private boolean followedBy(String str, int index, String pattern) {
+		while (index < str.length() && Character.isWhitespace(str.charAt(index))) {
+			++index;
+		}
+		
+		return str.startsWith(pattern, index);
+	}
+	
 	/**
 	 * Generate one line of the new text.
 	 * @param content the string with the line content.
@@ -320,13 +370,15 @@ public final class CodeFormatter {
 	 *        indentation done on the empty lines.
 	 * @param numberOfIndentation number of indentations
 	 * @param indentationString string for one indentation.
+	 * @param applyIndentation should indentation be applied.
 	 * @return generated line.
 	 */
 	static private String generateLine(
 			String content, 
 			boolean indentOnEmptyLines,
 			int numberOfIndentation, 
-			String indentationString) {
+			String indentationString,
+			boolean applyIndentation) {
 		
 		String trimmedLine = content.trim();
 		
@@ -334,8 +386,12 @@ public final class CodeFormatter {
 			return "\n";
 		}
 		
-		return multiply(indentationString, numberOfIndentation) + 
-				trimmedLine + "\n";
+		if (applyIndentation) {
+			return multiply(indentationString, numberOfIndentation) + 
+					trimmedLine + "\n";
+		}
+		
+		return trimmedLine + "\n";		
 	}
 	
 	/**
@@ -346,13 +402,15 @@ public final class CodeFormatter {
 	 *        indentation done on the empty lines.
 	 * @param numberOfIndentation number of indentations
 	 * @param indentationString string for one indentation.
+	 * @param applyIndentation should indentation be applied.
 	 * @return generated line.
 	 */
 	static private String generateLine(
 			StringBuilder contentBuilder, 
 			boolean indentOnEmptyLines,
 			int numberOfIndentation, 
-			String indentationString) {
+			String indentationString,
+			boolean applyIndentation) {
 		
 		String line = contentBuilder.toString();
 		
@@ -360,8 +418,10 @@ public final class CodeFormatter {
 		contentBuilder.delete(0, contentBuilder.length());
 		
 		return generateLine(line, indentOnEmptyLines, 
-				numberOfIndentation, indentationString);
+				numberOfIndentation, indentationString, applyIndentation);
 	}
+	
+	
 	
 	/**
 	 * This method multiplies the strings.
@@ -382,5 +442,27 @@ public final class CodeFormatter {
 		}
 		
 		return newStrBuilder.toString();
+	}
+	
+	/**
+	 * Get line indent pattern from options.
+	 * @param options format options
+	 * @return Line indent pattern from options.
+	 */
+	public static String singleIndentStr(final FormatOptions options) {
+		return options.insertTabs ? "\t" : 
+								   multiply(" ", options.intendWidth);
+	} 
+	
+	private static int getIndentationLevel(String lineIndentation, String singleIndentStr) {
+		int offset = 0;
+		int level = 0;
+		
+		while (lineIndentation.startsWith(singleIndentStr, offset)) {
+			offset += singleIndentStr.length();
+			level++;
+		}
+
+		return level;
 	}
 }

@@ -11,23 +11,31 @@ import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 
-public class CustomTemplateManager {
+/**
+ * Stores and manages template for haxe code.
+ */
+public class HaxeCustomTemplateManager {
 	private static final String CUSTOM_TEMPLATES_KEY = EclihxUIPlugin.getPluginId() + ".customtemplates";
-	private static CustomTemplateManager instance;
+	private static HaxeCustomTemplateManager instance;
 	private TemplateStore fStore;
 	private ContributionContextTypeRegistry fRegistry;
-	private TemplatePersistenceData[] templateData;
 
-	private CustomTemplateManager() {
+	private HaxeCustomTemplateManager() {
 	}
 
-	public static CustomTemplateManager getInstance() {
+	/**
+	 * @return Instance of manager.
+	 */
+	public static HaxeCustomTemplateManager getInstance() {
 		if (instance == null) {
-			instance = new CustomTemplateManager();
+			instance = new HaxeCustomTemplateManager();
 		}
 		return instance;
 	}
 
+	/**
+	 * @return Templates store.
+	 */
 	public TemplateStore getTemplateStore() {
 
 		if (fStore == null) {

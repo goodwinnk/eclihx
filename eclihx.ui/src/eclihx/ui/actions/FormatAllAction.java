@@ -50,7 +50,7 @@ public class FormatAllAction implements IEditorActionDelegate {
 		IDocumentProvider dp = haxeEditor.getDocumentProvider();
 		IDocument doc = dp.getDocument(haxeEditor.getEditorInput());
 		String text = doc.get();
-		String outputText = CodeFormatter.format(text, getPreferenceOptions());
+		String outputText = CodeFormatter.formatAll(text, getPreferenceOptions());
 
 		try {
 			doc.replace(0, doc.getLength(), outputText);
@@ -85,7 +85,6 @@ public class FormatAllAction implements IEditorActionDelegate {
 	 */
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		// TODO Auto-generated method stub
-
+		// Do nothing
 	}
 }

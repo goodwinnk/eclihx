@@ -3,7 +3,7 @@ package eclihx.ui.internal.ui.preferences;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
 import eclihx.ui.internal.ui.EclihxUIPlugin;
-import eclihx.ui.internal.ui.editors.templates.CustomTemplateManager;
+import eclihx.ui.internal.ui.editors.templates.HaxeCustomTemplateManager;
 
 /**
  * Show global templates for haxe.
@@ -21,8 +21,8 @@ public class HaxeTemplatesPreferencePage extends TemplatePreferencePage {
 	public HaxeTemplatesPreferencePage() {
 		try {
 			setPreferenceStore(EclihxUIPlugin.getDefault().getPreferenceStore());
-			setTemplateStore(CustomTemplateManager.getInstance().getTemplateStore());
-			setContextTypeRegistry(CustomTemplateManager.getInstance().getContextTypeRegistry());
+			setTemplateStore(HaxeCustomTemplateManager.getInstance().getTemplateStore());
+			setContextTypeRegistry(HaxeCustomTemplateManager.getInstance().getContextTypeRegistry());
 		} catch(Exception ex){
 			ex.printStackTrace();
 		}
