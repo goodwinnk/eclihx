@@ -1,12 +1,12 @@
 package eclihx.ui.internal.ui.editors.templates;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateVariable;
 
@@ -39,6 +39,9 @@ public class TemplateFormatter {
 		// Marker id to variable
 		private final HashMap<Integer, TemplateVariable> variablesIds = new HashMap<Integer, TemplateVariable>();
 		
+		private String unmarkedString;
+		private TemplateVariable[] updatedVariables;
+		
 		private VariableOffsetsTracker(String text, TemplateVariable[] variables) {
 			
 			// Collect variables offsets
@@ -68,14 +71,79 @@ public class TemplateFormatter {
 			return new VariableOffsetsTracker(text, varibles);
 		}
 		
-		public void unmark() {
+		/**
+		 * Remove markers from string and update template variables offsets.
+		 * @param formattedString already formatted string.
+		 */
+		public void unmark(String formattedString) {
+			StringBuffer unmarkedBuffer = new StringBuffer(formattedString);
 			
+			int variableOffset = unmarkedBuffer.indexOf(MARKER_PREFIX, 0);
+			
+			// Collection on new offsets for each variable
+			final HashMap<TemplateVariable, ArrayList<Integer>> variablesOffsets = 
+					new HashMap<TemplateVariable, ArrayList<Integer>>();
+			
+			// Remove markers and collect information about offsets.
+			while (variableOffset != -1) {
+				String idString = unmarkedBuffer.substring(variableOffset + MARKER_PREFIX.length(), variableOffset + MARKER_SIZE);
+				int id = Integer.parseInt(idString);
+				
+				TemplateVariable variable = variablesIds.get(id);
+				
+				if (!variablesOffsets.containsKey(variable)) {
+					variablesOffsets.put(variable, new ArrayList<Integer>());
+				}
+				
+				
+				variablesOffsets.get(variable).add(variableOffset);
+				
+				// Remove marker
+				unmarkedBuffer.replace(variableOffset, variableOffset + MARKER_SIZE, "");
+				
+				// Update loop condition variable - move to next variable
+				variableOffset = unmarkedBuffer.indexOf(MARKER_PREFIX, variableOffset);
+			}
+			
+			// Update variables
+			for (Entry<TemplateVariable, ArrayList<Integer>> variableToOffsets : variablesOffsets.entrySet()) {
+				TemplateVariable variable = variableToOffsets.getKey();
+				ArrayList<Integer> offsets = variableToOffsets.getValue();
+				
+				variable.setOffsets(toIntArray(offsets));
+			}
+			
+			// Store results
+			unmarkedString = unmarkedBuffer.toString();
+			updatedVariables = variablesOffsets.keySet().toArray(new TemplateVariable[variablesOffsets.keySet().size()]);
 		}
 
 		public String getMarkedString() {
 			return markedString;
 		}
-
+		
+		public String getUnmarkedString() {
+			if (unmarkedString == null) {
+				throw new IllegalStateException("should be unmarked before");
+			}
+			
+			return unmarkedString;
+		}
+		
+		public TemplateVariable[] getCorrectedVariables() {
+			if (updatedVariables == null) {
+				throw new IllegalStateException("should be unmarked before");
+			}
+			
+			return updatedVariables;
+		}
+		
+		private static int[] toIntArray(List<Integer> list) {
+			int[] ret = new int[list.size()];
+			for (int i = 0; i < ret.length; i++)
+				ret[i] = list.get(i);
+			return ret;
+		}
 	}
 	
 	/**
@@ -88,9 +156,12 @@ public class TemplateFormatter {
 		FormatOptions formatOptions = FormatAllAction.getPreferenceOptions();
 		formatOptions.setIndentOnEmptyLines(true);
 		
-		// VariableOffsetsTracker offsetsTracker = VariableOffsetsTracker.mark(buffer.getString(), buffer.getVariables());
+		VariableOffsetsTracker offsetsTracker = VariableOffsetsTracker.mark(buffer.getString(), buffer.getVariables());
 		
-		String formatted = CodeFormatter.formatSelection(buffer.getString(), formatOptions, lineIndentation);
-		buffer.setContent(formatted, buffer.getVariables());
+		String formatted = CodeFormatter.formatSelection(offsetsTracker.getMarkedString(), formatOptions, lineIndentation);
+		
+		offsetsTracker.unmark(formatted);
+		
+		buffer.setContent(offsetsTracker.getUnmarkedString(), offsetsTracker.getCorrectedVariables());
 	}	
 }
