@@ -54,7 +54,7 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 		
 		String savedText;
 		try {
-			savedText= document.get(textSelection.getOffset(), textSelection.getLength());
+			savedText = document.get(textSelection.getOffset(), textSelection.getLength());
 			if (savedText.length() == 0) {
 				String prefix= HXContextAssist.getIndentifierPrefix(contextViewer, textSelection.getOffset());
 				if (prefix.length() > 0 && !template.getName().startsWith(prefix.toString())) {
@@ -71,12 +71,13 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 			return;
 		}
 		
-		Position position= new Position(textSelection.getOffset() + 1, 0);
-		Region region= new Region(textSelection.getOffset() + 1, 0);
+		int positionOffset = textSelection.getLength() == 0 ? textSelection.getOffset() : textSelection.getOffset() + 1;
+		Position position= new Position(positionOffset, 0);
+		Region region= new Region(positionOffset, 0);
 		contextViewer.getSelectionProvider().setSelection(new TextSelection(textSelection.getOffset(), 1));
 
 		TemplateContextType type = getContextTypeRegistry().getContextType(template.getContextTypeId());
-		DocumentTemplateContext context = new DocumentTemplateContext(type, document, position);
+		DocumentTemplateContext context = new HaxeCodeTemplateContext(type, document, position);
 		context.setVariable("selection", savedText); //$NON-NLS-1$
 		if (context.getKey().length() == 0) {
 			try {
@@ -95,12 +96,12 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 	
 	@Override
 	protected ContextTypeRegistry getContextTypeRegistry() {
-		return CustomTemplateManager.getInstance().getContextTypeRegistry();
+		return HaxeCustomTemplateManager.getInstance().getContextTypeRegistry();
 	}
 
 	@Override
 	public TemplateStore getTemplateStore() {
-		return CustomTemplateManager.getInstance().getTemplateStore();
+		return HaxeCustomTemplateManager.getInstance().getTemplateStore();
 	}
 
 	@Override

@@ -3,11 +3,10 @@ package eclihx.ui.internal.ui.editors.hx;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.Template;
@@ -17,7 +16,8 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.swt.graphics.Image;
 
-import eclihx.ui.internal.ui.editors.templates.CustomTemplateManager;
+import eclihx.ui.internal.ui.editors.templates.HaxeCodeTemplateContext;
+import eclihx.ui.internal.ui.editors.templates.HaxeCustomTemplateManager;
 import eclihx.ui.internal.ui.editors.templates.HaxeContextTypes;
 
 /**
@@ -26,18 +26,15 @@ import eclihx.ui.internal.ui.editors.templates.HaxeContextTypes;
  *
  */
 public class HXTemplateCompletionProcessor extends TemplateCompletionProcessor {
+	
 	@Override
-	protected String extractPrefix(ITextViewer viewer, int offset) {
-		return HXContextAssist.getIndentifierPrefix(viewer, offset);
-	}
-
 	protected Template[] getTemplates(String contextTypeId) {
-		CustomTemplateManager manager = CustomTemplateManager.getInstance();
+		HaxeCustomTemplateManager manager = HaxeCustomTemplateManager.getInstance();
 		return manager.getTemplateStore().getTemplates();
 	}
 
 	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
-		CustomTemplateManager manager = CustomTemplateManager.getInstance();
+		HaxeCustomTemplateManager manager = HaxeCustomTemplateManager.getInstance();
 		return manager.getContextTypeRegistry().getContextType(HaxeContextTypes.ID_STATEMENTS);
 	}
 
@@ -70,6 +67,16 @@ public class HXTemplateCompletionProcessor extends TemplateCompletionProcessor {
 						getRelevance(template, prefix)));
 		}
 		return matches.toArray(new ICompletionProposal[matches.size()]);
+	}
+	
+	
+
+	@Override
+	protected TemplateContext createContext(ITextViewer viewer, IRegion region) {
+		return new HaxeCodeTemplateContext(
+				getContextType(viewer, region), 
+				viewer.getDocument(), 
+				new Position(region.getOffset(), region.getLength()));
 	}
 
 	@Override

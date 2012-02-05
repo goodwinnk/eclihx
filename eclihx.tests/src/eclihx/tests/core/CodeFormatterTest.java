@@ -15,7 +15,7 @@ import eclihx.core.haxe.model.CodeFormatter;
 public class CodeFormatterTest {
 
 	/**
-	 * Test method for {@link eclihx.core.haxe.model.CodeFormatter#format(java.lang.String, eclihx.core.haxe.model.CodeFormatter.FormatOptions)}.
+	 * Test method for {@link eclihx.core.haxe.model.CodeFormatter#formatAll(java.lang.String, eclihx.core.haxe.model.CodeFormatter.FormatOptions)}.
 	 */
 	@Test
 	public void testFormat() {
@@ -25,7 +25,7 @@ public class CodeFormatterTest {
 		options.setInsertTabs(false);
 		options.setIntendWidth(2);
 		
-		String str = CodeFormatter.format(
+		String str = CodeFormatter.formatAll(
 				"class A { public static function (){ if (a==1){}}}", 
 				options);
 		
