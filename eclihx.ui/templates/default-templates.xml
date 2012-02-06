@@ -36,4 +36,11 @@
 	${cursor}
 }</template>
 
+<template name="fun" description="Insert method" id="eclihx.ui.templates.function" context="haxe-members" enabled="true" autoinsert="false">public function ${name}(${cursor}) : ${type} {
+}</template>
+
+<template name="class" description="Class" id="eclihx.ui.templates.class" context="haxe-members" enabled="true" autoinsert="false">class ${name} {
+	${cursor}
+}</template>
+
 </templates>

@@ -575,6 +575,12 @@
            name="%templates.contextTypes.haxeStatements"
            registryId="eclihx.ui.internal.ui.editors.HXEditor">
      </contextType>
+     <contextType
+           class="eclihx.ui.internal.ui.editors.templates.HaxeContextTypes"
+           id="haxe-members"
+           name="%templates.contextTypes.haxeMembers"
+           registryId="eclihx.ui.internal.ui.editors.HXEditor">
+     </contextType>
   </extension>
   <!--
   <extension

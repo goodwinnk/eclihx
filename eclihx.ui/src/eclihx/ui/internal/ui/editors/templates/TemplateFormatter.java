@@ -26,8 +26,8 @@ public class TemplateFormatter {
 	static class VariableOffsetsTracker {
 		
 		private static final int MARKER_SIZE = 6;
-		private static final String MARKER_PREFIX = "$$__";
-		private static final String MARKER_FORMAT_STRING = "$$__%02d";
+		private static final String MARKER_PREFIX = "##__";
+		private static final String MARKER_FORMAT_STRING = "##__%02d";
 		
 		static {
 			assert MARKER_FORMAT_STRING.startsWith(MARKER_PREFIX);
