@@ -9,7 +9,6 @@ import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
-import org.eclipse.jface.text.templates.TemplateVariable;
 
 /**
  * A context for inserting template into haxe code.

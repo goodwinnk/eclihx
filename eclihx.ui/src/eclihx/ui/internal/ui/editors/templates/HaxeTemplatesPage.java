@@ -42,13 +42,15 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 
 	@Override
 	protected void insertTemplate(Template template, IDocument document) {		
-		if (!editor.validateEditorInputState())
+		if (!editor.validateEditorInputState()) {
 			return;
+		}
 
 		ISourceViewer contextViewer= editor.getViewer();
 		ITextSelection textSelection= (ITextSelection) contextViewer.getSelectionProvider().getSelection();
-		if (!isValidTemplate(document, template, textSelection.getOffset(), textSelection.getLength()))
+		if (!isValidTemplate(document, template, textSelection.getOffset(), textSelection.getLength())) {
 			return;
+		}
 		
 		beginCompoundChange(contextViewer);
 		
@@ -120,8 +122,7 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 	}
 
 	@Override
-	protected boolean isValidTemplate(IDocument document, Template template,
-			int offset, int length) {
+	protected boolean isValidTemplate(IDocument document, Template template, int offset, int length) {
 		return true;
 	}
 	
@@ -142,8 +143,8 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 	 * @param viewer the viewer
 	 */
 	private void beginCompoundChange(ISourceViewer viewer) {
-		if (viewer instanceof ITextViewerExtension)
+		if (viewer instanceof ITextViewerExtension) {
 			((ITextViewerExtension) viewer).getRewriteTarget().beginCompoundChange();
+		}
 	}
-
 }

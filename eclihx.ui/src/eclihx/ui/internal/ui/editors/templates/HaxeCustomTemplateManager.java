@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
-import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
@@ -37,9 +36,7 @@ public class HaxeCustomTemplateManager {
 	 * @return Templates store.
 	 */
 	public TemplateStore getTemplateStore() {
-
 		if (fStore == null) {
-
 			fStore = new ContributionTemplateStore(getContextTypeRegistry(),
 					EclihxUIPlugin.getDefault().getPreferenceStore(),
 					CUSTOM_TEMPLATES_KEY);
@@ -53,6 +50,11 @@ public class HaxeCustomTemplateManager {
 		return fStore;
 	}
 
+	/**
+	 * Get context type registry.
+	 * 
+	 * @return Get context type registry.
+	 */
 	public ContextTypeRegistry getContextTypeRegistry() {
 		if (fRegistry == null) {
 			fRegistry = new ContributionContextTypeRegistry();
@@ -65,12 +67,11 @@ public class HaxeCustomTemplateManager {
 		return fRegistry;
 	}
 
-	public IPreferenceStore getPreferenceStore() {
+	IPreferenceStore getPreferenceStore() {
 		return EclihxUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	public void savePluginPreferences() {
-		EclihxUIPlugin.getDefault().savePluginPreferences();
+	void savePluginPreferences() {
+		EclihxUIPlugin.flushInstanceScope();
 	}
-
 }
