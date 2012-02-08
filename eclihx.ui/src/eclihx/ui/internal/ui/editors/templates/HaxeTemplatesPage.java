@@ -118,7 +118,7 @@ public class HaxeTemplatesPage extends AbstractTemplatesPage {
 
 	@Override
 	protected String[] getContextTypeIds(IDocument document, int offset) {
-		return new String[] { HaxeContextTypes.ID_ALL, HaxeContextTypes.ID_MEMBERS, HaxeContextTypes.ID_STATEMENTS };
+		return new String[] { HaxeContextTypes.ID_MEMBERS, HaxeContextTypes.ID_STATEMENTS };
 	}
 
 	@Override

@@ -8,11 +8,6 @@ import org.eclipse.jface.text.templates.TemplateContextType;
  */
 public class HaxeContextTypes extends TemplateContextType {
 	/**
-	 * The context type id for templates working on all haxe code locations.
-	 */
-	public static final String ID_ALL= "haxe"; //$NON-NLS-1$
-
-	/**
 	 * The context type id for templates working on member locations.
 	 */
 	public static final String ID_MEMBERS= "haxe-members"; //$NON-NLS-1$
