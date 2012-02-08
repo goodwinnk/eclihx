@@ -32,15 +32,53 @@
 	${cursor}
 }</template>
 
+<template name="switch" description="Switch expression with single case" id="eclihx.ui.templates.switch" 
+		context="haxe-statements" enabled="true" autoinsert="false">switch (${condition}) {
+case ${value}:	
+	${cursor}
+}</template>
+
 <template name="main" description="%Templates.main" id="eclihx.ui.templates.main" context="haxe-members" enabled="true" autoinsert="false">public static function main() {
 	${cursor}
 }</template>
 
-<template name="fun" description="Insert method" id="eclihx.ui.templates.function" context="haxe-members" enabled="true" autoinsert="false">public function ${name}(${cursor}) : ${type} {
-}</template>
-
-<template name="class" description="Class" id="eclihx.ui.templates.class" context="haxe-members" enabled="true" autoinsert="false">class ${name} {
+<template name="ff" description="Insert method with explicit return type" id="eclihx.ui.templates.function" context="haxe-members" enabled="true" autoinsert="false"
+>${visibility:link(public,private)} function ${name}(${params}) : ${type} {
 	${cursor}
 }</template>
+
+<template name="fi" description="Insert method without explicit type" id="eclihx.ui.templates.function" context="haxe-members" enabled="true" autoinsert="false"
+>${visibility:link(public,private)} function ${name}(${params}) {
+	${cursor}
+}</template>
+
+<template name="pf" description="Insert public field definition with explicit type" id="eclihx.ui.templates.publicfield" 
+		context="haxe-members" enabled="true" autoinsert="false">public var ${name} : ${type};
+${cursor}</template>
+
+<template name="vv" description="Insert variable definition with explicit type" id="eclihx.ui.templates.typedvariable" 
+		context="haxe-members" enabled="true" autoinsert="false">var ${name} : ${type};
+${cursor}</template>
+
+<template name="vi" description="Insert variable definition without explicit type" id="eclihx.ui.templates.variabletypeinference" 
+		context="haxe-members" enabled="true" autoinsert="false">var ${name};
+${cursor}</template>
+		
+<template name="class" description="Class definition" id="eclihx.ui.templates.class" 
+		context="haxe-members" enabled="true" autoinsert="false"
+>class ${name} {
+	${cursor}
+}</template>
+
+<template name="interface" description="Interface definition" id="eclihx.ui.templates.interface" 
+		context="haxe-members" enabled="true" autoinsert="false"
+>interface ${name} {
+	${cursor}
+}</template>
+
+<template name="pp" description="Class property" id="eclihx.ui.templates.property" 
+		context="haxe-members" enabled="true" autoinsert="false"
+>${visibility:link(public,private)} var ${name}(${getter:link(null,default,dynamic,never)}, ${setter:link(null,default,dynamic,never)}) : ${type};
+${cursor}</template>
 
 </templates>

@@ -58,11 +58,10 @@ public class HaxeCustomTemplateManager {
 	public ContextTypeRegistry getContextTypeRegistry() {
 		if (fRegistry == null) {
 			fRegistry = new ContributionContextTypeRegistry();
+			
+			fRegistry.addContextType(HaxeContextTypes.ID_MEMBERS);
+			fRegistry.addContextType(HaxeContextTypes.ID_STATEMENTS);
 		}
-		
-		fRegistry.addContextType(HaxeContextTypes.ID_ALL);
-		fRegistry.addContextType(HaxeContextTypes.ID_MEMBERS);
-		fRegistry.addContextType(HaxeContextTypes.ID_STATEMENTS);
 		
 		return fRegistry;
 	}
