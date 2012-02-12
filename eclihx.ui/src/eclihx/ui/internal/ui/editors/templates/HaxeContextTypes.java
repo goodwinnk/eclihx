@@ -23,7 +23,13 @@ public class HaxeContextTypes extends TemplateContextType {
 	public HaxeContextTypes() {
 		addResolver(new GlobalTemplateVariables.Cursor());
 		addResolver(new GlobalTemplateVariables.WordSelection());
-		addResolver(new GlobalTemplateVariables.LineSelection());
+		addResolver(new GlobalTemplateVariables.Dollar());
+		addResolver(new GlobalTemplateVariables.Date());
+		addResolver(new GlobalTemplateVariables.Year());
+		addResolver(new GlobalTemplateVariables.Time());
 		addResolver(new GlobalTemplateVariables.User());
+		
+		addResolver(new LinkResolver("link", "empty"));
+		// addResolver(new LinkResolver(ID_STATEMENTS, "empty"));
 	}
 }
