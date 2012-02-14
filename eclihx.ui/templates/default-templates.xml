@@ -19,6 +19,12 @@
 	${cursor}
 }</template>
 
+<template name="foreach" description="Iterate over collection" id="eclihx.ui.templates.for_each" 
+		context="haxe-statements" 
+		enabled="true" autoinsert="false">for (${elem} in ${collection}) {
+	${cursor}
+}</template>
+
 <template name="if" description="If statement" id="eclihx.ui.templates.if" context="haxe-statements" enabled="true" autoinsert="false">if (${condition}) {
 	${cursor}
 }</template>
@@ -84,16 +90,16 @@ ${cursor}</template>
 		context="haxe-members" enabled="true" autoinsert="false">var ${name};
 ${cursor}</template>
 
-<template name="vara" description="Insert local variable definition with type and initial value" id="eclihx.ui.templates.local_typed_default" 
-		context="haxe-members" enabled="true" autoinsert="false">var ${name} : ${type} = ${value};
+<template name="vara" description="Insert variable definition with initial value" id="eclihx.ui.templates.local_typed_default" 
+		context="haxe-members" enabled="true" autoinsert="false">var ${name} = ${value};
 ${cursor}</template>
 
 <template name="vart" description="Insert local variable definition with explicit type" id="eclihx.ui.templates.local_typed" 
 		context="haxe-members" enabled="true" autoinsert="false">var ${name} : ${type};
 ${cursor}</template>
 
-<template name="varta" description="Insert variable definition with initial value" id="eclihx.ui.templates.local_default" 
-		context="haxe-members" enabled="true" autoinsert="false">var ${name} = ${value};
+<template name="varta" description="Insert local variable definition with type and initial value" id="eclihx.ui.templates.local_default" 
+		context="haxe-members" enabled="true" autoinsert="false">var ${name} : ${type} = ${value};
 ${cursor}</template>
 		
 <template name="class" description="Class definition" id="eclihx.ui.templates.class" 
@@ -123,7 +129,7 @@ ${cursor}</template>
 
 <template name="constructor" description="Type constructor" id="eclihx.ui.templates.constructor" 
 		context="haxe-members" enabled="true" autoinsert="false"
->${visibility:link(public,private)} function new() {
+>${visibility:link(public,private)} function new(${params}) {
 	${cursor}
 }</template>	
 
