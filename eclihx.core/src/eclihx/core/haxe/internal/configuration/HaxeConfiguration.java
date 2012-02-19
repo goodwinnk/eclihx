@@ -468,6 +468,13 @@ public final class HaxeConfiguration extends AbstractConfiguration {
 	}
 	
 	/**
+	 * Removes all cmd commands
+	 */
+	public void cleanCmdCommands() {
+		cmdCommands.clear();
+	}
+	
+	/**
 	 * Get the cmd commands calls.
 	 * 
 	 * @return list of cmd commands in configuration.
