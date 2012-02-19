@@ -97,10 +97,19 @@ public class ParserTest {
 		Assert.assertEquals("\\\"ssr", params[1]);
 	}
 	
+	@Test
 	public void shouldSplitPathsWithEscapeChar() {
 		String[] params = Parser.splitToParams("-file \"\\some\\some dir.test\"");
 		Assert.assertTrue(params.length == 2);
 		Assert.assertEquals("-file", params[0]);
 		Assert.assertEquals("\\some\\some dir.test", params[1]);
+	}
+	
+	@Test
+	public void shouldSplitPathsWithEscapeAndQuoteChar() {
+		String[] params = Parser.splitToParams("-cmd \"copy out\\main.js ..\\TestProject\\scripts\\\"");
+		Assert.assertTrue(params.length == 2);
+		Assert.assertEquals("-cmd", params[0]);
+		Assert.assertEquals("copy out\\main.js ..\\TestProject\\scripts\\", params[1]);
 	}
 }

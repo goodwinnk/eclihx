@@ -83,7 +83,7 @@ public class Parser {
 		
 		PushbackReader reader = new PushbackReader(new StringReader(input));
 		
-		try {			
+		try {		
 			for (int ch = reader.read(); ch != -1; ch = reader.read()) {				
 				if (ch == QUOTE) {
 					
@@ -120,7 +120,15 @@ public class Parser {
 			
 			// If we were have unfinished parameter
 			if (!tempParam.toString().isEmpty()) {
-				params.add(tempParam.toString());
+				
+				String paramString = tempParam.toString();
+				
+				// Change last char to escape chart if it is quote 
+				if (isInQuotedString && paramString.endsWith(Character.toString(QUOTE))) {
+					paramString = paramString.substring(0, paramString.length() - 1) + ESCAPE;
+				}
+				
+				params.add(paramString);
 			}	
 			
 			reader.close();

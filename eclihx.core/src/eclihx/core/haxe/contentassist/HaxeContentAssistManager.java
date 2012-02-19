@@ -119,6 +119,7 @@ public class HaxeContentAssistManager {
 		HaxeConfiguration haxeConfiguration = getProjectTipsConfiguration(project);
 		if (haxeConfiguration != null) {
 			haxeConfiguration.setExplicitNoOutput();
+			haxeConfiguration.cleanCmdCommands();
 			haxeConfiguration.enableTips(haxeFile.getBaseFile().getLocation().toOSString(),	position);
 		}
 		
@@ -186,6 +187,7 @@ public class HaxeContentAssistManager {
 		
 		if (projectTipsConfiguration != null) {
 			projectTipsConfiguration.setExplicitNoOutput();
+			projectTipsConfiguration.cleanCmdCommands();
 			projectTipsConfiguration.enableClassTips();
 			
 			return getClassTips(projectTipsConfiguration, haxePackage);
