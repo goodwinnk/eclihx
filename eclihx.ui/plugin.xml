@@ -582,15 +582,4 @@
            registryId="eclihx.ui.internal.ui.editors.HXEditor">
      </contextType>
   </extension>
-  <!--
-  <extension
-        point="com.github.eclipsecolortheme.mapper">
-     <mapper
-           class="com.github.eclipsecolortheme.mapper.GenericMapper"
-           name="haxe - eclihx"
-           pluginId="eclihx.ui"
-           xml="eclipsecolortheme/eclihx.ui.mapping.xml">
-     </mapper>
-  </extension>
-  -->
 </plugin>

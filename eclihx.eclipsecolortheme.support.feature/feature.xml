@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="eclihx.eclipsecolortheme.support.feature"
+      label="EclipseColorTheme support"
+      version="1.0.0.qualifier"
+      provider-name="www.eclihx.org">
+
+   <description url="http://www.eclihx.org">
+      Support for themes from EclipseColorThemes plugin (http://www.eclipsecolorthemes.org/)
+in eclihx editor. EclipseColorThemes could be installed from
+Eclipse Market.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/epl-v10.html">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="com.github.eclipsecolortheme" version="0.12.0" match="greaterOrEqual"/>
+      <import plugin="eclihx.ui" version="0.4.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="eclihx.eclipsecolortheme.support"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
