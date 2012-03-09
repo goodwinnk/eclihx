@@ -224,12 +224,9 @@
                 <iterate>
                 <or>
                    <test
+                         forcePluginActivation="true"
                          property="org.eclipse.debug.ui.matchesPattern"
                          value="*.hxml">
-                   </test>
-                   <test
-                         property="org.eclipse.debug.ui.matchesPattern"
-                         value="*.hx">
                    </test></or>
                 </iterate>
              </with>

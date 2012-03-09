@@ -28,6 +28,7 @@ import eclihx.core.CorePreferenceInitializer;
 import eclihx.core.EclihxCore;
 import eclihx.core.haxe.model.core.IHaxeProject;
 import eclihx.core.util.OSUtil;
+import eclihx.launching.HaxeRunnerConfiguration;
 import eclihx.launching.IHaxeLaunchConfigurationConstants;
 import eclihx.ui.internal.ui.EclihxUIPlugin;
 import eclihx.ui.internal.ui.utils.StandardDialogs;
@@ -89,8 +90,8 @@ public final class HaxeMainTab extends AbstractLaunchConfigurationTab {
 			// After that current project should be updated
 			if (haxeProject != null) {
 				if (!buildFilesCache.isEmpty()) {
-					buildFileNameText.setText(buildFilesCache.get(0).getLocation().toOSString());
-					workingDirectoryText.setText(buildFilesCache.get(0).getParent().getLocation().toOSString());
+					buildFileNameText.setText(HaxeRunnerConfiguration.AttributesConverter.getBuildFileString(buildFilesCache.get(0)));
+					workingDirectoryText.setText(HaxeRunnerConfiguration.AttributesConverter.getWorkingDirectory(buildFilesCache.get(0).getParent()));
 				} else {
 					buildFileNameText.setText("");
 					workingDirectoryText.setText("");					

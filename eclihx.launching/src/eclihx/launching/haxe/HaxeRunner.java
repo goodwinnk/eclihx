@@ -108,7 +108,12 @@ public class HaxeRunner implements IHaxeRunner {
         return "Building complete.\n" + launcher.getOutputString();
 	}
 	
-	private static String getLaunchCompilerPath(HaxeRunnerConfiguration configuration) {
+	/**
+	 * Get the compiler path for given configuration.
+	 * @param configuration configuration.
+	 * @return a special or default compiler path.
+	 */
+	public static String getLaunchCompilerPath(HaxeRunnerConfiguration configuration) {
 		// TODO 5: Implement project scope compiler setting
         return configuration.isNonDefaultCompiler() ? 
         		configuration.getCompilerPath() :
